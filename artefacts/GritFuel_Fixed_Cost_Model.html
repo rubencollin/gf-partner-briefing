@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GritFuel — Fixed Cost Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1A1A; --charcoal: #3C3C3C; --gray: #929292;
+    --gray-300: #D9D9D4; --gray-200: #E8E8E3; --gray-100: #F1F1ED;
+    --paper: #FAFAF7; --white: #FFFFFF;
+    --lime: #DEE450; --lime-dark: #B8BE3A; --lime-50: #F4F6D3;
+    --orange: #FC4E2B; --orange-50: #FFE4DC;
+    --green: #4E9B3E; --red: #C8382B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--ink); background: var(--gray-100); font-size: 14px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { max-width: 1160px; margin: 0 auto; padding: 28px 24px 80px; }
+  .home-link { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .home-link:hover { color: var(--ink); }
+
+  h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 6px; }
+  h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 14px; margin-top: 36px; }
+  h3 { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 10px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .intro { color: var(--charcoal); max-width: 760px; margin-bottom: 30px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 2px; background: var(--gray-200); padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 24px; }
+  .tab { padding: 10px 18px; border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--charcoal); cursor: pointer; border-radius: 7px; }
+  .tab.active { background: var(--ink); color: var(--paper); }
+
+  /* ASSUMPTIONS PANEL */
+  .assumptions {
+    background: var(--white); border-radius: 12px; padding: 20px 22px; margin-bottom: 28px;
+    border: 1px solid var(--gray-300);
+  }
+  .assumption-row { display: grid; grid-template-columns: 220px 1fr 90px; align-items: center; gap: 16px; padding: 6px 0; border-bottom: 1px solid var(--gray-100); }
+  .assumption-row:last-child { border: 0; }
+  .assumption-row label { font-size: 13px; color: var(--ink); }
+  .assumption-row .desc { font-size: 12px; color: var(--gray); }
+  .assumption-row input[type="number"] { font-family: 'JetBrains Mono', monospace; font-size: 14px; padding: 6px 10px; border: 1.5px solid var(--gray-300); border-radius: 6px; width: 100%; text-align: right; }
+  .assumption-row input:focus { outline: none; border-color: var(--lime-dark); background: var(--lime-50); }
+
+  /* TIER CARDS */
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .tier { background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--gray-300); display: flex; flex-direction: column; }
+  .tier.emphasise { border-color: var(--ink); }
+  .tier-head { padding: 20px 22px 14px; border-bottom: 1px solid var(--gray-100); }
+  .tier-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
+  .tier-price { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; color: var(--ink); }
+  .tier-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  .kpi-band { padding: 14px 22px; background: var(--lime-50); border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .kpi-band .k { color: var(--charcoal); font-weight: 600; }
+  .kpi-band .v { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--ink); }
+
+  .items { padding: 14px 22px 6px; }
+  .line-item { display: grid; grid-template-columns: 1fr 38px 60px 70px; gap: 10px; padding: 6px 0; font-size: 12px; border-bottom: 1px solid var(--gray-100); }
+  .line-item:last-child { border: 0; }
+  .line-item .it-name { color: var(--charcoal); }
+  .line-item .it-name small { display: block; font-size: 10px; color: var(--gray); margin-top: 1px; }
+  .line-item input { font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 4px 6px; border: 1px solid var(--gray-300); border-radius: 4px; width: 100%; text-align: right; background: var(--white); }
+  .line-item input:focus { outline: none; border-color: var(--lime-dark); background: var(--lime-50); }
+  .line-item .role { font-size: 10px; color: var(--gray); font-family: 'JetBrains Mono', monospace; text-align: center; padding-top: 4px; }
+  .line-item .cost { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--ink); text-align: right; padding-top: 4px; }
+  .line-item.reclassified { opacity: 0.55; }
+  .line-item.reclassified .cost { color: var(--orange); }
+  .reclassified-badge { display: inline-block; font-size: 9px; background: var(--orange-50); color: var(--orange); padding: 1px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.04em; margin-left: 6px; }
+
+  .tier-totals { padding: 14px 22px; background: var(--gray-100); border-top: 1px solid var(--gray-200); }
+  .total-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; color: var(--charcoal); }
+  .total-row.big { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--gray-300); }
+  .total-row .v { font-family: 'JetBrains Mono', monospace; }
+
+  .summary-row { padding: 14px 22px; border-top: 1px solid var(--gray-200); background: var(--white); }
+  .summary-item { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+  .summary-item .k { color: var(--gray); }
+  .summary-item .v { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .summary-item.margin { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--gray-100); font-weight: 700; font-size: 13px; color: var(--ink); }
+  .margin-good { color: var(--green) !important; }
+  .margin-warn { color: var(--orange) !important; }
+  .margin-bad { color: var(--red) !important; }
+
+  /* NOTE */
+  .note { background: var(--white); border-left: 3px solid var(--lime); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 32px; font-size: 13px; color: var(--charcoal); }
+  .note strong { color: var(--ink); }
+
+  .reset { margin-top: 18px; background: none; border: 1px solid var(--gray-300); padding: 8px 14px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--charcoal); cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; }
+  .reset:hover { background: var(--gray-100); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 900px) {
+    .tier-grid { grid-template-columns: 1fr; }
+    .assumption-row { grid-template-columns: 1fr 100px; }
+    .assumption-row .desc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<a class="home-link" href="../04-finance.html">← Back to Finance</a>
+
+<div class="eyebrow">Interactive calculator · Stream 1 baseline</div>
+<h1>Fixed-Cost Model</h1>
+<p class="intro">The Stream 1 baseline. Models the cost of delivering the <em>fixed</em> items in each subscription tier (Core / Growth / Performance) — everything the client pays for that is <strong>not</strong> funded by the credit pool. Rates, hours, and tier fees are all editable — change any input and the totals recalculate.</p>
+
+<div class="tabs">
+  <button class="tab active" data-scenario="base">Base model</button>
+  <button class="tab" data-scenario="hybrid">Hybrid scenario</button>
+</div>
+
+<div class="assumptions">
+  <h3>Rate assumptions (€/hour)</h3>
+  <div class="assumption-row">
+    <label for="rate-strat">Strategist (lead / CMO-level)</label>
+    <span class="desc">Client-facing sessions, playbook, strategic oversight.</span>
+    <input type="number" id="rate-strat" value="120" min="0" step="5">
+  </div>
+  <div class="assumption-row">
+    <label for="rate-other">Other (ops / junior / data)</label>
+    <span class="desc">Dashboard updates, engine runs, specialist coordination.</span>
+    <input type="number" id="rate-other" value="80" min="0" step="5">
+  </div>
+</div>
+
+<div class="tier-grid" id="tiers"></div>
+
+<div class="note" id="note-base">
+  <strong>Base model note:</strong> Margins are tight at Growth (~22%) because several Fractional CMO / Structured Experiments / Multi-channel items are all charged as fixed delivery. The <em>Hybrid Scenario</em> tab moves those items into the credit pool (funded by credit margin, not fixed cost) — lifting Growth margin to ~44% without changing the client-facing headline.
+</div>
+<div class="note hidden" id="note-hybrid">
+  <strong>Hybrid scenario note:</strong> Price increases applied (Growth +€250 → €5,250 / Performance +€500 → €8,000). Selected deliverables reclassified as credit-funded (shown in orange, struck-through in totals). These items are <em>still delivered</em> for clients — they're funded from the credit pool, not the fixed subscription cost. Margin lifts across the board without the client-facing experience changing.
+</div>
+
+<button class="reset" onclick="resetInputs()">↻ Reset to defaults</button>
+
+</div>
+
+<script>
+const CREDIT_VALUE = 25;
+
+// Base model — Specialist coordination in fixed cost
+const BASE = {
+  CORE: {
+    name: "Core", price: 3500, credits: 70,
+    items: [
+      { label: "Monthly strategy session (1 × 60 min)", role: "strat", hrs: 1 },
+      { label: "On-demand support (1.5 hrs/month)", role: "strat", hrs: 1.5 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Specialist coordination (back-end routing)", role: "other", hrs: 0.5 }
+    ]
+  },
+  GROWTH: {
+    name: "Growth", price: 5000, credits: 110,
+    items: [
+      { label: "Bi-weekly alignment (2 × 60 min)", role: "strat", hrs: 2 },
+      { label: "On-demand support (3 hrs/month)", role: "strat", hrs: 3 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Fractional CMO oversight", role: "strat", hrs: 2 },
+      { label: "Structured growth experiments (design)", role: "strat", hrs: 1.5 },
+      { label: "Multi-channel orchestration (3+ channels)", role: "strat", hrs: 1.5 },
+      { label: "Direct specialist briefing (brand + perf)", role: "other", hrs: 1 }
+    ]
+  },
+  PERFORMANCE: {
+    name: "Performance", price: 7500, credits: 180,
+    items: [
+      { label: "Weekly growth review (4 × 60 min)", role: "strat", hrs: 4 },
+      { label: "On-demand support (6 hrs/month)", role: "strat", hrs: 6 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Fractional CMO oversight", role: "strat", hrs: 2 },
+      { label: "Senior strategic intensity (elevated input)", role: "strat", hrs: 2 },
+      { label: "Advanced testing architecture (design)", role: "strat", hrs: 1.5 },
+      { label: "Forecasting & growth modelling", role: "strat", hrs: 2 },
+      { label: "Direct specialist briefing (brand+perf+events)", role: "other", hrs: 1.5 }
+    ]
+  }
+};
+
+// Hybrid scenario — higher prices + some items reclassified to credit-funded
+const HYBRID = {
+  CORE: {
+    name: "Core", price: 3500, credits: 70,
+    items: [
+      { label: "Monthly strategy session (1 × 60 min)", role: "strat", hrs: 1 },
+      { label: "On-demand support (1.5 hrs/month)", role: "strat", hrs: 1.5 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Specialist coordination (back-end routing)", role: "other", hrs: 0.5, reclassified: false }
+    ]
+  },
+  GROWTH: {
+    name: "Growth", price: 5250, credits: 110,
+    items: [
+      { label: "Bi-weekly alignment (2 × 60 min)", role: "strat", hrs: 2 },
+      { label: "On-demand support (3 hrs/month)", role: "strat", hrs: 3 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Fractional CMO oversight", role: "strat", hrs: 2 },
+      { label: "Structured growth experiments", role: "strat", hrs: 1.5, reclassified: true },
+      { label: "Multi-channel orchestration (3+ channels)", role: "strat", hrs: 1.5 },
+      { label: "Direct specialist briefing (brand + perf)", role: "other", hrs: 1 },
+      { label: "Specialist coordination", role: "other", hrs: 1, reclassified: true }
+    ]
+  },
+  PERFORMANCE: {
+    name: "Performance", price: 8000, credits: 180,
+    items: [
+      { label: "Weekly growth review (4 × 60 min)", role: "strat", hrs: 4 },
+      { label: "On-demand support (6 hrs/month)", role: "strat", hrs: 6 },
+      { label: "Monthly Growth Playbook (prep + write-up)", role: "strat", hrs: 2.5 },
+      { label: "Live growth dashboard (monthly update)", role: "other", hrs: 1 },
+      { label: "Compounding engine (run + review)", role: "other", hrs: 0.5 },
+      { label: "Ongoing brand & messaging guidance", role: "strat", hrs: 0.5 },
+      { label: "Fractional CMO oversight", role: "strat", hrs: 2 },
+      { label: "Senior strategic intensity (elevated input)", role: "strat", hrs: 2, reclassified: true },
+      { label: "Advanced testing architecture", role: "strat", hrs: 1.5 },
+      { label: "Forecasting & growth modelling", role: "strat", hrs: 2, reclassified: true },
+      { label: "Direct specialist briefing (brand+perf+events)", role: "other", hrs: 1.5 },
+      { label: "Specialist coordination", role: "other", hrs: 1.5, reclassified: true }
+    ]
+  }
+};
+
+let scenario = "base";
+let state = JSON.parse(JSON.stringify(BASE));
+
+function money(n) { return "€" + Math.round(n).toLocaleString("en-US"); }
+function pct(n) { return (n * 100).toFixed(1) + "%"; }
+
+function buildTiers() {
+  const container = document.getElementById("tiers");
+  container.innerHTML = "";
+  const data = scenario === "base" ? state : state;
+  Object.keys(data).forEach(k => {
+    const t = data[k];
+    const creditPoolValue = t.credits * CREDIT_VALUE;
+    const div = document.createElement("div");
+    div.className = "tier";
+    div.innerHTML = `
+      <div class="tier-head">
+        <div class="tier-name">${t.name}</div>
+        <div class="tier-price">${money(t.price)}<span style="font-size:12px;color:var(--gray);font-weight:500;">/month</span></div>
+        <div class="tier-sub">${t.credits} credits included</div>
+      </div>
+      <div class="kpi-band">
+        <span class="k">Credit pool value</span>
+        <span class="v">${money(creditPoolValue)}</span>
+      </div>
+      <div class="items">
+        ${t.items.map((it, i) => `
+          <div class="line-item ${it.reclassified ? 'reclassified' : ''}">
+            <div class="it-name">${it.label}${it.reclassified ? '<span class="reclassified-badge">→ credits</span>' : ''}<small>${it.role === 'strat' ? 'Strategist' : 'Other'}</small></div>
+            <div class="role">hrs</div>
+            <input type="number" data-tier="${k}" data-idx="${i}" value="${it.hrs}" min="0" step="0.25">
+            <div class="cost" id="cost-${k}-${i}"></div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="tier-totals" id="totals-${k}"></div>
+      <div class="summary-row" id="summary-${k}"></div>
+    `;
+    container.appendChild(div);
+  });
+  // wire input handlers
+  container.querySelectorAll("input[data-tier]").forEach(inp => {
+    inp.addEventListener("input", e => {
+      const tier = e.target.dataset.tier;
+      const idx = parseInt(e.target.dataset.idx);
+      state[tier].items[idx].hrs = parseFloat(e.target.value) || 0;
+      recalc();
+    });
+  });
+  recalc();
+}
+
+function recalc() {
+  const rs = parseFloat(document.getElementById("rate-strat").value) || 0;
+  const ro = parseFloat(document.getElementById("rate-other").value) || 0;
+  Object.keys(state).forEach(k => {
+    const t = state[k];
+    let sessionCost = 0, otherCost = 0, reclassifiedCost = 0;
+    t.items.forEach((it, i) => {
+      const rate = it.role === "strat" ? rs : ro;
+      const cost = it.hrs * rate;
+      const el = document.getElementById(`cost-${k}-${i}`);
+      if (el) el.textContent = money(cost);
+      if (it.reclassified) {
+        reclassifiedCost += cost;
+      } else {
+        // Session items: first two for Core, first two for Growth/Perf
+        const sessionIndices = k === "CORE" ? [0, 1] : [0, 1];
+        if (sessionIndices.includes(i)) sessionCost += cost;
+        else otherCost += cost;
+      }
+    });
+    const fixedCost = sessionCost + otherCost;
+    const creditPoolValue = t.credits * CREDIT_VALUE;
+    const fixedRevenue = t.price - creditPoolValue;
+    const margin = fixedRevenue - fixedCost;
+    const marginPct = fixedRevenue ? margin / fixedRevenue : 0;
+
+    document.getElementById(`totals-${k}`).innerHTML = `
+      <div class="total-row"><span>Session-time cost</span><span class="v">${money(sessionCost)}</span></div>
+      <div class="total-row"><span>Other fixed item cost</span><span class="v">${money(otherCost)}</span></div>
+      ${reclassifiedCost > 0 ? `<div class="total-row" style="color:var(--orange);"><span>Reclassified → credits</span><span class="v">${money(reclassifiedCost)}</span></div>` : ""}
+      <div class="total-row big"><span>Total fixed delivery cost</span><span class="v">${money(fixedCost)}</span></div>
+    `;
+
+    const marginClass = marginPct >= 0.4 ? "margin-good" : marginPct >= 0.25 ? "margin-warn" : "margin-bad";
+    document.getElementById(`summary-${k}`).innerHTML = `
+      <div class="summary-item"><span class="k">Subscription revenue</span><span class="v">${money(t.price)}</span></div>
+      <div class="summary-item"><span class="k">— Credit pool value</span><span class="v">${money(creditPoolValue)}</span></div>
+      <div class="summary-item"><span class="k">— Fixed item revenue</span><span class="v">${money(fixedRevenue)}</span></div>
+      <div class="summary-item"><span class="k">Fixed delivery cost</span><span class="v">${money(fixedCost)}</span></div>
+      <div class="summary-item margin ${marginClass}"><span>Gross margin</span><span class="v">${money(margin)} · ${pct(marginPct)}</span></div>
+    `;
+  });
+}
+
+function setScenario(s) {
+  scenario = s;
+  state = JSON.parse(JSON.stringify(s === "base" ? BASE : HYBRID));
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.scenario === s));
+  document.getElementById("note-base").classList.toggle("hidden", s !== "base");
+  document.getElementById("note-hybrid").classList.toggle("hidden", s !== "hybrid");
+  buildTiers();
+}
+
+function resetInputs() {
+  document.getElementById("rate-strat").value = 120;
+  document.getElementById("rate-other").value = 80;
+  setScenario(scenario);
+}
+
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => setScenario(t.dataset.scenario)));
+document.getElementById("rate-strat").addEventListener("input", recalc);
+document.getElementById("rate-other").addEventListener("input", recalc);
+buildTiers();
+</script>
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Compounding Engine</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --charcoal:#2D2D2D;--lime:#C8E000;--lime-d:#a8bc00;--lime-bg:rgba(200,224,0,0.09);
+  --white:#FFF;--bg:#F2F3F4;--card:#FFF;--border:#E2E4E7;--mid:#6B7280;
+  --dark:#1C1C1C;--success:#22C55E;--warning:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+  --int:#181A1B;--int-card:#1f2123;--int-b:#2e3133;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--int);color:#E5E7EB;font-size:14px;line-height:1.5;min-height:100vh}
+/* HEADER */
+.hdr{background:var(--charcoal);border-bottom:3px solid var(--lime);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.wm{color:var(--lime);font-size:17px;font-weight:800;letter-spacing:2px}
+.hdr-sub{color:#888;font-size:12px;margin-left:16px}
+.hdr-badge{background:#3a3a3a;color:#bbb;padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:.5px}
+/* CONTEXT STRIP */
+.ctx{background:#222426;border-bottom:1px solid var(--int-b);padding:14px 32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.ctx-item{display:flex;flex-direction:column;gap:2px}
+.ctx-label{font-size:10px;color:#6B7280;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.ctx-val{font-size:15px;font-weight:700;color:#F3F4F6}
+.ctx-divider{width:1px;height:32px;background:var(--int-b)}
+.ctx-edit{background:transparent;border:1px solid var(--int-b);color:#9CA3AF;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s}
+.ctx-edit:hover{border-color:#555;color:#D1D5DB}
+input.ctx-input{background:#2a2c2e;border:1px solid var(--int-b);color:#F3F4F6;padding:4px 8px;border-radius:5px;font-size:14px;font-weight:700;width:120px;outline:none}
+input.ctx-input:focus{border-color:var(--lime-d)}
+select.ctx-input{background:#2a2c2e;border:1px solid var(--int-b);color:#F3F4F6;padding:4px 8px;border-radius:5px;font-size:13px;font-weight:600;outline:none;cursor:pointer}
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:28px 32px 60px}
+/* SECTION */
+.sec-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6B7280;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-title .badge{background:var(--int-b);color:#9CA3AF;padding:2px 8px;border-radius:10px;font-size:10px;text-transform:none;letter-spacing:0;font-weight:600}
+/* CARD */
+.card{background:var(--int-card);border:1px solid var(--int-b);border-radius:10px;padding:20px}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.g-3-2{display:grid;grid-template-columns:3fr 2fr;gap:20px;margin-bottom:24px}
+.g-2-1{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px}
+/* CHANNEL CARD */
+.ch-card{background:var(--int-card);border:1.5px solid var(--int-b);border-radius:10px;padding:16px;transition:.2s;position:relative}
+.ch-card.active{border-color:#3a3c3e}
+.ch-card.paused{opacity:.5}
+.ch-card.growing{border-color:rgba(34,197,94,.3)}
+.ch-card.declining{border-color:rgba(239,68,68,.3)}
+.ch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ch-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;background:#2a2c2e}
+.ch-name{font-size:13px;font-weight:700;color:#F3F4F6;margin-left:8px}
+.ch-toggle{width:36px;height:20px;background:#374151;border-radius:10px;position:relative;cursor:pointer;transition:.2s;flex-shrink:0}
+.ch-toggle.on{background:var(--lime)}
+.ch-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.2s}
+.ch-toggle.on::after{left:18px}
+.ch-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ch-field label{font-size:10px;color:#6B7280;font-weight:600;letter-spacing:.4px;text-transform:uppercase;display:block;margin-bottom:3px}
+.ch-field input{width:100%;background:#2a2c2e;border:1px solid var(--int-b);color:#F3F4F6;padding:6px 8px;border-radius:6px;font-size:13px;font-weight:600;outline:none;transition:.2s}
+.ch-field input:focus{border-color:var(--lime-d)}
+.ch-metric-label{font-size:10px;color:#6B7280;margin-top:8px;font-style:italic}
+/* momentum pill */
+.mom-pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:8px;display:inline-block}
+.mom-hot{background:rgba(34,197,94,.15);color:#22C55E}
+.mom-good{background:rgba(200,224,0,.12);color:var(--lime-d)}
+.mom-flat{background:rgba(107,114,128,.15);color:#6B7280}
+.mom-drop{background:rgba(239,68,68,.12);color:#EF4444}
+/* MILESTONE */
+.ms-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.ms-item{background:var(--int-card);border:1.5px solid var(--int-b);border-radius:8px;padding:12px 14px;cursor:pointer;transition:.2s;user-select:none;display:flex;align-items:flex-start;gap:10px}
+.ms-item:hover{border-color:#3a3c3e}
+.ms-item.done{border-color:rgba(200,224,0,.35);background:rgba(200,224,0,.04)}
+.ms-check{width:20px;height:20px;border-radius:50%;border:2px solid #374151;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:var(--charcoal);transition:.2s}
+.ms-item.done .ms-check{background:var(--lime);border-color:var(--lime)}
+.ms-text strong{font-size:12.5px;font-weight:700;color:#D1D5DB;display:block}
+.ms-item.done .ms-text strong{color:#F3F4F6}
+.ms-text small{font-size:11px;color:#6B7280}
+.ms-tier{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-bottom:3px;display:inline-block}
+.t1{background:rgba(59,130,246,.15);color:#60A5FA}
+.t2{background:rgba(139,92,246,.15);color:#A78BFA}
+.t3{background:rgba(249,115,22,.15);color:#FB923C}
+/* SIGNAL BARS */
+.sig-bar-wrap{margin-bottom:16px}
+.sig-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sig-name{font-size:12px;font-weight:700;color:#D1D5DB}
+.sig-score{font-size:14px;font-weight:800;color:#F3F4F6}
+.sig-track{height:8px;background:#2a2c2e;border-radius:4px;overflow:hidden}
+.sig-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.sig-desc{font-size:11px;color:#6B7280;margin-top:4px}
+/* COMPOUND SCORE */
+.compound-box{background:var(--int-b);border-radius:10px;padding:20px;text-align:center}
+.compound-label{font-size:10px;font-weight:700;color:#6B7280;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.compound-score{font-size:56px;font-weight:900;line-height:1;margin-bottom:6px;transition:all .5s}
+.compound-badge{display:inline-block;font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.strategy-accelerate{background:rgba(200,224,0,.15);color:var(--lime);border:1px solid rgba(200,224,0,.3)}
+.strategy-maintain{background:rgba(59,130,246,.12);color:#60A5FA;border:1px solid rgba(59,130,246,.3)}
+.strategy-pivot{background:rgba(249,115,22,.12);color:#FB923C;border:1px solid rgba(249,115,22,.3)}
+.strategy-rebalance{background:rgba(139,92,246,.12);color:#A78BFA;border:1px solid rgba(139,92,246,.3)}
+.compound-rationale{font-size:12px;color:#6B7280;margin-top:10px;line-height:1.6}
+/* INITIATIVE RECOMMENDATION CARD */
+.init-rec{background:#222426;border:1px solid var(--int-b);border-radius:10px;padding:16px;margin-bottom:12px;transition:.2s}
+.init-rec:hover{border-color:#3a3c3e}
+.init-rec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.init-priority{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0;text-transform:uppercase;letter-spacing:.5px}
+.p-high{background:rgba(200,224,0,.15);color:var(--lime-d)}
+.p-medium{background:rgba(59,130,246,.12);color:#60A5FA}
+.p-consider{background:rgba(107,114,128,.15);color:#9CA3AF}
+.init-rec-title{font-size:14px;font-weight:700;color:#F3F4F6}
+.init-rec-meta{display:flex;gap:12px;font-size:11px;color:#6B7280;margin-bottom:8px;flex-wrap:wrap}
+.init-rec-meta span{display:flex;align-items:center;gap:4px}
+.init-rationale{font-size:12px;color:#9CA3AF;line-height:1.6}
+.signal-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.sig-tag{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.st-mom{background:rgba(34,197,94,.1);color:#22C55E}
+.st-prox{background:rgba(59,130,246,.1);color:#60A5FA}
+.st-eff{background:rgba(200,224,0,.1);color:var(--lime-d)}
+.st-dep{background:rgba(249,115,22,.1);color:#FB923C}
+/* CREDIT TABLE */
+.cr-table{width:100%;border-collapse:collapse;font-size:13px}
+.cr-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6B7280;padding:8px 10px;text-align:left;border-bottom:1px solid var(--int-b)}
+.cr-table td{padding:9px 10px;border-bottom:1px solid var(--int-b);vertical-align:middle}
+.cr-table tr:last-child td{border-bottom:none}
+.cr-delta{font-size:11px;font-weight:700}
+.cr-plus{color:var(--lime-d)}
+.cr-minus{color:#EF4444}
+.cr-same{color:#6B7280}
+/* DONUT */
+.donut-wrap{width:160px;height:160px;margin:0 auto 12px}
+/* EXPORT */
+.export-btn{background:var(--lime);color:var(--charcoal);border:none;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:.2s}
+.export-btn:hover{background:var(--lime-d)}
+.copy-btn{background:#2a2c2e;color:#9CA3AF;border:1px solid var(--int-b);padding:11px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;margin-left:10px}
+.copy-btn:hover{border-color:#555;color:#D1D5DB}
+/* SEPARATOR */
+.sep{border:none;border-top:1px solid var(--int-b);margin:24px 0}
+/* FLOW DIAGRAM */
+.flow-row{display:flex;align-items:center;gap:0;margin-bottom:20px;overflow-x:auto;padding:4px 0}
+.flow-node{background:#2a2c2e;border:1.5px solid var(--int-b);border-radius:8px;padding:10px 14px;font-size:11px;font-weight:600;color:#D1D5DB;white-space:nowrap;flex-shrink:0}
+.flow-node.done{border-color:rgba(200,224,0,.4);color:var(--lime);background:rgba(200,224,0,.06)}
+.flow-node.active{border-color:rgba(59,130,246,.4);color:#60A5FA;background:rgba(59,130,246,.06)}
+.flow-node.locked{opacity:.35}
+.flow-arrow{color:#374151;font-size:16px;margin:0 6px;flex-shrink:0}
+.flow-arrow.live{color:var(--lime-d)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div style="display:flex;align-items:center">
+    <div class="wm">GRITFUEL</div>
+    <div class="hdr-sub">Compounding Engine</div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="hdr-badge" id="last-updated">Live · updates on input</div>
+  </div>
+</header>
+
+<!-- CONTEXT STRIP -->
+<div class="ctx" id="ctx-strip">
+  <div class="ctx-item">
+    <div class="ctx-label">Client</div>
+    <div class="ctx-val">Momentum Sports BV</div>
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Current Month</div>
+    <input class="ctx-input" type="text" id="ctx-month" value="April 2026" oninput="compute()">
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Next Month</div>
+    <input class="ctx-input" type="text" id="ctx-next" value="May 2026" oninput="compute()">
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Monthly Credit Budget</div>
+    <input class="ctx-input" type="number" id="ctx-credits" value="80" min="20" max="240" style="width:80px" oninput="compute()">
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Primary Goal</div>
+    <select class="ctx-input" id="ctx-goal" onchange="compute()">
+      <option value="leads">Qualified Leads</option>
+      <option value="traffic">Organic Sessions</option>
+      <option value="subscribers">Email Subscribers</option>
+      <option value="revenue">Revenue</option>
+      <option value="reach">Social Reach</option>
+    </select>
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Goal Target</div>
+    <input class="ctx-input" type="number" id="ctx-target" value="40" min="1" style="width:90px" oninput="compute()">
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item">
+    <div class="ctx-label">Current Value</div>
+    <input class="ctx-input" type="number" id="ctx-current" value="28" min="0" style="width:90px" oninput="compute()">
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══ SECTION 1: CHANNEL PERFORMANCE ══ -->
+<div style="margin-bottom:8px" class="sec-title">Channel Performance <span class="badge">This month vs last month · toggle to activate</span></div>
+<div class="g3" id="channels-grid">
+  <!-- rendered by JS -->
+</div>
+
+<hr class="sep">
+
+<!-- ══ SECTION 2: MILESTONE TRACKER ══ -->
+<div class="sec-title" style="margin-bottom:10px">Milestone Tracker <span class="badge">Foundation → Amplification → Acceleration</span></div>
+<div class="sec-title" style="font-size:10px;margin-bottom:10px;color:#4B5563">Completed foundations unlock the next tier of initiatives</div>
+
+<!-- Compounding flow diagram -->
+<div class="flow-row" id="flow-diagram"></div>
+
+<div class="ms-grid" id="ms-grid"><!-- rendered by JS --></div>
+
+<hr class="sep">
+
+<!-- ══ SECTION 3: SIGNAL ANALYSIS + SCORE ══ -->
+<div class="sec-title">Signal Analysis <span class="badge">Auto-computed from inputs above</span></div>
+<div class="g-3-2" style="margin-bottom:24px">
+  <div class="card">
+    <div style="margin-bottom:20px">
+      <!-- Signal bars -->
+      <div class="sig-bar-wrap">
+        <div class="sig-header">
+          <div class="sig-name">📈 Channel Momentum</div>
+          <div class="sig-score" id="s-momentum">—</div>
+        </div>
+        <div class="sig-track"><div class="sig-fill" id="sf-momentum" style="width:0%;background:var(--lime)"></div></div>
+        <div class="sig-desc" id="sd-momentum">Weighted average MoM growth across active channels.</div>
+      </div>
+      <div class="sig-bar-wrap">
+        <div class="sig-header">
+          <div class="sig-name">🎯 Goal Proximity</div>
+          <div class="sig-score" id="s-proximity">—</div>
+        </div>
+        <div class="sig-track"><div class="sig-fill" id="sf-proximity" style="width:0%;background:#3B82F6"></div></div>
+        <div class="sig-desc" id="sd-proximity">How close you are to the primary goal target.</div>
+      </div>
+      <div class="sig-bar-wrap">
+        <div class="sig-header">
+          <div class="sig-name">⚡ Credit Efficiency</div>
+          <div class="sig-score" id="s-efficiency">—</div>
+        </div>
+        <div class="sig-track"><div class="sig-fill" id="sf-efficiency" style="width:0%;background:#F59E0B"></div></div>
+        <div class="sig-desc" id="sd-efficiency">Output growth rate per credit spent, across active channels.</div>
+      </div>
+      <div class="sig-bar-wrap">
+        <div class="sig-header">
+          <div class="sig-name">🔓 Dependency Sequencing</div>
+          <div class="sig-score" id="s-dependency">—</div>
+        </div>
+        <div class="sig-track"><div class="sig-fill" id="sf-dependency" style="width:0%;background:#A78BFA"></div></div>
+        <div class="sig-desc" id="sd-dependency">How many Tier 2 and Tier 3 initiatives are now unlocked.</div>
+      </div>
+    </div>
+    <!-- Per-channel breakdown table -->
+    <div class="sec-title" style="margin-top:4px;margin-bottom:10px;font-size:10px">Per-channel detail</div>
+    <table class="cr-table" id="channel-detail-table">
+      <thead><tr><th>Channel</th><th>MoM</th><th>Efficiency</th><th>Credits</th><th>Signal</th></tr></thead>
+      <tbody id="channel-detail-body"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="compound-box">
+      <div class="compound-label">Compound Score</div>
+      <div class="compound-score" id="compound-score" style="color:var(--lime)">—</div>
+      <div><span class="compound-badge strategy-accelerate" id="strategy-badge">Computing…</span></div>
+      <div class="compound-rationale" id="compound-rationale">Adjust inputs above to generate your compound score.</div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div class="sec-title" style="font-size:10px;margin-bottom:10px">Credit allocation — next month</div>
+      <div class="donut-wrap"><canvas id="donut-next"></canvas></div>
+      <div id="donut-legend" style="font-size:11px;color:#9CA3AF;text-align:center"></div>
+    </div>
+  </div>
+</div>
+
+<hr class="sep">
+
+<!-- ══ SECTION 4: NEXT PLAYBOOK ══ -->
+<div class="sec-title">Next Playbook Recommendations <span class="badge" id="next-month-label">May 2026</span></div>
+<div class="g-2-1">
+  <div>
+    <div id="init-recs"><!-- rendered by JS --></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card" style="padding:16px">
+      <div class="sec-title" style="font-size:10px;margin-bottom:12px">Credit allocation</div>
+      <table class="cr-table" id="credit-alloc-table">
+        <thead><tr><th>Channel</th><th>This mo</th><th>Next mo</th><th>Δ</th></tr></thead>
+        <tbody id="credit-alloc-body"></tbody>
+      </table>
+    </div>
+    <div class="card" style="padding:16px;background:rgba(200,224,0,.04);border-color:rgba(200,224,0,.2)">
+      <div class="sec-title" style="font-size:10px;margin-bottom:8px;color:var(--lime-d)">Strategist brief</div>
+      <div id="strategist-brief" style="font-size:12px;color:#9CA3AF;line-height:1.7">—</div>
+    </div>
+    <div style="display:flex;gap:0">
+      <button class="export-btn" onclick="exportBrief()">Export Brief</button>
+      <button class="copy-btn" onclick="copyBrief()">Copy</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+Chart.defaults.font.family = "'Segoe UI', Arial, sans-serif";
+Chart.defaults.color = '#9CA3AF';
+
+// ═══════════════════════════════════════════════════════
+// DATA MODEL
+// ═══════════════════════════════════════════════════════
+
+const CHANNELS = [
+  { id:'seo',     label:'SEO / Organic',  icon:'🌱', metricLabel:'Sessions/mo',     thisMonth:12400, lastMonth:10500, credits:24, active:true },
+  { id:'content', label:'Content',        icon:'✍️', metricLabel:'Articles published', thisMonth:6,     lastMonth:6,     credits:28, active:true },
+  { id:'social',  label:'Social',         icon:'📣', metricLabel:'Total reach',       thisMonth:45200, lastMonth:37000, credits:0,  active:true },
+  { id:'email',   label:'Email / CRM',    icon:'✉️', metricLabel:'Subscribers',       thisMonth:3840,  lastMonth:3530,  credits:20, active:true },
+  { id:'paid',    label:'Paid Media',     icon:'💸', metricLabel:'Leads from paid',   thisMonth:0,     lastMonth:0,     credits:0,  active:false },
+  { id:'pr',      label:'PR / Media',     icon:'📰', metricLabel:'Media mentions',    thisMonth:0,     lastMonth:0,     credits:0,  active:false },
+];
+
+const MILESTONES = [
+  { id:'seo-foundation',     tier:1, label:'SEO Foundation',      desc:'Technical audit + keyword map live',  done:true  },
+  { id:'content-foundation', tier:1, label:'Content Foundation',   desc:'Strategy + pillar articles published', done:true  },
+  { id:'email-setup',        tier:1, label:'Email Setup',          desc:'List, platform, welcome sequence',    done:true  },
+  { id:'brand-foundation',   tier:1, label:'Brand Foundation',     desc:'Guidelines, voice, visual identity',  done:false },
+  { id:'tracking-setup',     tier:1, label:'Tracking & Analytics', desc:'GA4, GSC, pixel, UTMs in place',      done:false },
+  { id:'conversion-pages',   tier:2, label:'Conversion Pages',     desc:'Landing pages built on keyword map',  done:false, prereqs:['seo-foundation'] },
+  { id:'email-nurture',      tier:2, label:'Email Nurture',        desc:'Segmented sequences + lead scoring',  done:false, prereqs:['email-setup'] },
+  { id:'paid-foundation',    tier:2, label:'Paid Foundation',      desc:'Campaign structure, creative, pixel', done:false, prereqs:['brand-foundation','tracking-setup'] },
+  { id:'social-growth',      tier:2, label:'Social Growth Engine', desc:'Growth campaign + community layer',   done:false, prereqs:['content-foundation'] },
+  { id:'paid-scale',         tier:3, label:'Paid Scale',           desc:'Performance campaigns at scale',      done:false, prereqs:['paid-foundation'] },
+  { id:'seo-authority',      tier:3, label:'SEO Authority',        desc:'Link building, PR, domain authority', done:false, prereqs:['conversion-pages','content-foundation'] },
+  { id:'lead-scoring',       tier:3, label:'Lead Scoring + CRM',   desc:'Automation, scoring, sales handoff',  done:false, prereqs:['email-nurture'] },
+];
+
+// Initiative templates for recommendations
+const INITIATIVE_TEMPLATES = [
+  { id:'seo-foundation',   title:'SEO Foundation',           channel:'seo',     credLow:20, credMid:28, credHigh:36, tier:1, prereqs:[],                          goalFit:['traffic','leads'], desc:'Technical audit, keyword map, on-page optimisations for 10–15 priority pages.' },
+  { id:'content-series',   title:'Brand Content Series',     channel:'content', credLow:22, credMid:30, credHigh:40, tier:1, prereqs:[],                          goalFit:['traffic','reach','leads'], desc:'Pillar articles + social adaptations to build authority and organic reach.' },
+  { id:'email-engine',     title:'Email Growth Engine',      channel:'email',   credLow:16, credMid:22, credHigh:30, tier:1, prereqs:[],                          goalFit:['leads','subscribers'], desc:'List segmentation, welcome sequence, first newsletter.' },
+  { id:'conversion-pages', title:'Conversion Landing Pages', channel:'seo',     credLow:18, credMid:26, credHigh:36, tier:2, prereqs:['seo-foundation'],          goalFit:['leads','revenue'], desc:'Convert organic traffic with targeted, high-intent landing pages.' },
+  { id:'paid-social',      title:'Paid Social — Meta',       channel:'paid',    credLow:20, credMid:28, credHigh:38, tier:2, prereqs:['brand-foundation','tracking-setup'], goalFit:['leads','reach','revenue'], desc:'Meta campaign build — creative, copy, audiences, and optimisation framework.' },
+  { id:'email-nurture',    title:'Email Nurture Sequence',   channel:'email',   credLow:16, credMid:22, credHigh:28, tier:2, prereqs:['email-setup'],             goalFit:['leads','revenue'], desc:'Segmented nurture flows, lead scoring, and sales-ready trigger logic.' },
+  { id:'seo-authority',    title:'SEO Authority Building',   channel:'seo',     credLow:20, credMid:28, credHigh:36, tier:3, prereqs:['seo-foundation','content-foundation'], goalFit:['traffic','leads'], desc:'Link acquisition, PR-led authority, domain rating improvement.' },
+  { id:'content-compound', title:'Content Compounding',      channel:'content', credLow:16, credMid:22, credHigh:30, tier:2, prereqs:['content-foundation'],      goalFit:['traffic','reach'], desc:'Refresh top-5 articles, expand distribution layer, repurpose for paid.' },
+  { id:'social-growth',    title:'Social Growth Engine',     channel:'social',  credLow:18, credMid:24, credHigh:32, tier:2, prereqs:['content-foundation'],      goalFit:['reach','leads'], desc:'Growth campaign, UGC layer, community engagement strategy.' },
+  { id:'paid-scale',       title:'Paid Scale — Performance', channel:'paid',    credLow:24, credMid:34, credHigh:46, tier:3, prereqs:['paid-foundation'],         goalFit:['leads','revenue'], desc:'Scale winning ad sets, launch new audiences, introduce retargeting.' },
+  { id:'lead-scoring',     title:'Lead Scoring & CRM',       channel:'email',   credLow:18, credMid:24, credHigh:32, tier:3, prereqs:['email-nurture'],           goalFit:['leads','revenue'], desc:'Behaviour-based scoring, CRM pipeline integration, sales handoff automation.' },
+  { id:'pr-media',         title:'PR & Media Outreach',      channel:'pr',      credLow:20, credMid:28, credHigh:36, tier:3, prereqs:['content-foundation','brand-foundation'], goalFit:['reach','leads'], desc:'Targeted media pitching, thought leadership placement, podcast outreach.' },
+];
+
+// ═══════════════════════════════════════════════════════
+// RENDER INPUT COMPONENTS
+// ═══════════════════════════════════════════════════════
+function renderChannels() {
+  const grid = document.getElementById('channels-grid');
+  grid.innerHTML = CHANNELS.map((ch, i) => `
+    <div class="ch-card${ch.active?' active':' paused'}" id="ch-card-${ch.id}">
+      <div class="ch-header">
+        <div style="display:flex;align-items:center">
+          <div class="ch-icon">${ch.icon}</div>
+          <div class="ch-name">${ch.label}</div>
+        </div>
+        <div class="ch-toggle${ch.active?' on':''}" id="toggle-${ch.id}" onclick="toggleChannel('${ch.id}')"></div>
+      </div>
+      <div class="ch-inputs">
+        <div class="ch-field">
+          <label>This month</label>
+          <input type="number" id="ch-this-${ch.id}" value="${ch.thisMonth}" min="0" oninput="updateChannel('${ch.id}')" ${!ch.active?'disabled':''}>
+        </div>
+        <div class="ch-field">
+          <label>Last month</label>
+          <input type="number" id="ch-last-${ch.id}" value="${ch.lastMonth}" min="0" oninput="updateChannel('${ch.id}')" ${!ch.active?'disabled':''}>
+        </div>
+        <div class="ch-field">
+          <label>Credits used</label>
+          <input type="number" id="ch-cr-${ch.id}" value="${ch.credits}" min="0" max="120" oninput="updateChannel('${ch.id}')" ${!ch.active?'disabled':''}>
+        </div>
+      </div>
+      <div class="ch-metric-label">${ch.metricLabel}</div>
+      <div id="mom-pill-${ch.id}"></div>
+    </div>`).join('');
+}
+
+function renderMilestones() {
+  const grid = document.getElementById('ms-grid');
+  grid.innerHTML = MILESTONES.map(ms => {
+    const unlocked = isUnlocked(ms);
+    const tierLabel = `<span class="ms-tier t${ms.tier}">Tier ${ms.tier}</span>`;
+    return `<div class="ms-item${ms.done?' done':''}${!unlocked&&!ms.done?' paused':''}" id="ms-${ms.id}" onclick="toggleMs('${ms.id}')" ${!unlocked&&!ms.done?'title="Prerequisite not yet completed"':''}>
+      <div class="ms-check">${ms.done?'✓':''}</div>
+      <div class="ms-text">${tierLabel}<strong>${ms.label}</strong><small>${ms.desc}</small></div>
+    </div>`;
+  }).join('');
+}
+
+function isUnlocked(ms) {
+  if (!ms.prereqs || ms.prereqs.length === 0) return true;
+  return ms.prereqs.every(p => {
+    const found = MILESTONES.find(m => m.id === p);
+    return found && found.done;
+  });
+}
+
+function renderFlowDiagram() {
+  const tiers = [1,2,3];
+  let html = '';
+  tiers.forEach((t, ti) => {
+    const items = MILESTONES.filter(m => m.tier === t);
+    if (ti > 0) html += `<div class="flow-arrow${items.some(m=>m.done)?'':(MILESTONES.filter(m=>m.tier===t-1).some(m=>m.done)?' live':'')}">→</div>`;
+    html += `<div style="display:flex;gap:6px;align-items:center">`;
+    items.forEach(m => {
+      const cls = m.done ? 'done' : isUnlocked(m) ? 'active' : 'locked';
+      html += `<div class="flow-node ${cls}">${m.done?'✓ ':''}${m.label}</div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('flow-diagram').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+// INTERACTION HANDLERS
+// ═══════════════════════════════════════════════════════
+function toggleChannel(id) {
+  const ch = CHANNELS.find(c => c.id === id);
+  ch.active = !ch.active;
+  const card = document.getElementById('ch-card-' + id);
+  const tog = document.getElementById('toggle-' + id);
+  card.className = 'ch-card ' + (ch.active ? 'active' : 'paused');
+  tog.className = 'ch-toggle ' + (ch.active ? 'on' : '');
+  ['ch-this-','ch-last-','ch-cr-'].forEach(p => {
+    const el = document.getElementById(p + id);
+    if (el) el.disabled = !ch.active;
+  });
+  compute();
+}
+
+function updateChannel(id) {
+  const ch = CHANNELS.find(c => c.id === id);
+  const t = document.getElementById('ch-this-' + id);
+  const l = document.getElementById('ch-last-' + id);
+  const cr = document.getElementById('ch-cr-' + id);
+  if (t) ch.thisMonth = parseFloat(t.value) || 0;
+  if (l) ch.lastMonth = parseFloat(l.value) || 0;
+  if (cr) ch.credits = parseFloat(cr.value) || 0;
+  compute();
+}
+
+function toggleMs(id) {
+  const ms = MILESTONES.find(m => m.id === id);
+  if (!ms) return;
+  if (!ms.done && !isUnlocked(ms)) return; // locked
+  ms.done = !ms.done;
+  renderMilestones();
+  renderFlowDiagram();
+  compute();
+}
+
+// ═══════════════════════════════════════════════════════
+// SIGNAL COMPUTATION
+// ═══════════════════════════════════════════════════════
+let donutChart = null;
+
+function compute() {
+  const budget = parseFloat(document.getElementById('ctx-credits').value) || 80;
+  const goalType = document.getElementById('ctx-goal').value;
+  const target = parseFloat(document.getElementById('ctx-target').value) || 1;
+  const current = parseFloat(document.getElementById('ctx-current').value) || 0;
+  const nextMonth = document.getElementById('ctx-next').value || 'Next Month';
+  document.getElementById('next-month-label').textContent = nextMonth;
+
+  const active = CHANNELS.filter(c => c.active);
+
+  // ── 1. MOMENTUM ────────────────────────────────────
+  let momTotal = 0;
+  active.forEach(ch => {
+    const pct = ch.lastMonth > 0 ? (ch.thisMonth - ch.lastMonth) / ch.lastMonth * 100 : 0;
+    ch._mom = pct;
+    let s = 0;
+    if (pct > 30) s = 100;
+    else if (pct > 15) s = 80;
+    else if (pct > 5) s = 60;
+    else if (pct >= 0) s = 40;
+    else if (pct > -10) s = 20;
+    else s = 5;
+    ch._momScore = s;
+    momTotal += s;
+    // Update pill
+    const pill = document.getElementById('mom-pill-' + ch.id);
+    if (pill) {
+      let cls, label;
+      if (pct > 15) { cls='mom-hot'; label=`↑ ${pct.toFixed(1)}%`; }
+      else if (pct > 0) { cls='mom-good'; label=`↑ ${pct.toFixed(1)}%`; }
+      else if (pct === 0) { cls='mom-flat'; label='→ flat'; }
+      else { cls='mom-drop'; label=`↓ ${Math.abs(pct).toFixed(1)}%`; }
+      pill.innerHTML = `<span class="mom-pill ${cls}">${label} MoM</span>`;
+    }
+    // Card border
+    const card = document.getElementById('ch-card-' + ch.id);
+    if (card) {
+      card.classList.remove('growing','declining');
+      if (ch.active) card.classList.add(pct > 5 ? 'growing' : pct < -5 ? 'declining' : '');
+    }
+  });
+  const momentumScore = active.length > 0 ? Math.round(momTotal / active.length) : 0;
+
+  // ── 2. GOAL PROXIMITY ──────────────────────────────
+  const ratio = target > 0 ? current / target : 0;
+  let proximityScore = 0;
+  let proximityDesc = '';
+  if (ratio >= 1.2) { proximityScore = 95; proximityDesc = `Target exceeded (${Math.round(ratio*100)}%) — compound to next level.`; }
+  else if (ratio >= 0.9) { proximityScore = 80; proximityDesc = `Close to target (${Math.round(ratio*100)}%) — maintain pressure.`; }
+  else if (ratio >= 0.6) { proximityScore = 60; proximityDesc = `On track (${Math.round(ratio*100)}%) — steady increase recommended.`; }
+  else if (ratio >= 0.35) { proximityScore = 45; proximityDesc = `Behind target (${Math.round(ratio*100)}%) — shift resources to highest-impact channels.`; }
+  else { proximityScore = 30; proximityDesc = `Significantly behind target (${Math.round(ratio*100)}%) — urgent strategy review needed.`; }
+
+  // ── 3. CREDIT EFFICIENCY ──────────────────────────
+  // Efficiency = MoM growth rate per credit. Normalise to 0-100.
+  const effChannels = active.filter(c => c.credits > 0 && c.lastMonth > 0);
+  effChannels.forEach(ch => {
+    const growthRate = ch.lastMonth > 0 ? (ch.thisMonth - ch.lastMonth) / ch.lastMonth : 0;
+    ch._eff = ch.credits > 0 ? (growthRate * 100) / ch.credits : 0; // % growth per credit
+  });
+  let effScore = 50;
+  let effDesc = 'Insufficient credit data for efficiency analysis.';
+  if (effChannels.length > 0) {
+    const avgEff = effChannels.reduce((s,c) => s + c._eff, 0) / effChannels.length;
+    effScore = Math.min(100, Math.max(0, Math.round(50 + avgEff * 4)));
+    const best = [...effChannels].sort((a,b) => b._eff - a._eff)[0];
+    const worst = [...effChannels].sort((a,b) => a._eff - b._eff)[0];
+    effDesc = best ? `${best.label} is most efficient. ${worst && worst.id !== best.id ? worst.label+' is underperforming per credit.' : ''}` : '';
+  }
+
+  // ── 4. DEPENDENCY SEQUENCING ──────────────────────
+  const t1Done = MILESTONES.filter(m => m.tier === 1 && m.done).length;
+  const t2Done = MILESTONES.filter(m => m.tier === 2 && m.done).length;
+  const t2Unlocked = MILESTONES.filter(m => m.tier === 2 && isUnlocked(m)).length;
+  const t3Unlocked = MILESTONES.filter(m => m.tier === 3 && isUnlocked(m)).length;
+  const t1Total = MILESTONES.filter(m => m.tier === 1).length;
+  const depScore = Math.round(
+    (t1Done / t1Total) * 40 +
+    (t2Done / Math.max(1, MILESTONES.filter(m=>m.tier===2).length)) * 35 +
+    (t3Unlocked / Math.max(1, MILESTONES.filter(m=>m.tier===3).length)) * 25
+  );
+  const depDesc = `${t1Done}/${t1Total} foundations complete · ${t2Unlocked} Tier 2 initiatives unlocked · ${t3Unlocked} Tier 3 unlocked.`;
+
+  // ── COMPOUND SCORE ────────────────────────────────
+  const compound = Math.round(momentumScore * 0.30 + proximityScore * 0.25 + effScore * 0.25 + depScore * 0.20);
+
+  let strategy, stratClass, rationale;
+  if (compound >= 75) { strategy='ACCELERATE'; stratClass='strategy-accelerate'; rationale='Strong momentum across channels with high credit efficiency. Double down on what\'s working and expand to the next tier.'; }
+  else if (compound >= 55) { strategy='MAINTAIN'; stratClass='strategy-maintain'; rationale='Solid foundations and steady growth. Sustain current channel mix and introduce one new initiative to test.'; }
+  else if (compound >= 35) { strategy='REBALANCE'; stratClass='strategy-rebalance'; rationale='Mixed signals. Shift credits away from underperforming channels and concentrate on the highest-efficiency driver.'; }
+  else { strategy='PIVOT'; stratClass='strategy-pivot'; rationale='Current approach isn\'t generating sufficient momentum. Review channel mix, complete missing foundations, and reset targets.'; }
+
+  // ── RENDER SIGNALS ────────────────────────────────
+  setSignal('momentum', momentumScore, `Active channels averaging ${momentumScore < 50 ? 'weak' : momentumScore < 70 ? 'moderate' : 'strong'} MoM growth.`);
+  setSignal('proximity', proximityScore, proximityDesc, '#3B82F6');
+  setSignal('efficiency', effScore, effDesc, '#F59E0B');
+  setSignal('dependency', depScore, depDesc, '#A78BFA');
+
+  // Compound
+  const cs = document.getElementById('compound-score');
+  cs.textContent = compound;
+  cs.style.color = compound >= 75 ? 'var(--lime)' : compound >= 55 ? '#60A5FA' : compound >= 35 ? '#A78BFA' : '#FB923C';
+  const badge = document.getElementById('strategy-badge');
+  badge.textContent = strategy;
+  badge.className = 'compound-badge ' + stratClass;
+  document.getElementById('compound-rationale').textContent = rationale;
+
+  // ── CHANNEL DETAIL TABLE ──────────────────────────
+  const tbody = document.getElementById('channel-detail-body');
+  tbody.innerHTML = active.map(ch => {
+    const mom = ch._mom !== undefined ? (ch._mom > 0 ? `↑ ${ch._mom.toFixed(1)}%` : ch._mom < 0 ? `↓ ${Math.abs(ch._mom).toFixed(1)}%` : '→ flat') : '—';
+    const momCls = ch._mom > 5 ? '#22C55E' : ch._mom < -5 ? '#EF4444' : '#9CA3AF';
+    const eff = ch._eff !== undefined ? (ch._eff > 0 ? `+${ch._eff.toFixed(2)}` : ch._eff.toFixed(2)) : '—';
+    const effCls = ch._eff > 0 ? '#C8E000' : ch._eff < 0 ? '#EF4444' : '#9CA3AF';
+    const sig = ch._momScore >= 70 ? '🔥 Strong' : ch._momScore >= 50 ? '✓ Solid' : ch._momScore >= 30 ? '~ Flat' : '⚠ Weak';
+    return `<tr>
+      <td>${ch.icon} ${ch.label}</td>
+      <td style="color:${momCls};font-weight:700">${mom}</td>
+      <td style="color:${effCls};font-weight:700">${eff}</td>
+      <td>${ch.credits > 0 ? ch.credits + ' cr' : '—'}</td>
+      <td style="font-size:11px">${sig}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" style="color:#6B7280;text-align:center;padding:14px">No active channels</td></tr>';
+
+  // ── INITIATIVE RECOMMENDATIONS ────────────────────
+  const recs = scoreInitiatives(active, goalType, depScore, compound, budget);
+  renderInitiativeRecs(recs, nextMonth, budget, active);
+
+  // ── DONUT ─────────────────────────────────────────
+  updateDonut(recs, budget);
+}
+
+function setSignal(id, score, desc, color) {
+  color = color || 'var(--lime)';
+  document.getElementById('s-' + id).textContent = score + ' / 100';
+  const fill = document.getElementById('sf-' + id);
+  fill.style.width = score + '%';
+  fill.style.background = color;
+  document.getElementById('sd-' + id).textContent = desc;
+}
+
+// ═══════════════════════════════════════════════════════
+// INITIATIVE SCORING
+// ═══════════════════════════════════════════════════════
+function scoreInitiatives(active, goalType, depScore, compound, budget) {
+  const doneIds = MILESTONES.filter(m => m.done).map(m => m.id);
+  const activeIds = active.map(c => c.id);
+
+  return INITIATIVE_TEMPLATES
+    .filter(t => !doneIds.includes(t.id)) // not already done
+    .map(t => {
+      let score = 0;
+      const reasons = [];
+
+      // Prereqs met?
+      const prereqsMet = t.prereqs.every(p => doneIds.includes(p));
+      if (!prereqsMet) { score -= 40; }
+      else if (t.prereqs.length > 0) { score += 20; reasons.push('dep'); }
+
+      // Goal alignment
+      if (t.goalFit.includes(goalType)) { score += 25; reasons.push('prox'); }
+
+      // Channel momentum
+      const chData = CHANNELS.find(c => c.id === t.channel);
+      if (chData && chData.active && chData._momScore !== undefined) {
+        score += chData._momScore * 0.3;
+        if (chData._momScore >= 70) reasons.push('mom');
+      } else if (!chData || !chData.active) {
+        // Inactive channel — lower score unless it's a foundation
+        if (t.tier === 1) score += 15;
+        else score -= 10;
+      }
+
+      // Efficiency bonus
+      if (chData && chData._eff !== undefined && chData._eff > 0) {
+        score += Math.min(20, chData._eff * 5);
+        reasons.push('eff');
+      }
+
+      // Tier bonus — prefer what compound score suggests
+      if (compound >= 70 && t.tier === 3) score += 10;
+      else if (compound >= 45 && t.tier === 2) score += 10;
+      else if (compound < 45 && t.tier === 1) score += 15;
+
+      t._score = Math.round(score);
+      t._prereqsMet = prereqsMet;
+      t._reasons = reasons;
+      return t;
+    })
+    .filter(t => t._prereqsMet) // only show unlocked
+    .sort((a,b) => b._score - a._score)
+    .slice(0, 3);
+}
+
+function renderInitiativeRecs(recs, nextMonth, budget, active) {
+  const goalType = document.getElementById('ctx-goal').value;
+  const container = document.getElementById('init-recs');
+
+  if (recs.length === 0) {
+    container.innerHTML = '<div style="color:#6B7280;padding:20px;text-align:center">All available initiatives are completed or no channels are active.</div>';
+    return;
+  }
+
+  const priorities = ['high','medium','consider'];
+  const pLabels = ['Priority','Recommended','Consider'];
+  container.innerHTML = recs.map((r, i) => {
+    const cred = i === 0 ? r.credHigh : i === 1 ? r.credMid : r.credLow;
+    const sigTags = r._reasons.map(s => {
+      const map = { mom:'📈 Momentum', prox:'🎯 Goal fit', eff:'⚡ Efficiency', dep:'🔓 Unlocked' };
+      const cls = { mom:'st-mom', prox:'st-prox', eff:'st-eff', dep:'st-dep' };
+      return `<span class="sig-tag ${cls[s]}">${map[s]}</span>`;
+    }).join('');
+    return `<div class="init-rec">
+      <div class="init-rec-header">
+        <div>
+          <div class="init-priority p-${priorities[i]}">${pLabels[i]}</div>
+          <div class="init-rec-title" style="margin-top:4px">${r.title}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:18px;font-weight:800;color:var(--lime)">${cred} cr</div>
+          <div style="font-size:10px;color:#6B7280">€${cred*25}</div>
+        </div>
+      </div>
+      <div class="init-rec-meta">
+        <span>Channel: ${CHANNELS.find(c=>c.id===r.channel)?.label || r.channel}</span>
+        <span>Tier ${r.tier}</span>
+        <span>Fit score: ${r._score}</span>
+      </div>
+      <div class="init-rationale">${r.desc}</div>
+      <div class="signal-tags">${sigTags}</div>
+    </div>`;
+  }).join('');
+
+  // Update credit allocation table
+  renderCreditAlloc(recs, budget, active);
+
+  // Strategist brief
+  const cr = recs.reduce((s,r,i) => s + (i===0?r.credHigh:i===1?r.credMid:r.credLow), 0);
+  const reserve = Math.max(0, budget - cr);
+  document.getElementById('strategist-brief').innerHTML =
+    `<strong style="color:#D1D5DB">${nextMonth} brief</strong><br><br>` +
+    recs.map((r,i) => `→ <strong>${r.title}</strong>: ${r.desc}`).join('<br><br>') +
+    `<br><br>Reserve: ${reserve} credits. Total: ${cr + reserve}/${budget} credits allocated.`;
+}
+
+function renderCreditAlloc(recs, budget, active) {
+  const tbody = document.getElementById('credit-alloc-body');
+  const used = {};
+  recs.forEach((r,i) => {
+    used[r.channel] = (used[r.channel]||0) + (i===0?r.credHigh:i===1?r.credMid:r.credLow);
+  });
+
+  const allCh = CHANNELS.filter(c => c.active || used[c.id]);
+  const rows = allCh.map(ch => {
+    const cur = ch.credits;
+    const nxt = used[ch.id] || 0;
+    const delta = nxt - cur;
+    const dStr = delta > 0 ? `<span class="cr-delta cr-plus">+${delta}</span>` :
+                 delta < 0 ? `<span class="cr-delta cr-minus">${delta}</span>` :
+                              `<span class="cr-delta cr-same">—</span>`;
+    return `<tr>
+      <td>${ch.icon} ${ch.label}</td>
+      <td>${cur > 0 ? cur+' cr' : '—'}</td>
+      <td style="font-weight:700;color:${nxt>0?'#F3F4F6':'#6B7280'}">${nxt > 0 ? nxt+' cr' : '—'}</td>
+      <td>${dStr}</td>
+    </tr>`;
+  });
+
+  const totalNext = Object.values(used).reduce((s,v)=>s+v,0);
+  const reserve = Math.max(0, budget - totalNext);
+  if (reserve > 0) {
+    rows.push(`<tr><td style="color:#6B7280"><em>Reserve</em></td><td>—</td><td style="color:#6B7280">${reserve} cr</td><td>—</td></tr>`);
+  }
+  rows.push(`<tr><td style="font-weight:700">Total</td><td>${active.reduce((s,c)=>s+c.credits,0)} cr</td><td style="font-weight:700;color:var(--lime)">${budget} cr</td><td></td></tr>`);
+  tbody.innerHTML = rows.join('');
+}
+
+function updateDonut(recs, budget) {
+  const labels = recs.map(r => r.title);
+  const data = recs.map((r,i) => i===0?r.credHigh:i===1?r.credMid:r.credLow);
+  const total = data.reduce((s,v)=>s+v,0);
+  const reserve = Math.max(0, budget - total);
+  if (reserve > 0) { labels.push('Reserve'); data.push(reserve); }
+
+  const colors = ['#C8E000','#3B82F6','#A78BFA','#374151'];
+
+  if (donutChart) {
+    donutChart.data.labels = labels;
+    donutChart.data.datasets[0].data = data;
+    donutChart.data.datasets[0].backgroundColor = colors.slice(0, data.length);
+    donutChart.update();
+  } else {
+    donutChart = new Chart(document.getElementById('donut-next'), {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{ data, backgroundColor: colors.slice(0, data.length), borderWidth: 0, hoverOffset: 4 }]
+      },
+      options: {
+        cutout: '70%',
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} cr · €${ctx.raw*25}` } }
+        }
+      }
+    });
+  }
+
+  document.getElementById('donut-legend').innerHTML = labels.map((l,i) =>
+    `<span style="display:inline-flex;align-items:center;gap:4px;margin:2px 5px"><span style="width:8px;height:8px;border-radius:50%;background:${colors[i]};display:inline-block"></span>${l}: ${data[i]} cr</span>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════
+function exportBrief() {
+  const brief = document.getElementById('strategist-brief').innerText;
+  const month = document.getElementById('ctx-next').value;
+  const blob = new Blob([`GritFuel Compounding Brief — ${month}\n${'='.repeat(50)}\n\n${brief}`], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `GritFuel_Brief_${month.replace(/ /g,'_')}.txt`;
+  a.click();
+}
+
+function copyBrief() {
+  const brief = document.getElementById('strategist-brief').innerText;
+  const month = document.getElementById('ctx-next').value;
+  navigator.clipboard.writeText(`GritFuel Compounding Brief — ${month}\n${'='.repeat(50)}\n\n${brief}`)
+    .then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+renderChannels();
+renderMilestones();
+renderFlowDiagram();
+compute();
+</script>
+</body>
+</html>

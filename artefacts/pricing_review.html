@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel Pricing — Review & Suggestions</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Inter', sans-serif; background: #f4f4f0; color: #1a1a1a; }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  /* SECTION LABELS */
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #888; margin-bottom: 8px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: #1a1a1a; margin-bottom: 6px; }
+  .intro { font-size: 14px; color: #666; margin-bottom: 40px; max-width: 680px; line-height: 1.6; }
+
+  /* ISSUE CARDS */
+  .issues-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 48px; }
+  .issue-card {
+    background: #fff; border-radius: 10px; padding: 18px 20px;
+    border-left: 3px solid #FF6B00;
+  }
+  .issue-num { font-size: 10px; font-weight: 800; color: #FF6B00; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .issue-title { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+  .issue-desc { font-size: 12px; color: #555; line-height: 1.6; }
+  .issue-fix { font-size: 11px; color: #1a1a1a; background: #f9fce8; border-radius: 5px; padding: 8px 10px; margin-top: 8px; }
+  .issue-fix strong { color: #6a7800; }
+
+  /* BEFORE / AFTER */
+  .compare-header {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px;
+  }
+  .compare-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 14px; border-radius: 6px; text-align: center;
+  }
+  .compare-label.before { background: #ffe5d5; color: #c94000; }
+  .compare-label.after { background: #eeffc0; color: #4a6000; }
+
+  /* TIER GRIDS */
+  .tiers { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 8px; }
+
+  .tier {
+    background: #fff; border-radius: 12px; padding: 20px;
+    border: 1.5px solid #e8e8e8; position: relative;
+  }
+  .tier.growth { border-color: #C8E000; }
+  .tier.growth-after { border-color: #C8E000; }
+
+  .tier-badge {
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    background: #C8E000; color: #1a1a1a; font-size: 9px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+  }
+  .tier-name { font-size: 9px; font-weight: 800; letter-spacing: 0.14em; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+  .tier-headline { font-size: 16px; font-weight: 800; color: #1a1a1a; line-height: 1.2; margin-bottom: 4px; }
+  .tier-sub { font-size: 11px; color: #888; margin-bottom: 12px; font-style: italic; }
+  .tier-divider { border: none; border-top: 1px solid #eee; margin: 10px 0; }
+
+  .includes-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #aaa; margin-bottom: 6px;
+  }
+  .feature-list { list-style: none; }
+  .feature-list li {
+    font-size: 11px; color: #333; padding: 3px 0;
+    display: flex; align-items: flex-start; gap: 6px; line-height: 1.4;
+  }
+  .feature-list li .check { color: #C8E000; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+  .feature-list li.redundant { color: #ffaa88; }
+  .feature-list li.redundant .check { color: #ffaa88; }
+  .feature-list li.new { color: #333; }
+  .feature-list li.removed { text-decoration: line-through; color: #ccc; }
+
+  .problem-tag {
+    display: inline-block; background: #ffe0d0; color: #c94000; font-size: 9px;
+    font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+    vertical-align: middle; flex-shrink: 0;
+  }
+  .new-tag {
+    display: inline-block; background: #eeffc0; color: #4a6000; font-size: 9px;
+    font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+    flex-shrink: 0;
+  }
+
+  .tier-tagline { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-top: 12px; border-top: 1px solid #f0f0f0; padding-top: 10px; }
+  .tier-credit-band { font-size: 10px; color: #888; margin-top: 4px; }
+  .tier-credit-band strong { color: #C8E000; }
+
+  .section-divider { border: none; border-top: 2px solid #e0e0d0; margin: 48px 0 40px; }
+
+  /* NOTES */
+  .notes-section { margin-top: 40px; }
+  .note {
+    background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 12px;
+    border-left: 3px solid #C8E000;
+  }
+  .note-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .note-body { font-size: 11px; color: #555; line-height: 1.6; }
+
+  .footer { font-size: 10px; color: #aaa; text-align: center; padding: 30px 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="section-label">Internal Review</div>
+  <h1>Pricing Tier Review & Suggestions</h1>
+  <p class="intro">Five issues with the current tier structure, each with a concrete fix. The goal is to tighten the feature progression, align naming with GritFuel OS, and make the credit model visible — without changing the tier logic or taglines, which are strong.</p>
+
+  <!-- ISSUES -->
+  <div class="section-label" style="margin-bottom:14px;">The Issues</div>
+  <div class="issues-grid">
+
+    <div class="issue-card">
+      <div class="issue-num">ISSUE 01</div>
+      <div class="issue-title">Redundant features in Growth and Performance</div>
+      <div class="issue-desc">Growth says "Everything in Core, plus" but then re-lists "Monthly Growth System" and "Strategic alignment rhythm" — items already in Core. Performance does the same with "Monthly Growth System" and "Fractional CMO oversight". This reads as a copy error and undermines trust.</div>
+      <div class="issue-fix"><strong>Fix:</strong> Remove re-listed items from Growth and Performance. Only list genuinely new capabilities per tier.</div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-num">ISSUE 02</div>
+      <div class="issue-title">"Monthly Growth System" is a weak, generic name</div>
+      <div class="issue-desc">The playbook is GritFuel's primary delivery mechanism and proprietary IP. "Monthly Growth System" doesn't communicate that. It sounds like any other agency's monthly report. The product is already called the "Monthly Growth Playbook" in all other materials.</div>
+      <div class="issue-fix"><strong>Fix:</strong> Rename to "Monthly Growth Playbook" (or "Compounding Growth Playbook" at Performance tier to signal the intelligence layer activating).</div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-num">ISSUE 03</div>
+      <div class="issue-title">The credit model is invisible</div>
+      <div class="issue-desc">Credits are the core commercial mechanic — the thing that makes the model transparent and client-aligned. They're not mentioned anywhere on the pricing page. Clients have no way to understand how output scales with tier, or what "more" looks like in practice.</div>
+      <div class="issue-fix"><strong>Fix:</strong> Add a credit band indicator per tier (e.g., "40–60 credits / month" → "80–120 credits / month" → "140+ credits / month"). This shows progression without publishing a fixed price.</div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-num">ISSUE 04</div>
+      <div class="issue-title">The Compounding Engine is missing entirely</div>
+      <div class="issue-desc">The Compounding Engine is GritFuel's biggest differentiator — the thing that gets smarter every month. It doesn't appear anywhere in the pricing tiers. This is the IP that justifies staying long-term, and it's not even hinted at in the feature lists.</div>
+      <div class="issue-fix"><strong>Fix:</strong> Surface it as a named feature in Growth ("Compounding growth engine — active") and make it more explicit in Performance ("Full compounding engine + forecasting").</div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-num">ISSUE 05</div>
+      <div class="issue-title">Core tier uses passive, vague language</div>
+      <div class="issue-desc">"Focused execution support" and "Performance dashboards" are weak. GritFuel's tone is active: "we build, execute, optimise." Even the entry tier should feel like a purposeful growth system, not a support service. "Dashboards" also doesn't match the product name ("Live growth dashboard").</div>
+      <div class="issue-fix"><strong>Fix:</strong> Rename to "Focused channel execution" and "Live growth dashboard" to match the OS language and use active framing.</div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-num">BONUS</div>
+      <div class="issue-title">Consider: one "not included" signal per tier</div>
+      <div class="issue-desc">A single explicit exclusion per tier (e.g., Core: "Fractional CMO not included") creates a natural upgrade tension without being aggressive. It's a common SaaS pattern that makes the value of the next tier immediately obvious — especially for visitors who are evaluating Core vs. Growth.</div>
+      <div class="issue-fix"><strong>Fix:</strong> Add one greyed-out "not included" item at the bottom of Core and Growth. Keep it to one — don't overdo it.</div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- BEFORE -->
+  <div class="section-label" style="margin-bottom: 14px;">Current Version — with issues flagged</div>
+
+  <div class="tiers">
+    <!-- CORE BEFORE -->
+    <div class="tier">
+      <div class="tier-name">Core</div>
+      <div class="tier-headline">Clarity. Traction. Control.</div>
+      <div class="tier-sub">For organisations that need disciplined focus.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Includes</div>
+      <ul class="feature-list">
+        <li><span class="check">✓</span> Monthly Growth System <span class="problem-tag">weak name</span></li>
+        <li><span class="check">✓</span> Strategic alignment rhythm <span class="problem-tag">vague</span></li>
+        <li><span class="check">✓</span> Brand positioning refinement</li>
+        <li><span class="check">✓</span> Focused execution support <span class="problem-tag">passive</span></li>
+        <li><span class="check">✓</span> Performance dashboards <span class="problem-tag">wrong name</span></li>
+      </ul>
+      <div class="tier-tagline">Establish commercial momentum with precision.</div>
+    </div>
+
+    <!-- GROWTH BEFORE -->
+    <div class="tier growth">
+      <div class="tier-badge">Most Popular</div>
+      <div class="tier-name">Growth</div>
+      <div class="tier-headline">Repeatability. Optimisation. Expansion.</div>
+      <div class="tier-sub">For teams building a scalable engine.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Everything in Core, plus</div>
+      <ul class="feature-list">
+        <li class="redundant"><span class="check">✓</span> Monthly Growth System <span class="problem-tag">already in Core</span></li>
+        <li class="redundant"><span class="check">✓</span> Strategic alignment rhythm <span class="problem-tag">already in Core</span></li>
+        <li><span class="check">✓</span> Fractional CMO oversight</li>
+        <li><span class="check">✓</span> Multi-channel orchestration</li>
+        <li><span class="check">✓</span> Continuous creative production</li>
+        <li><span class="check">✓</span> Conversion optimisation</li>
+        <li><span class="check">✓</span> Structured experimentation framework</li>
+      </ul>
+      <div class="tier-tagline">Turn traction into predictable performance.</div>
+    </div>
+
+    <!-- PERFORMANCE BEFORE -->
+    <div class="tier">
+      <div class="tier-name">Performance</div>
+      <div class="tier-headline">Acceleration. Market Expansion. Efficiency at Scale.</div>
+      <div class="tier-sub">For organisations scaling aggressively.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Everything in Growth, plus</div>
+      <ul class="feature-list">
+        <li class="redundant"><span class="check">✓</span> Monthly Growth System <span class="problem-tag">already in Core</span></li>
+        <li class="redundant"><span class="check">✓</span> Fractional CMO oversight <span class="problem-tag">already in Growth</span></li>
+        <li><span class="check">✓</span> Advanced testing architecture</li>
+        <li><span class="check">✓</span> Forecasting and modelling</li>
+        <li><span class="check">✓</span> Increased production cadence</li>
+        <li><span class="check">✓</span> Multi-market rollout support</li>
+      </ul>
+      <div class="tier-tagline">Scale revenue with control and confidence.</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- AFTER -->
+  <div class="section-label" style="margin-bottom: 14px;">Suggested Version — cleaned up</div>
+
+  <div class="tiers">
+    <!-- CORE AFTER -->
+    <div class="tier">
+      <div class="tier-name">Core</div>
+      <div class="tier-headline">Clarity. Traction. Control.</div>
+      <div class="tier-sub">For organisations that need disciplined focus.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Includes</div>
+      <ul class="feature-list">
+        <li><span class="check">✓</span> Monthly Growth Playbook <span class="new-tag">renamed</span></li>
+        <li><span class="check">✓</span> Monthly strategy session</li>
+        <li><span class="check">✓</span> Brand positioning refinement</li>
+        <li><span class="check">✓</span> Focused channel execution (1–2 channels) <span class="new-tag">clarified</span></li>
+        <li><span class="check">✓</span> Live growth dashboard <span class="new-tag">renamed</span></li>
+        <li style="color:#ccc;"><span style="color:#ccc;">✗</span> <span style="color:#ccc; font-style:italic;">Fractional CMO oversight — not included</span></li>
+      </ul>
+      <div class="tier-tagline">Establish commercial momentum with precision.</div>
+      <div class="tier-credit-band">Typical capacity: <strong>40–60 credits / month</strong></div>
+    </div>
+
+    <!-- GROWTH AFTER -->
+    <div class="tier growth-after">
+      <div class="tier-badge">Most Popular</div>
+      <div class="tier-name">Growth</div>
+      <div class="tier-headline">Repeatability. Optimisation. Expansion.</div>
+      <div class="tier-sub">For teams building a scalable engine.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Everything in Core, plus</div>
+      <ul class="feature-list">
+        <li><span class="check">✓</span> Fractional CMO oversight <span class="new-tag">new in Growth</span></li>
+        <li><span class="check">✓</span> Multi-channel orchestration (3+ channels) <span class="new-tag">clarified</span></li>
+        <li><span class="check">✓</span> Compounding growth engine — active <span class="new-tag">added</span></li>
+        <li><span class="check">✓</span> Continuous creative production</li>
+        <li><span class="check">✓</span> Conversion optimisation</li>
+        <li><span class="check">✓</span> Structured experimentation framework</li>
+        <li style="color:#ccc;"><span style="color:#ccc;">✗</span> <span style="color:#ccc; font-style:italic;">Multi-market rollout — not included</span></li>
+      </ul>
+      <div class="tier-tagline">Turn traction into predictable performance.</div>
+      <div class="tier-credit-band">Typical capacity: <strong>80–120 credits / month</strong></div>
+    </div>
+
+    <!-- PERFORMANCE AFTER -->
+    <div class="tier">
+      <div class="tier-name">Performance</div>
+      <div class="tier-headline">Acceleration. Market Expansion. Efficiency at Scale.</div>
+      <div class="tier-sub">For organisations scaling aggressively.</div>
+      <hr class="tier-divider">
+      <div class="includes-label">Everything in Growth, plus</div>
+      <ul class="feature-list">
+        <li><span class="check">✓</span> Advanced testing architecture <span class="new-tag">new in Perf.</span></li>
+        <li><span class="check">✓</span> Forecasting and growth modelling <span class="new-tag">new in Perf.</span></li>
+        <li><span class="check">✓</span> Increased production cadence <span class="new-tag">new in Perf.</span></li>
+        <li><span class="check">✓</span> Multi-market rollout support <span class="new-tag">new in Perf.</span></li>
+        <li><span class="check">✓</span> Senior strategic intensity <span class="new-tag">added</span></li>
+      </ul>
+      <div class="tier-tagline">Scale revenue with control and confidence.</div>
+      <div class="tier-credit-band">Typical capacity: <strong>140+ credits / month</strong></div>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes-section">
+    <hr class="section-divider" style="margin-top:40px;">
+    <div class="section-label" style="margin-bottom:14px;">Additional Considerations</div>
+
+    <div class="note">
+      <div class="note-title">On "Structured experimentation framework" — worth a rename</div>
+      <div class="note-body">This is the right capability to feature in Growth, but the name is internal-sounding. Consider: "Monthly A/B testing framework" or "Structured growth experiments" — slightly more tangible for a prospect scanning the page quickly.</div>
+    </div>
+
+    <div class="note">
+      <div class="note-title">On credit bands — don't publish fixed numbers publicly yet</div>
+      <div class="note-body">The "40–60 credits / month" style indicator communicates scale and progression without locking you to a number. During Beta phase this is especially useful — you can adjust credit depth per client while the tier label stays consistent. If you prefer to keep it off the page entirely, at minimum consider adding it to the sales flow (scoping call, proposal) so prospects understand the volume difference.</div>
+    </div>
+
+    <div class="note">
+      <div class="note-title">On "Monthly strategy session" vs "Strategic alignment rhythm"</div>
+      <div class="note-body">"Rhythm" sounds like agency jargon. "Monthly strategy session" is concrete — it describes an actual thing that happens. If the cadence is different per tier (e.g., bi-weekly in Performance), that's worth surfacing: "Monthly strategy session" → "Bi-weekly strategy sessions" as an upgrade signal.</div>
+    </div>
+
+    <div class="note">
+      <div class="note-title">One open question: does Core include the Compounding Engine?</div>
+      <div class="note-body">Currently the Compounding Engine is listed as a Growth-and-above feature in this mockup. The argument for that: Core clients have less data history, and the engine becomes more valuable over time — so making it a Growth feature creates a natural upsell trigger at month 2–3. But you could also argue it should be in all tiers (it just outputs less on limited data). Worth a deliberate decision before locking the page.</div>
+    </div>
+  </div>
+
+  <div class="footer">GritFuel · Internal pricing review · April 2026</div>
+</div>
+</body>
+</html>

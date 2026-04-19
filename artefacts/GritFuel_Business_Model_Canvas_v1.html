@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Business Model Canvas v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #3C3C3C;
+    --lime: #DEE450;
+    --orange: #FC4E2B;
+    --gray: #929292;
+    --light: #F4F4F2;
+    --white: #FFFFFF;
+    --ink: #1E1E1E;
+    --hairline: #E5E5E3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--light); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; }
+  .wrap { max-width: 1600px; margin: 0 auto; padding: 40px 24px 64px; }
+
+  /* HEADER */
+  header { margin-bottom: 28px; position: relative; }
+  .eyebrow { font-weight: 600; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 48px; line-height: 1.0; letter-spacing: -1.4px; color: var(--charcoal); margin-bottom: 14px; }
+  h1 .accent { background: var(--lime); padding: 0 8px; }
+  .sub { font-size: 15px; color: var(--gray); max-width: 900px; line-height: 1.55; }
+  .meta-bar { display: grid; grid-template-columns: 2fr 2fr 1fr 1fr; gap: 0; margin-top: 24px; background: var(--charcoal); color: var(--white); }
+  .meta-bar > div { padding: 14px 20px; border-right: 1px solid #555; }
+  .meta-bar > div:last-child { border-right: none; }
+  .meta-bar .label { font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--lime); font-weight: 700; margin-bottom: 3px; }
+  .meta-bar .value { font-size: 13px; font-weight: 500; color: var(--white); }
+
+  /* CANVAS GRID */
+  .canvas {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    background: var(--charcoal);
+    padding: 1px;
+    min-height: 85vh;
+  }
+  .box {
+    background: var(--white);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    position: relative;
+  }
+  .col-split {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--charcoal);
+  }
+  .col-split .box { min-height: 260px; }
+
+  /* Box grid assignments */
+  .b-partners { grid-column: 1; grid-row: 1; }
+  .b-activities-resources { grid-column: 2; grid-row: 1; }
+  .b-valueprop { grid-column: 3; grid-row: 1; background: #fefff0; }
+  .b-relationships-channels { grid-column: 4; grid-row: 1; }
+  .b-segments { grid-column: 5; grid-row: 1; }
+  .b-cost { grid-column: 1 / 3; grid-row: 2; background: #fff7f4; }
+  .b-revenue { grid-column: 3 / 6; grid-row: 2; background: #f9fbe0; }
+
+  /* Box header */
+  .box-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    border-bottom: 2px solid var(--charcoal);
+  }
+  .box-head h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--charcoal);
+    text-transform: uppercase;
+  }
+  .box-head .icon {
+    width: 24px;
+    height: 24px;
+    background: var(--charcoal);
+    color: var(--lime);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .b-valueprop .box-head .icon { background: var(--lime); color: var(--charcoal); }
+  .b-cost .box-head .icon { background: var(--orange); color: var(--white); }
+  .b-revenue .box-head .icon { background: var(--lime); color: var(--charcoal); }
+
+  /* Content */
+  .box h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin: 12px 0 6px 0;
+  }
+  .box h3:first-of-type { margin-top: 0; }
+  .box ul {
+    list-style: none;
+    margin-bottom: 0;
+  }
+  .box li {
+    font-size: 12px;
+    color: var(--ink);
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 5px;
+    line-height: 1.45;
+  }
+  .box li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 2px;
+    background: var(--charcoal);
+  }
+  .box li strong { color: var(--charcoal); font-weight: 600; }
+  .box li em { font-style: normal; background: var(--lime); padding: 0 4px; color: var(--charcoal); font-weight: 600; }
+  .box .callout {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 8px 12px;
+    margin-top: auto;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .box .callout strong { color: var(--lime); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; font-size: 9px; display: block; margin-bottom: 2px; }
+
+  /* VP has special treatment */
+  .b-valueprop .lead-vp {
+    background: var(--charcoal);
+    color: var(--white);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--lime);
+  }
+  .b-valueprop .lead-vp .lead-kicker {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 4px;
+  }
+  .b-valueprop .lead-vp .lead-body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--white);
+  }
+
+  /* Economics summary at bottom-right */
+  .economics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .economics .econ-card {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .economics .econ-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .economics .econ-value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--charcoal);
+    letter-spacing: -0.3px;
+  }
+  .economics .econ-note {
+    font-size: 10px;
+    color: var(--gray);
+    margin-top: 2px;
+  }
+
+  /* Cost structure split */
+  .cost-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Open questions section */
+  .questions-sec { margin-top: 40px; background: var(--white); border: 1px solid var(--hairline); padding: 28px 32px; }
+  .questions-sec h3 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--charcoal); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .questions-sec .q-sub { color: var(--gray); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; font-weight: 600; }
+  .q-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .q-grid > div { padding: 16px; background: var(--light); border-left: 4px solid var(--orange); }
+  .q-grid h4 { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; color: var(--charcoal); margin-bottom: 8px; letter-spacing: 0.2px; }
+  .q-grid ul { list-style: none; }
+  .q-grid li { font-size: 12px; line-height: 1.55; color: #3a3a3a; padding-left: 14px; position: relative; margin-bottom: 6px; }
+  .q-grid li::before { content: "?"; position: absolute; left: 0; top: 0; color: var(--orange); font-weight: 800; font-family: 'Montserrat', sans-serif; }
+
+  /* Footer */
+  footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--hairline); color: var(--gray); font-size: 11px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--charcoal); font-size: 13px; letter-spacing: -0.3px; }
+  footer .logo .dot { color: var(--lime); }
+  footer .note { font-style: italic; }
+
+  /* Responsive */
+  @media (max-width: 1200px) {
+    h1 { font-size: 36px; }
+    .canvas { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .b-partners, .b-activities-resources, .b-valueprop, .b-relationships-channels, .b-segments, .b-cost, .b-revenue { grid-column: auto; grid-row: auto; }
+    .cost-split, .q-grid, .economics { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .canvas { grid-template-columns: 1fr; }
+    .cost-split, .q-grid, .economics { grid-template-columns: 1fr; }
+    .meta-bar { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: white; }
+    .wrap { padding: 12px; max-width: none; }
+    .canvas { min-height: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">BMC · v1 · First Draft · Internal</div>
+  <h1>Business Model <span class="accent">Canvas</span></h1>
+  <p class="sub">Strategyzer 9-box applied to GritFuel's current business model (Hybrid pricing v7, beta launch). A first pass synthesising the Context Doc, Deep Dive v2, and Assumption Tactics v1 into the canonical nine-part view.</p>
+  <div class="meta-bar">
+    <div><div class="label">Designed for</div><div class="value">GritFuel · Growth Operating System</div></div>
+    <div><div class="label">Designed by</div><div class="value">Ruben &amp; team · with Claude</div></div>
+    <div><div class="label">Date</div><div class="value">18 April 2026</div></div>
+    <div><div class="label">Version</div><div class="value">v1 — first draft</div></div>
+  </div>
+</header>
+
+<div class="canvas">
+
+  <!-- KEY PARTNERSHIPS -->
+  <div class="box b-partners">
+    <div class="box-head"><div class="icon">⟲</div><h2>Key Partnerships</h2></div>
+
+    <h3>Core delivery (common ownership)</h3>
+    <ul>
+      <li><strong>.frank</strong> — brand strategy, positioning, creative, identity</li>
+      <li><strong>Bluegyfu</strong> — paid media, performance, analytics, tech</li>
+      <li><strong>BFL (Brandformance Live)</strong> — events, activations, experiential</li>
+    </ul>
+
+    <h3>Capital &amp; Referral</h3>
+    <ul>
+      <li>Pre-seed investors (€300k raise in progress)</li>
+      <li><em>VC &amp; accelerator partners</em> — preferred-partner, embedded-resource, or strategic-alliance models</li>
+    </ul>
+
+    <h3>Talent &amp; Tech</h3>
+    <ul>
+      <li>External dev + Tech Lead (Q4 Y1 hire)</li>
+      <li>Senior strategist pool (EU-wide, being mapped)</li>
+      <li>Specialist freelancers via Router (outer creative layer)</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Structural note</strong>
+      Core partners share common ownership with GritFuel — related-party structure, not an arms-length partner pyramid.
+    </div>
+  </div>
+
+  <!-- KEY ACTIVITIES + KEY RESOURCES -->
+  <div class="col-split">
+    <div class="box">
+      <div class="box-head"><div class="icon">⚡</div><h2>Key Activities</h2></div>
+      <h3>Client-facing</h3>
+      <ul>
+        <li>Monthly <strong>Playbook</strong> generation (per-client execution contract)</li>
+        <li>Compounding Engine <strong>scoring</strong> (4 signals → Compound Score)</li>
+        <li>Strategy sessions — dedicated strategist cadence</li>
+        <li>Dashboard operations &amp; attribution reconciliation</li>
+      </ul>
+      <h3>Operational</h3>
+      <ul>
+        <li>Brief writing &amp; partner routing (Escalation Router)</li>
+        <li>Content · SEO · PR · Social · Email (delivered in-house)</li>
+      </ul>
+      <h3>Growth</h3>
+      <ul>
+        <li>Category-building — founder POV, whitepapers, conference presence</li>
+        <li>Founder-led sales (first 20 clients)</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <div class="box-head"><div class="icon">◉</div><h2>Key Resources</h2></div>
+      <h3>IP &amp; Data</h3>
+      <ul>
+        <li><strong>GritFuel OS</strong> — 5 integrated tools</li>
+        <li><strong>Compounding Engine</strong> scoring methodology</li>
+        <li><em>Accumulated client growth data</em> — moat compounds monthly</li>
+      </ul>
+      <h3>Human</h3>
+      <ul>
+        <li>Strategist capacity — <strong>binding constraint</strong> (6 clients/FTE)</li>
+        <li>Founders' EU + SSA expertise &amp; networks</li>
+      </ul>
+      <h3>Brand &amp; Capital</h3>
+      <ul>
+        <li>"Growth Operating System" category position</li>
+        <li>gritfuel.works · brand system</li>
+        <li>€300k pre-seed runway (18 months)</li>
+        <li>Rights-of-first-call with core partners at 75% credit-pool cost</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- VALUE PROPOSITIONS -->
+  <div class="box b-valueprop">
+    <div class="box-head"><div class="icon">★</div><h2>Value Propositions</h2></div>
+
+    <div class="lead-vp">
+      <div class="lead-kicker">Category Claim</div>
+      <div class="lead-body">The first Growth Operating System — strategy, execution, and compounding intelligence in one monthly subscription.</div>
+    </div>
+
+    <h3>For the Founder / CEO</h3>
+    <ul>
+      <li><strong>One contract</strong> replaces 3–5 vendors — strategy + execution together</li>
+      <li><strong>Compounding Engine</strong> kills the agency "monthly reset"</li>
+      <li><strong>Compound Score</strong> — one board-ready progress metric</li>
+      <li><strong>70%</strong> of EU benchmark pricing · paid media <strong>at cost</strong></li>
+      <li><strong>Senior thinking at ~€55k/yr</strong> — no €180k CMO hire required</li>
+      <li><strong>Attribution clarity</strong> — answer "where did each euro go" with evidence</li>
+    </ul>
+
+    <h3>Structural edge</h3>
+    <ul>
+      <li>Data that <strong>accumulates</strong> — switching cost grows over time</li>
+      <li><em>EU + SSA bridge</em> — unique for founders with Africa ambitions</li>
+      <li>Variable-cost growth function that scales with revenue</li>
+    </ul>
+  </div>
+
+  <!-- CUSTOMER RELATIONSHIPS + CHANNELS -->
+  <div class="col-split">
+    <div class="box">
+      <div class="box-head"><div class="icon">♡</div><h2>Customer Relationships</h2></div>
+      <h3>Core</h3>
+      <ul>
+        <li><strong>Dedicated strategist</strong> — named, photographed, long-term</li>
+        <li>Founder-level access during beta (first 20 clients)</li>
+        <li>Monthly Playbook review + Dashboard walkthrough</li>
+      </ul>
+      <h3>Rhythm &amp; Trust</h3>
+      <ul>
+        <li><strong>Compound Score email</strong> 1st of every month — shareable</li>
+        <li>Beta cohort community (Slack + founder office hours)</li>
+        <li>Co-created onboarding — 7-section intake wizard</li>
+      </ul>
+      <h3>Transparency</h3>
+      <ul>
+        <li>Real-time credit tracker — utilisation, rollover, forecast</li>
+        <li>Cancel-anytime, month-to-month contract</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <div class="box-head"><div class="icon">→</div><h2>Channels</h2></div>
+      <h3>Inbound</h3>
+      <ul>
+        <li>gritfuel.works — website + diagnostic on-ramp</li>
+        <li>Founder POV content (LinkedIn, podcasts, essays)</li>
+        <li>Whitepaper &amp; thought-leadership distribution</li>
+      </ul>
+      <h3>Outbound &amp; Partner</h3>
+      <ul>
+        <li><strong>Founder-led sales</strong> — direct intros, email + LinkedIn</li>
+        <li><strong>VC &amp; accelerator referrals</strong> — portfolio intros</li>
+        <li>Beta cohort referrals — peer-to-peer introductions</li>
+        <li>Conference presence — EU tech + SSA startup events</li>
+      </ul>
+      <h3>On-ramp</h3>
+      <ul>
+        <li><em>"Month 0" diagnostic</em> — €500–1k paid entry (proposed)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CUSTOMER SEGMENTS -->
+  <div class="box b-segments">
+    <div class="box-head"><div class="icon">◎</div><h2>Customer Segments</h2></div>
+
+    <h3>Primary — EU tech SME</h3>
+    <ul>
+      <li>Founders / CEOs · 10–200 FTE · €50–500k mktg budget</li>
+      <li>Series A or ARR €1–20M · digital-first · active growth mandate</li>
+      <li><strong>Anxious Founder</strong> archetype — risk-reduction buyer</li>
+      <li><strong>Confident Founder</strong> archetype — leverage buyer</li>
+    </ul>
+
+    <h3>Secondary — EU → SSA Bridge</h3>
+    <ul>
+      <li>European companies expanding into African markets</li>
+      <li>Small TAM (~450 SAM) but highest structural differentiation</li>
+    </ul>
+
+    <h3>Tertiary — SSA digital-first</h3>
+    <ul>
+      <li>Lagos · Nairobi · Cape Town · Johannesburg</li>
+      <li>Separate JTBD — canvas to follow, not translated from EU</li>
+    </ul>
+
+    <h3>Partner audience (not customers)</h3>
+    <ul>
+      <li>VCs &amp; accelerators — portfolio referral &amp; ecosystem alliances</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Beta target</strong>
+      First 20 clients = EU Primary only. SSA + Bridge activate post-seed.
+    </div>
+  </div>
+
+  <!-- COST STRUCTURE -->
+  <div class="box b-cost">
+    <div class="box-head"><div class="icon">€</div><h2>Cost Structure</h2></div>
+    <div class="cost-split">
+      <div>
+        <h3>Variable (per client)</h3>
+        <ul>
+          <li><strong>Partner delivery</strong> — 75% of credit pool (invisible to client)</li>
+          <li>Paid media — pass-through at cost, no markup</li>
+          <li>Credit-layer margin: <strong>25%</strong></li>
+        </ul>
+        <h3>Fixed / service layer</h3>
+        <ul>
+          <li>Strategists (binding constraint — 6 clients / FTE)</li>
+          <li>Internal delivery: content · SEO · PR · social · email</li>
+          <li>Operations · Client Success · tooling</li>
+          <li>Fixed-layer margin: <strong>47%</strong></li>
+        </ul>
+      </div>
+      <div>
+        <h3>€300k pre-seed allocation</h3>
+        <ul>
+          <li><strong>40%</strong> Go-to-market (conferences · paid · visits)</li>
+          <li><strong>27%</strong> Tech &amp; product (dev + Tech Lead)</li>
+          <li><strong>25%</strong> Operating runway buffer (ramp gap)</li>
+          <li><strong>8%</strong> Setup &amp; working capital (BV · legal · tools)</li>
+        </ul>
+        <h3>Scaling dynamics</h3>
+        <ul>
+          <li>All-in GM: <strong>35%</strong> · GM/client/mo: <strong>€1,697</strong></li>
+          <li>63% of GM from fixed layer — expands with Phase 3 automation</li>
+          <li>Post-Phase 3: margin expansion without adding HC or partner cost</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVENUE STREAMS -->
+  <div class="box b-revenue">
+    <div class="box-head"><div class="icon">$</div><h2>Revenue Streams</h2></div>
+
+    <h3>Primary — Monthly Subscription (Hybrid v7)</h3>
+    <ul>
+      <li><strong>Core</strong> €3,500/mo · 70 credits · €1,750 fixed + €1,750 credit pool</li>
+      <li><strong>Growth</strong> €5,250/mo · 110 credits · €2,500 fixed + €2,750 credit pool</li>
+      <li><strong>Performance</strong> €8,000/mo · 180 credits · €3,500 fixed + €4,500 credit pool</li>
+      <li>1 credit = €25 output · 3-month rollover · 70% of EU benchmark</li>
+    </ul>
+
+    <h3>Secondary &amp; Proposed</h3>
+    <ul>
+      <li>Credit <strong>overage</strong> — additional credits priced at €25/credit</li>
+      <li><em>Month 0 diagnostic</em> — €500–1k on-ramp (proposed)</li>
+      <li><em>Flat-fee Core tier</em> — fallback for abstraction-resistant buyers (proposed)</li>
+      <li>Paid media passes through at cost — not a revenue stream, no markup</li>
+    </ul>
+
+    <div class="economics">
+      <div class="econ-card"><div class="econ-label">Tier mix</div><div class="econ-value">50/35/15</div><div class="econ-note">Core · Growth · Performance</div></div>
+      <div class="econ-card"><div class="econ-label">Blended MRR</div><div class="econ-value">€4,788</div><div class="econ-note">per client</div></div>
+      <div class="econ-card"><div class="econ-label">Blended ARR</div><div class="econ-value">€57,450</div><div class="econ-note">per client</div></div>
+      <div class="econ-card"><div class="econ-label">LTV : CAC</div><div class="econ-value">~41×</div><div class="econ-note">€136k LTV · €3.3k Y2 CAC</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- OPEN QUESTIONS -->
+<section class="questions-sec">
+  <h3>Open questions for iteration</h3>
+  <div class="q-sub">Things this v1 doesn't resolve — worth flagging before v2</div>
+  <div class="q-grid">
+    <div>
+      <h4>Commercial</h4>
+      <ul>
+        <li>Should the "Month 0" diagnostic replace the discovery call entirely, and be mandatory before any subscription?</li>
+        <li>Does a flat-fee Core tier cannibalise the credit model, or recover otherwise-lost segment?</li>
+        <li>What triggers credit-pool resizing across tiers? Should Performance be uncapped at €X/credit?</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Structural</h4>
+      <ul>
+        <li>Should VCs/accelerators sit in <em>Key Partners</em> (referral channel) or <em>Customer Segments</em> (paying partner)?</li>
+        <li>Does SSA need its own canvas, or is it a variation of this one with pricing + partner differences?</li>
+        <li>Do we optimise Y1–Y2 for <strong>client count</strong> (moat) or <strong>ARPU</strong> (margin)?</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Operational</h4>
+      <ul>
+        <li>What's the SLA on the Compound Score being delivered every month — and what happens when it slips?</li>
+        <li>How does credit rollover handle churn — refund, lapse, or credit-back?</li>
+        <li>When does the senior-strategist pool become a formal talent program vs. ad-hoc contracting?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">GritFuel<span class="dot">.</span>works — Business Model Canvas v1</div>
+  <div class="note">Strategyzer BMC framework · Based on Hybrid v7 pricing · Internal working doc · April 2026</div>
+</footer>
+
+</div>
+</body>
+</html>

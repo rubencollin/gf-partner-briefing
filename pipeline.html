@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pipeline Plan · GritFuel Partner Briefing</title>
+<meta name="description" content="There is no pipeline yet. This is the plan to build one before 18 May official launch — what has to resolve, who owns it, and what a realistic cohort one looks like.">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* Zero-state hero panel */
+  .zero-panel {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-l);
+    padding: var(--s-7) var(--s-7);
+    margin: var(--s-5) 0 var(--s-7);
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--s-6);
+    align-items: center;
+  }
+  .zero-panel .zero-num {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 160px;
+    line-height: 0.85;
+    color: var(--lime);
+    letter-spacing: -6px;
+  }
+  .zero-panel .zero-body h3 { color: var(--paper); font-family: var(--f-display); font-weight: 800; font-size: 22px; margin: 0 0 var(--s-3); text-transform: none; letter-spacing: -0.01em; }
+  .zero-panel .zero-body p { color: rgba(250,250,247,0.78); font-size: 14px; margin: 0; }
+  .zero-panel .zero-body strong { color: var(--lime); font-weight: 600; }
+
+  /* Gate list */
+  .gates { display: grid; grid-template-columns: 1fr; gap: var(--s-3); margin: var(--s-5) 0 var(--s-7); }
+  .gate {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-m);
+    padding: var(--s-4) var(--s-5);
+    display: grid;
+    grid-template-columns: 70px 1fr 220px;
+    gap: var(--s-4);
+    align-items: start;
+  }
+  .gate .gate-num {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    background: var(--lime);
+    padding: 6px 8px;
+    border-radius: 4px;
+    text-align: center;
+    text-transform: uppercase;
+    height: fit-content;
+  }
+  .gate .gate-body h4 { font-family: var(--f-body); font-weight: 700; font-size: 15.5px; color: var(--ink); margin: 0 0 4px; text-transform: none; letter-spacing: 0; }
+  .gate .gate-body p { font-size: 13.5px; color: var(--charcoal); margin: 0; }
+  .gate .gate-owner { font-family: var(--f-mono); font-size: 10.5px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.65; }
+  .gate .gate-owner strong { color: var(--ink); font-weight: 700; }
+  .gate .gate-owner a { color: var(--orange); text-decoration: none; border-bottom: 1px dashed rgba(252,78,43,0.35); }
+
+  .gate.blocker { border-left: 4px solid var(--orange); }
+  .gate.enabler { border-left: 4px solid var(--lime-dark); }
+
+  /* Target shape card */
+  .target-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-m);
+    padding: var(--s-5) var(--s-6);
+    margin-bottom: var(--s-5);
+  }
+  .target-row { display: grid; grid-template-columns: 180px 1fr; gap: var(--s-4); padding: var(--s-3) 0; border-bottom: 1px dashed var(--gray-200); font-size: 14px; }
+  .target-row:last-child { border-bottom: 0; }
+  .target-row .k { font-family: var(--f-mono); font-size: 10.5px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; padding-top: 2px; }
+  .target-row .v { color: var(--ink); }
+  .target-row .v em { color: var(--orange); font-style: normal; font-weight: 600; }
+
+  /* Honest read panel */
+  .read {
+    background: var(--lime-50, #F4F6D3);
+    border-left: 4px solid var(--lime);
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+    padding: var(--s-5) var(--s-6);
+    margin-top: var(--s-5);
+  }
+  .read h4 { font-family: var(--f-body); font-weight: 700; font-size: 15px; color: var(--ink); margin: 0 0 var(--s-2); text-transform: none; letter-spacing: 0; }
+  .read p { font-size: 14px; color: var(--charcoal); margin: 0; }
+  .read strong { color: var(--ink); }
+
+  @media (max-width: 820px) {
+    .zero-panel { grid-template-columns: 1fr; text-align: center; }
+    .zero-panel .zero-num { font-size: 100px; }
+    .gate { grid-template-columns: 1fr; }
+    .target-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html">Brand</a>
+      <a href="04-finance.html">Operating Model</a>
+      <a href="05-gtm.html">GTM</a>
+      <a href="decisions.html">Decisions</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="launch.html">Launch</a>
+      <a href="risks.html">Risks</a>
+      <a href="pipeline.html" class="active">Pipeline</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <img class="hero-icon" src="assets/icons/loop.svg" alt="">
+    <span class="eyebrow">Pipeline Plan · Cohort One</span>
+    <h1 class="display">
+      There is <span class="accent">no pipeline yet</span>.<br>
+      This is how we build one.
+    </h1>
+    <p class="lead">
+      Honest page. Zero conversations, zero warm intros, zero LOIs, nothing in a CRM. Any "numbers" would be invented. What follows isn't a funnel — it's the short list of things that have to resolve between now and 18 May for a cohort-one pipeline to form at all. (Soft launch on 22 April is feedback-gathering with the inner circle; outbound and cohort-one intake open at official launch.)
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<section class="band" style="padding-top: var(--s-7);">
+  <div class="container">
+
+    <!-- ZERO PANEL -->
+    <div class="zero-panel">
+      <div class="zero-num">0</div>
+      <div class="zero-body">
+        <h3>Signed · In proposal · In outreach · In a CRM.</h3>
+        <p>
+          Four zeros. Not a problem we hide — it's the starting point this briefing is honest about. An 18 May official launch means the <strong>first serious outbound conversation</strong> still has to happen. Soft-launch meetings starting 22 April are inner-circle, not pipeline. Everything on this page is upstream of 18 May.
+        </p>
+      </div>
+    </div>
+
+    <!-- WHAT MUST RESOLVE -->
+    <div class="section-head">
+      <span class="eyebrow">Prerequisites · in order</span>
+      <h2>What has to exist before a pipeline can.</h2>
+      <p>Six gates, five of which are open decisions the group hasn't made. Until they resolve, any outbound is speculative — the positioning, the geo, the owner, and the tracking don't exist yet.</p>
+    </div>
+
+    <div class="gates">
+
+      <div class="gate blocker">
+        <div class="gate-num">Gate 01</div>
+        <div class="gate-body">
+          <h4>Decide geography: NL-only, or NL + SA in parallel?</h4>
+          <p>Shapes the outbound list. You cannot write a target list without knowing whether it's a list of one country or two. NL €500k–€5m and SA R5M–R100M is the current working hypothesis but has not been committed by the group.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> Tlali lead · all in<br><a href="decisions.html">→ Decision 05</a></div>
+      </div>
+
+      <div class="gate blocker">
+        <div class="gate-num">Gate 02</div>
+        <div class="gate-body">
+          <h4>Decide who does the outbound.</h4>
+          <p>Partner rotation, junior BDR hire, or results-only outbound partner. Each commits different capacity and cost. No outbound happens until this is called — and that directly determines whether cohort one signs in May or July.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> all partners<br><a href="decisions.html">→ Decision 06</a></div>
+      </div>
+
+      <div class="gate blocker">
+        <div class="gate-num">Gate 03</div>
+        <div class="gate-body">
+          <h4>Decide the beachhead shape — narrow or horizontal?</h4>
+          <p>Consumer DTC and vertical SaaS are the two working candidates. Narrow cohort-one means cleaner positioning and faster pattern-matching; horizontal means broader signal and slower learning. Partners have strong priors here and they diverge — worth surfacing now, not at month three.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> all partners · post-launch review<br><a href="decisions.html">→ Decision 07</a></div>
+      </div>
+
+      <div class="gate enabler">
+        <div class="gate-num">Gate 04</div>
+        <div class="gate-body">
+          <h4>Stand up CRM tracking before any first call.</h4>
+          <p>HubSpot Starter or Attio — the call doesn't matter, the existence does. Tracking outbound in a spreadsheet past three conversations is how intelligence disappears. Stage, owner, next action, decline reason — all of that has to be captured from call one.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> Ruben<br><strong>By:</strong> 27 April 2026</div>
+      </div>
+
+      <div class="gate enabler">
+        <div class="gate-num">Gate 05</div>
+        <div class="gate-body">
+          <h4>Activate partner-referral channels from day one.</h4>
+          <p>The 60/30/10 split allocates ~30% of cohort one to partner-led referrals. Tlali and Kim's networks are the first expression of that. "Activation" means a named list each of <em>five people you would actually introduce us to</em>, held in the CRM, worked through in May. Not a vibe — a list.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> Tlali + Kim<br><strong>By:</strong> 18 May 2026</div>
+      </div>
+
+      <div class="gate enabler">
+        <div class="gate-num">Gate 06</div>
+        <div class="gate-body">
+          <h4>Agree what "cohort one" is supposed to prove.</h4>
+          <p>Before we talk conversion, we need to agree what conversion would even mean. Cohort one is a learning vehicle, not a revenue vehicle — it has to produce data across the tier mix, and at least one client who uses the credit pool the way the model assumes. That's the success definition; the target size follows.</p>
+        </div>
+        <div class="gate-owner"><strong>Owner:</strong> all partners · before 18 May<br>Review mid-May.</div>
+      </div>
+
+    </div>
+
+    <!-- TARGET SHAPE -->
+    <div class="section-head" style="margin-top: var(--s-7);">
+      <span class="eyebrow">Cohort-one target shape</span>
+      <h3>What we're aiming for — and what it would have to look like.</h3>
+      <p class="small">These are working assumptions. None of them are proven yet; they shape the outbound once the gates above resolve.</p>
+    </div>
+
+    <div class="target-card">
+      <div class="target-row">
+        <div class="k">Cohort-one size</div>
+        <div class="v"><strong>3–5 signed</strong> by end of May; 6–8 as stretch. Smaller than instinct says — cohort one is a learning run, not a revenue run. Each client generates more signal than any tier-mix model predicts.</div>
+      </div>
+      <div class="target-row">
+        <div class="k">Tier mix</div>
+        <div class="v">Aim for at least one in each tier — Core, Growth, Performance. Without that, we don't get signal on whether the Hybrid cost model holds across tiers. <em>See Fixed-Cost Model.</em></div>
+      </div>
+      <div class="target-row">
+        <div class="k">Geo split</div>
+        <div class="v">Resolves with Decision 05. If NL + SA: 3:2 working ratio. If NL-only: all five NL, SA phases in at cohort two.</div>
+      </div>
+      <div class="target-row">
+        <div class="k">Source mix</div>
+        <div class="v">60% founder-direct · 30% partner-referral · 10% inbound. The partner-referral share only materialises if Gate 05 lands. Otherwise the model quietly defaults to 100% founder-direct — which it <em>shouldn't</em>.</div>
+      </div>
+      <div class="target-row">
+        <div class="k">Conversion assumption</div>
+        <div class="v"><em>Unknown</em>. We have no cohort-derived conversion rate — anything we quote would be a guess. First real data lands after the first five intake calls.</div>
+      </div>
+      <div class="target-row">
+        <div class="k">First measurable moment</div>
+        <div class="v">End of May. Not "signed revenue" — that's the wrong bar. The real bar is: <em>did anyone engage an intake call, did any partner refer anyone, and did the CRM catch it?</em></div>
+      </div>
+    </div>
+
+    <div class="read">
+      <h4>The honest read.</h4>
+      <p>
+        Zero is an honest number. A pipeline doesn't exist yet because the prerequisites don't exist yet — and the prerequisites are the six decisions this briefing is built around. <strong>If the partner group resolves Gates 01–03 by soft launch (22 April) and commits to Gates 04–06 during the inner-circle window before 18 May</strong>, cohort one is reachable in June. If those gates slip, cohort one slips with them — and every week of slippage compresses the measurement window before the first iteration of the product has to land.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="pager">
+      <a class="prev" href="risks.html">
+        <span class="eyebrow">← Back</span>
+        <span class="title">Risk Register</span>
+      </a>
+      <a class="next" href="index.html">
+        <span class="eyebrow">Next →</span>
+        <span class="title">Back to Overview</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="small">GritFuel · Partner Briefing · Pipeline Plan</span>
+      <span class="small">v1.1 · 18 April 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

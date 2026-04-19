@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Readiness · GritFuel Partner Briefing</title>
+<meta name="description" content="Red / amber / green snapshot for the two-phase launch: soft 22 April (inner circle) and official 18 May 2026. What's ready, what's at risk, what needs partner sign-off.">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .countdown-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-3);
+    margin: var(--s-5) 0 var(--s-5);
+  }
+  .count-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--s-5) var(--s-6);
+    border-radius: var(--radius-m);
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+  }
+  .count-box .num { font-family: var(--f-display); font-weight: 900; font-size: 72px; line-height: 1; color: var(--lime); letter-spacing: -3px; }
+  .count-box .lbl { font-family: var(--f-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gray); }
+
+  .rag-bar {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-m);
+    padding: var(--s-5);
+    margin: 0 0 var(--s-5);
+  }
+  .rag-bar-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-bottom: var(--s-4);
+  }
+  .rag-bar-title {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+  .rag-bar-title em { font-style: normal; color: var(--gray); font-family: var(--f-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; margin-left: var(--s-3); }
+  .rag-bar-legend {
+    display: flex;
+    gap: var(--s-4);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--charcoal);
+  }
+  .rag-bar-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .rag-bar-legend .d { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .rag-bar-legend .d.g { background: #7FB800; }
+  .rag-bar-legend .d.a { background: #FFB547; }
+  .rag-bar-legend .d.r { background: var(--orange); }
+  .rag-bar-track {
+    display: flex;
+    height: 44px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .seg.g { background: #7FB800; color: var(--ink); }
+  .seg.a { background: #FFB547; color: var(--ink); }
+  .seg.r { background: var(--orange); color: var(--paper); }
+
+  .rag-section { margin: var(--s-7) 0; }
+  .rag-section h3 {
+    font-family: var(--f-body);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--charcoal);
+    margin-bottom: var(--s-4);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .rag-grid { display: grid; gap: var(--s-3); }
+  .rag-row {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-left: 4px solid var(--gray-300);
+    border-radius: var(--radius-m);
+    padding: var(--s-4) var(--s-5);
+    display: grid;
+    grid-template-columns: 60px 1fr 140px;
+    gap: var(--s-4);
+    align-items: center;
+  }
+  .rag-row.g { border-left-color: #7FB800; }
+  .rag-row.a { border-left-color: #FFB547; }
+  .rag-row.r { border-left-color: var(--orange); }
+
+  .rag-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    font-family: var(--f-display); font-weight: 800; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white);
+  }
+  .rag-dot.g { background: #7FB800; }
+  .rag-dot.a { background: #FFB547; color: var(--ink); }
+  .rag-dot.r { background: var(--orange); }
+
+  .rag-body h4 { font-family: var(--f-body); font-weight: 700; font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--ink); margin: 0 0 4px; }
+  .rag-body p { font-size: 13.5px; color: var(--charcoal); margin: 0; }
+  .rag-owner { font-family: var(--f-mono); font-size: 10.5px; color: var(--gray); text-align: right; text-transform: uppercase; letter-spacing: 0.08em; }
+  .rag-owner strong { color: var(--charcoal); }
+
+  .legend { display: flex; gap: var(--s-5); font-family: var(--f-mono); font-size: 11px; color: var(--charcoal); margin-bottom: var(--s-5); padding: var(--s-4); background: var(--white); border-radius: var(--radius-m); border: 1px solid var(--gray-200); }
+  .legend .item { display: flex; align-items: center; gap: var(--s-2); }
+  .legend .d { width: 12px; height: 12px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html">Brand</a>
+      <a href="04-finance.html">Operating Model</a>
+      <a href="05-gtm.html">GTM</a>
+      <a href="decisions.html">Decisions</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="launch.html" class="active">Launch</a>
+      <a href="risks.html">Risks</a>
+      <a href="pipeline.html">Pipeline</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <img class="hero-icon" src="assets/icons/execution.svg" alt="">
+    <span class="eyebrow">Launch Readiness · Soft 22 April · Official 18 May 2026</span>
+    <h1 class="display">
+      <span class="accent">3 days</span> to soft launch.
+    </h1>
+    <p class="lead">
+      Honest read on what's ready for the <strong>22 April soft launch</strong> to our inner circle, what's at risk, and what's blocked. Inner-circle feedback across the four weeks that follow shapes the <strong>18 May official launch</strong>. Reviewed together until 22 April. This page owns the clock so the section pages can stay focused on decisions.
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<section class="band" style="padding-top: var(--s-7);">
+  <div class="container">
+    <div class="countdown-row">
+      <div class="count-box"><div class="num">3</div><div class="lbl">Days to<br>soft launch<br><span style="color:var(--paper); opacity:0.6;">22 April</span></div></div>
+      <div class="count-box"><div class="num">29</div><div class="lbl">Days to<br>official launch<br><span style="color:var(--paper); opacity:0.6;">18 May</span></div></div>
+    </div>
+
+    <div class="rag-bar">
+      <div class="rag-bar-head">
+        <div class="rag-bar-title">18 workstreams<em>status distribution</em></div>
+        <div class="rag-bar-legend">
+          <span><i class="d g"></i>9 Green</span>
+          <span><i class="d a"></i>7 Amber</span>
+          <span><i class="d r"></i>2 Red</span>
+        </div>
+      </div>
+      <div class="rag-bar-track">
+        <div class="seg g" style="flex: 9">9</div>
+        <div class="seg a" style="flex: 7">7</div>
+        <div class="seg r" style="flex: 2">2</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="item"><span class="d" style="background:#7FB800;"></span> Green — ready or will be by 22 April soft launch</div>
+      <div class="item"><span class="d" style="background:#FFB547;"></span> Amber — at risk; workable but needs attention</div>
+      <div class="item"><span class="d" style="background:var(--orange);"></span> Red — blocked; needs a partner call</div>
+    </div>
+
+    <!-- PRODUCT-ENGINEERING -->
+    <div class="rag-section">
+      <h3>Product-engineering — a strategic conversation, not a launch blocker</h3>
+      <div class="rag-grid">
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Capability split needs naming</h4>
+            <p>Positioning GritFuel as a Growth OS surfaces a capability line we haven't drawn yet. Three lanes of work — automation, integration, product-engineering — need naming, and one of them (product-engineering) sits outside the partnership's original service shape. Not a launch blocker, but a conversation we owe each other soon. See <a href="04-finance.html#capability-map">capability map</a> and <a href="decisions.html">Decision 00</a>.</p>
+          </div>
+          <div class="rag-owner">All · <strong>Capability map</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Hire path for first engineer / dev shop</h4>
+            <p>Three options on the table — phased equity-for-work contractor, straight contractor, or dev shop + revenue-share. WBSO + MIT / Innovation Credit NL look promising for cost offset. Workable once the capability conversation lands. Build order is already clear: (1) harden the OS, (2) automate the ALC Menu.</p>
+          </div>
+          <div class="rag-owner">All · <strong>Post-capability call</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SITE -->
+    <div class="rag-section">
+      <h3>Site — gritfuel.works</h3>
+      <div class="rag-grid">
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Staging site live</h4>
+            <p>gritfuel.works staging rendering cleanly. Nav + content + hero flow confirmed.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Homepage hero copy</h4>
+            <p>Copy is drafted. Final line depends on Decision 02 (GritFuel OS vs Monthly Growth System as the front door). Blocks final push.</p>
+          </div>
+          <div class="rag-owner">Kim · <strong>Decision 02</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Display typography</h4>
+            <p>Live site uses editorial serif; Brand Guide v2 calls for Montserrat sans. Decision 03 resolves. Change is 30 min of CSS work once called.</p>
+          </div>
+          <div class="rag-owner">Kim · <strong>Decision 03</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Logo + ".works" label treatment</h4>
+            <p>Logomark-with-label locked for off-site use (helps memorise domain). Logomark-only on our own properties. Consistent across briefing + site.</p>
+          </div>
+          <div class="rag-owner"><strong>Locked</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Contact + intake form route</h4>
+            <p>Wired to Ruben's inbox. Onboarding Intake tool lives behind it. Works end-to-end in staging.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT -->
+    <div class="rag-section">
+      <h3>Product — GritFuel OS</h3>
+      <div class="rag-grid">
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Tool 01 · Onboarding Intake</h4>
+            <p>Form + logic + delivery working. Demo-ready.</p>
+          </div>
+          <div class="rag-owner"><strong>Micha</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Tool 02 · Growth Dashboard</h4>
+            <p>Compound Score computation + four compounding signals rendering. Client-facing hero (pending Decision 01).</p>
+          </div>
+          <div class="rag-owner"><strong>Micha</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Tool 03 · Compounding Engine</h4>
+            <p>Logic spec is complete; implementation at ~70%. Will be demo-ready for cohort one; full automation lands later.</p>
+          </div>
+          <div class="rag-owner">Micha · <strong>Stretch for 18 May</strong></div>
+        </div>
+        <div class="rag-row r">
+          <div class="rag-dot r">R</div>
+          <div class="rag-body">
+            <h4>Tool 04 · Escalation &amp; Handoff Router</h4>
+            <p>Logic spec done. Start-state (human-in-the-loop vs automated) is Decision 08. Can't build until called — but human-in-the-loop fallback is workable on day one.</p>
+          </div>
+          <div class="rag-owner">Micha · <strong>Decision 08</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Tool 05 · Dynamic Credit Allocation</h4>
+            <p>Scoping Configurator + ALC Menu linked. Quote generation working.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben / Micha</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Monthly Playbook template</h4>
+            <p>Example Playbook lives in briefing. Template + generation process defined.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPERATING -->
+    <div class="rag-section">
+      <h3>Operating — pricing, billing, contracts</h3>
+      <div class="rag-grid">
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Pricing v7 locked for sales calls</h4>
+            <p>Core €3,500 · Growth €5,250 · Performance €8,000. 70 / 110 / 180 credits. €25 per credit. Fixed + credit-pool split. Internal-only — public site stays price-free in beta.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Credit counts on public site?</h4>
+            <p>Decision 04. Either way is workable; changes homepage section above the fold.</p>
+          </div>
+          <div class="rag-owner">All · <strong>Decision 04</strong></div>
+        </div>
+        <div class="rag-row r">
+          <div class="rag-dot r">R</div>
+          <div class="rag-body">
+            <h4>Client contract template</h4>
+            <p>Draft exists. Legal review not yet scheduled. Needs BV lawyer sign-off before first signed client. Not blocking soft launch but blocks first contract — target resolved before 18 May.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben · by 26 April</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Delivery-partner cost-share</h4>
+            <p>75% to .frank / Bluegyfu / BFL on Stream 2. Verbally agreed. Paperwork follows the first invoice.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Fixed-Cost Model + Headcount Plan</h4>
+            <p>Both live as xlsx in the briefing. Model tells us what Stream 1 must earn; capacity plan tells us what we can actually run.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GTM -->
+    <div class="rag-section">
+      <h3>GTM — cohort one</h3>
+      <div class="rag-grid">
+        <div class="rag-row r">
+          <div class="rag-dot r">R</div>
+          <div class="rag-body">
+            <h4>Target-logo list for cohort one</h4>
+            <p>Doesn't exist yet. Depends on Decision 05 (NL + SA parallel, or NL-only) before any list can be written. Zero prospects in outreach; zero in a CRM. See <a href="pipeline.html">Pipeline Plan</a>.</p>
+          </div>
+          <div class="rag-owner">Tlali · <strong>Decision 05</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Outbound capacity</h4>
+            <p>Decision 06 sets the model (partner-rotation / BDR / outbound partner). Until called, Ruben is the default outbound owner — not sustainable past 5 clients.</p>
+          </div>
+          <div class="rag-owner">All · <strong>Decision 06</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Sales deck (Investor + Partner)</h4>
+            <p>VC & Accelerator Partner Deck + Investor Deck v1.1 both live in uploads. Minor touch-ups post-Decision 02.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Assumption-to-Tactic map</h4>
+            <p>Published. Gives the group the shared language for why we're making which GTM call.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben / Tlali</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RHYTHM -->
+    <div class="rag-section">
+      <h3>Team rhythm to launch</h3>
+      <div class="rag-grid">
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Partner briefing published (this site)</h4>
+            <p>Living doc. Updated as decisions resolve. Source of truth through 22 April soft launch, then rolled forward to 18 May as inner-circle feedback lands.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>Mon 20 April — decision sync</h4>
+            <p>60-min call. Pre-launch decisions 01–06. Tlali / Micha / Kim / Ruben. Needs scheduling.</p>
+          </div>
+          <div class="rag-owner">All · <strong>Needs invite</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Tue 21 April — go/no-go for soft launch</h4>
+            <p>All six pre-launch calls resolved. Any last red-flag items escalate here. 45 min.</p>
+          </div>
+          <div class="rag-owner"><strong>All</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Wed 22 April — soft launch</h4>
+            <p>Site pushes to production for our inner circle. Introductory meetings with trusted advisors and friendly founders begin this week. Their feedback is the point — not outbound, not scale.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+        <div class="rag-row a">
+          <div class="rag-dot a">A</div>
+          <div class="rag-body">
+            <h4>22 April – mid May — inner-circle feedback + refinement</h4>
+            <p>Weekly refinement cadence. Ruben consolidates feedback, partners weigh in on any substantive shifts. Any ambers above should resolve to green during this window.</p>
+          </div>
+          <div class="rag-owner"><strong>All</strong></div>
+        </div>
+        <div class="rag-row g">
+          <div class="rag-dot g">G</div>
+          <div class="rag-body">
+            <h4>Mon 18 May — official launch</h4>
+            <p>Public launch. Outbound begins. First pilot cohort intake opens. The refined story goes wide.</p>
+          </div>
+          <div class="rag-owner"><strong>Ruben</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="callout lime">
+      <h4>The honest read</h4>
+      <p style="margin:0;">
+        Two reds and seven ambers — all of them resolve with a decision from the four of us, not with more building. The product-engineering question is a strategic conversation we owe each other, not a launch blocker. That's the point of the Mon 20 April sync. Product and site are largely green; the constraints are commitments, not code. Soft launch on 22 April gives us four weeks of live signal before the official 18 May.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="pager">
+      <a class="prev" href="decisions.html">
+        <span class="eyebrow">← Back</span>
+        <span class="title">Decisions</span>
+      </a>
+      <a class="next" href="risks.html">
+        <span class="eyebrow">Next →</span>
+        <span class="title">Risk Register</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="small">GritFuel · Partner Briefing · Launch Readiness</span>
+      <span class="small">v1.1 · 19 April 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

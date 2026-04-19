@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monthly Playbook · May 2026 · Helio — GritFuel</title>
+<meta name="description" content="An example Monthly Playbook — the artefact a GritFuel client signs off at the start of each new cycle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1A1A;
+    --charcoal: #3C3C3C;
+    --gray-900: #1A1A1A;
+    --gray-700: #3C3C3C;
+    --gray: #929292;
+    --gray-300: #D9D9D4;
+    --gray-200: #E8E8E3;
+    --gray-100: #F1F1ED;
+    --paper: #FAFAF7;
+    --white: #FFFFFF;
+    --lime: #DEE450;
+    --lime-dark: #B8BE3A;
+    --lime-50: #F4F6D3;
+    --orange: #FC4E2B;
+    --orange-50: #FFE4DC;
+
+    --f-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    --f-body: 'Inter', -apple-system, sans-serif;
+    --f-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+    --radius-s: 6px;
+    --radius-m: 12px;
+    --radius-l: 20px;
+
+    --s-1: 4px;
+    --s-2: 8px;
+    --s-3: 16px;
+    --s-4: 24px;
+    --s-5: 32px;
+    --s-6: 48px;
+    --s-7: 64px;
+    --s-8: 96px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--f-body);
+    color: var(--ink);
+    background: var(--gray-100);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--ink); }
+
+  /* ── PAGE SHELL ── */
+  .shell {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: var(--s-5) var(--s-4) var(--s-8);
+  }
+
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    margin-bottom: var(--s-4);
+  }
+  .home-link:hover { color: var(--ink); }
+
+  /* ── COVER CARD ── */
+  .cover {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-l);
+    padding: var(--s-6) var(--s-6) var(--s-5);
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: "";
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(222,228,80,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .cover-brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: var(--s-3);
+    margin-bottom: var(--s-5);
+  }
+  .cover-brand .wm { color: var(--lime); font-weight: 800; letter-spacing: 0.2em; }
+  .cover-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: var(--s-3);
+  }
+  .cover h1 {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--s-4);
+  }
+  .cover h1 .accent { color: var(--lime); }
+  .cover-lead {
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.78);
+    max-width: 680px;
+    margin-bottom: var(--s-5);
+  }
+
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-3);
+    padding-top: var(--s-4);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .cover-meta .cell .label {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 4px;
+  }
+  .cover-meta .cell .val {
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--paper);
+    line-height: 1.1;
+  }
+  .cover-meta .cell .sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+  /* ── SIGN-OFF BANNER ── */
+  .signoff {
+    margin-top: var(--s-4);
+    background: var(--lime);
+    color: var(--ink);
+    border-radius: var(--radius-m);
+    padding: var(--s-4) var(--s-5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-4);
+    flex-wrap: wrap;
+  }
+  .signoff .left {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .signoff .mid {
+    font-size: 14px;
+    color: var(--ink);
+    flex: 1 1 400px;
+    min-width: 240px;
+  }
+  .signoff .mid strong { font-weight: 700; }
+  .signoff .btn {
+    background: var(--ink);
+    color: var(--lime);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* ── SECTION ── */
+  section.s {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-l);
+    padding: var(--s-6);
+    margin-top: var(--s-5);
+  }
+  section.s.dark {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  section.s.dark h2, section.s.dark h3, section.s.dark h4,
+  section.s.dark .s-head p, section.s.dark strong { color: var(--paper); }
+  section.s.dark .s-head .eyebrow { color: var(--lime); }
+  section.s.dark p { color: rgba(255,255,255,0.78); }
+
+  .s-head { margin-bottom: var(--s-5); max-width: 760px; }
+  .s-head .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: var(--s-2);
+    display: inline-block;
+  }
+  .s-head h2 {
+    font-family: var(--f-display);
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+  .s-head p { font-size: 15.5px; line-height: 1.65; color: var(--charcoal); }
+
+  /* ── KPI CARDS ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-3);
+    margin-bottom: var(--s-5);
+  }
+  .kpi {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-m);
+    padding: var(--s-4);
+  }
+  .kpi .label {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: var(--s-2);
+  }
+  .kpi .val {
+    font-family: var(--f-display);
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .kpi .val.lime { color: var(--lime-dark); }
+  .kpi .val.orange { color: var(--orange); }
+  .kpi .sub { font-size: 12px; color: var(--gray); }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: var(--white);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+  section.s.dark table { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.08); }
+  thead th {
+    background: var(--gray-100);
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-700);
+    font-weight: 700;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  section.s.dark thead th { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.08); }
+  tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--charcoal);
+    vertical-align: top;
+  }
+  section.s.dark tbody td { color: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.06); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td.num { font-family: var(--f-mono); font-weight: 700; color: var(--ink); text-align: right; white-space: nowrap; }
+  section.s.dark tbody td.num { color: var(--paper); }
+  tbody tr.total td {
+    background: var(--ink);
+    color: var(--lime);
+    font-family: var(--f-mono);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 12.5px;
+  }
+  tbody tr.total td.num { color: var(--lime); font-size: 16px; letter-spacing: 0; }
+  .cell-strong { font-weight: 600; color: var(--ink); }
+  .cell-muted { color: var(--gray); font-size: 12.5px; }
+  .cell-trend { color: var(--lime-dark); font-weight: 600; font-size: 12.5px; }
+  .cell-ok { color: #3F8E3F; font-weight: 600; }
+
+  /* ── STATUS CHIPS ── */
+  .chip {
+    display: inline-block;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 99px;
+    line-height: 1.5;
+  }
+  .chip.in-progress { background: var(--orange-50); color: #B8401F; border: 1px solid #FFBFA3; }
+  .chip.scheduled { background: var(--gray-100); color: var(--charcoal); border: 1px solid var(--gray-300); }
+  .chip.done { background: var(--lime-50); color: #5E6A1F; border: 1px solid #D7E270; }
+
+  .init-num {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--orange);
+  }
+
+  /* ── INITIATIVE ── */
+  .init {
+    border-top: 6px solid var(--lime);
+    background: var(--white);
+    border-radius: var(--radius-l);
+    padding: var(--s-5) var(--s-5);
+    border: 1px solid var(--gray-200);
+    border-top: 6px solid var(--lime);
+    margin-top: var(--s-4);
+  }
+  .init.o { border-top-color: var(--orange); }
+  .init.k { border-top-color: var(--ink); }
+  .init .top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-2); }
+  .init .top .no { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--gray); text-transform: uppercase; }
+  .init .top .cr { font-family: var(--f-mono); font-size: 12px; color: var(--gray); }
+  .init .top .cr strong { color: var(--ink); font-weight: 700; }
+  .init h3 { font-family: var(--f-display); font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: var(--s-3); }
+  .init .ob {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: var(--s-2) var(--s-3);
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--gray-100);
+    border-radius: var(--radius-s);
+    padding: var(--s-3) var(--s-4);
+    margin-bottom: var(--s-4);
+  }
+  .init .ob .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--gray); text-transform: uppercase; padding-top: 2px; }
+
+  .sub-head {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-700);
+    margin: var(--s-4) 0 var(--s-2);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .dep {
+    font-size: 11.5px;
+    color: var(--gray);
+    font-style: italic;
+    display: block;
+    margin-top: 3px;
+  }
+  .dep::before { content: "⚑ "; color: var(--orange); font-style: normal; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--gray-100);
+    border-left: 4px solid var(--ink);
+    border-radius: var(--radius-s);
+    padding: var(--s-3) var(--s-4);
+    margin-top: var(--s-3);
+    font-size: 14px;
+    color: var(--charcoal);
+    line-height: 1.55;
+  }
+  .callout.lime { background: var(--lime-50); border-left-color: var(--lime-dark); }
+  .callout.orange { background: var(--orange-50); border-left-color: var(--orange); }
+  .callout h4 {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  /* ── 2-COLUMN GRID ── */
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+  }
+
+  .list-clean { list-style: none; margin-top: var(--s-2); }
+  .list-clean li {
+    font-size: 14px;
+    color: var(--charcoal);
+    padding: 6px 0 6px 22px;
+    position: relative;
+  }
+  .list-clean li::before {
+    content: "→";
+    color: var(--lime-dark);
+    position: absolute;
+    left: 0;
+    font-family: var(--f-mono);
+    font-weight: 700;
+  }
+  section.s.dark .list-clean li { color: rgba(255,255,255,0.82); }
+
+  /* ── STRATEGIST NOTE ── */
+  .strategist {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-l);
+    padding: var(--s-6);
+    margin-top: var(--s-5);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--s-4);
+    align-items: start;
+  }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--lime), var(--lime-dark));
+    color: var(--ink);
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -0.02em;
+  }
+  .strategist .eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--lime); text-transform: uppercase; margin-bottom: var(--s-2); }
+  .strategist p { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,0.82); margin-bottom: var(--s-2); }
+  .strategist .sig { font-family: var(--f-display); font-weight: 700; color: var(--paper); margin-top: var(--s-3); }
+  .strategist .sig-sub { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--gray); text-transform: uppercase; }
+
+  /* ── FOOTER ── */
+  .page-foot {
+    margin-top: var(--s-6);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+
+  @media (max-width: 780px) {
+    .cover-meta, .kpi-row, .grid2 { grid-template-columns: 1fr 1fr; }
+    .cover h1 { font-size: 40px; }
+    .strategist { grid-template-columns: 1fr; }
+    .avatar { margin: 0 auto; }
+    section.s { padding: var(--s-4); }
+    .init .ob { grid-template-columns: 1fr; }
+    .init .ob .k { padding-top: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .cover-meta { grid-template-columns: 1fr; }
+    table, thead, tbody, th, td, tr { font-size: 13px; }
+    thead th, tbody td { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="../02-product.html" class="home-link">← Partner Briefing · 02 Product</a>
+
+  <!-- ── COVER ────────────────────────────────────────────────── -->
+  <div class="cover">
+    <div class="cover-brand">
+      <span class="wm">GRITFUEL · GROWTH OPERATING SYSTEM</span>
+      <span>Example · For partner briefing</span>
+    </div>
+    <div class="cover-eyebrow">Monthly Growth Playbook · May 2026</div>
+    <h1>
+      May 2026.<br>
+      Helio's next <span class="accent">compounding cycle</span>.
+    </h1>
+    <p class="cover-lead">
+      The plan Helio's founder signs off today. Month 3 of the engagement shifts from discovery and positioning into full execution — three initiatives running in parallel: messaging refresh, content velocity, and demand generation. 118 of 125 credits are committed.
+    </p>
+
+    <div class="cover-meta">
+      <div class="cell">
+        <div class="label">Client</div>
+        <div class="val">Helio</div>
+        <div class="sub">DACH · Benelux observability SaaS</div>
+      </div>
+      <div class="cell">
+        <div class="label">Tier · Month</div>
+        <div class="val">Growth · 3 of 12</div>
+        <div class="sub">125 credits / month</div>
+      </div>
+      <div class="cell">
+        <div class="label">Lead strategist</div>
+        <div class="val">Kim van der Berg</div>
+        <div class="sub">Next review · 1 June 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGN-OFF BANNER -->
+  <div class="signoff">
+    <span class="left">Start-of-cycle sign-off</span>
+    <div class="mid">
+      This Playbook is the <strong>commitment document for the coming month</strong>. Once you sign it off, these initiatives, credits and success metrics are what GritFuel will run against. Changes mid-cycle flow through the Escalation Router.
+    </div>
+    <a href="#" class="btn" onclick="alert('Demo only — would open the e-signature flow');return false;">Approve the plan →</a>
+  </div>
+
+  <!-- ── MONTH AT A GLANCE ───────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">01 · Month at a glance</span>
+      <h2>Three initiatives. 118 credits committed. 7 held for ad-hoc.</h2>
+      <p>Discovery, ICP definition, and positioning are locked from Months 1–2. May is the month Helio moves into execution across brand, content, and demand. All three initiatives share a single dependency: the positioning document in Week 1.</p>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="label">This month's focus</div>
+        <div class="val">Execution</div>
+        <div class="sub">Brand · Content · Demand</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Credits allocated</div>
+        <div class="val lime">118 / 125</div>
+        <div class="sub">Committed this month</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Initiatives active</div>
+        <div class="val">3</div>
+        <div class="sub">Running in parallel</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Credits held back</div>
+        <div class="val orange">7</div>
+        <div class="sub">Roll-over buffer for June</div>
+      </div>
+    </div>
+
+    <h3 class="sub-head">Credit allocation — May 2026</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 40px;">#</th>
+          <th>Initiative</th>
+          <th>Deliverables included</th>
+          <th style="text-align:right;">Credits</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cell-strong">01</td>
+          <td class="cell-strong">Brand &amp; Messaging Refresh</td>
+          <td>Positioning doc, messaging house, 3 web page rewrites</td>
+          <td class="num">42</td>
+        </tr>
+        <tr>
+          <td class="cell-strong">02</td>
+          <td class="cell-strong">SEO Content Engine</td>
+          <td>4 pillar articles, keyword map, internal linking plan</td>
+          <td class="num">48</td>
+        </tr>
+        <tr>
+          <td class="cell-strong">03</td>
+          <td class="cell-strong">LinkedIn Demand Generation</td>
+          <td>Campaign brief, 3 ad sets, copy + creative direction</td>
+          <td class="num">28</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="cell-muted">Held back for June</td>
+          <td class="cell-muted">Available for ad-hoc requests</td>
+          <td class="num cell-muted">7</td>
+        </tr>
+        <tr class="total">
+          <td></td>
+          <td colspan="2">Total committed</td>
+          <td class="num">125</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── CONTEXT FROM APRIL ──────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">02 · Context feeding this plan</span>
+      <h2>What April's Dashboard told us.</h2>
+      <p>This is the signal that informed May's initiatives. April closed ahead of target across the board, so May doubles down on what's working (organic, LinkedIn) rather than pivoting the mix.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th style="text-align:right;">Apr actual</th>
+          <th style="text-align:right;">Benchmark</th>
+          <th style="text-align:right;">vs. target</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Website sessions</td>
+          <td class="num">3,240</td>
+          <td class="num cell-muted">3,000</td>
+          <td class="num cell-ok">+8%</td>
+          <td class="cell-trend">↑ Growing</td>
+        </tr>
+        <tr>
+          <td>Organic traffic share</td>
+          <td class="num">41%</td>
+          <td class="num cell-muted">35%</td>
+          <td class="num cell-ok">+6pp</td>
+          <td class="cell-trend">↑ Growing</td>
+        </tr>
+        <tr>
+          <td>LinkedIn page followers</td>
+          <td class="num">1,180</td>
+          <td class="num cell-muted">1,000</td>
+          <td class="num cell-ok">+18%</td>
+          <td class="cell-trend">↑ Ahead of target</td>
+        </tr>
+        <tr>
+          <td>Email open rate</td>
+          <td class="num">34.2%</td>
+          <td class="num cell-muted">28%</td>
+          <td class="num cell-ok">+6.2pp</td>
+          <td class="cell-trend">↑ Above benchmark</td>
+        </tr>
+        <tr>
+          <td>Demo requests (inbound)</td>
+          <td class="num">7</td>
+          <td class="num cell-muted">5</td>
+          <td class="num cell-ok">+40%</td>
+          <td class="cell-trend">↑ Above target</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="cell-muted" style="margin-top: var(--s-3); font-size: 12px;">Trailing 30-day figures. Demo requests via HubSpot form submissions only. Full breakdown in the Growth Dashboard.</p>
+  </section>
+
+  <!-- ── HOW REVIEWS WORK ────────────────────────────────────── -->
+  <section class="s dark">
+    <div class="s-head">
+      <span class="eyebrow">03 · How reviews work</span>
+      <h2>Async-first. One live anchor per month.</h2>
+      <p>GritFuel operates on an async-first review model. This keeps delivery moving, protects your calendar, and means you never need to book a call to unblock work. Every deliverable ships with a structured review brief and a 72-hour feedback window.</p>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h4 class="sub-head" style="color: var(--lime); border-color: rgba(255,255,255,0.1);">How each deliverable is reviewed</h4>
+        <ul class="list-clean">
+          <li><strong>Delivered to the shared workspace</strong> — Google Drive or Notion. You receive a notification with a direct link.</li>
+          <li><strong>Review brief included</strong> — each deliverable ships with a short note: what to focus on, what decision to make, what feedback format works best.</li>
+          <li><strong>Feedback via inline comments</strong> — one consolidated round per deliverable keeps things clean.</li>
+          <li><strong>72-hour window</strong> — standard review period. If feedback isn't received, we follow up once and the revision carries forward.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="sub-head" style="color: var(--lime); border-color: rgba(255,255,255,0.1);">Live sessions</h4>
+        <ul class="list-clean">
+          <li><strong>Monthly Playbook review (30 min)</strong> — included in all tiers. Walk through the Dashboard, confirm this month's priorities, flag any strategic shifts.</li>
+          <li><strong>Strategy sessions (à la carte)</strong> — when scope genuinely needs a live working session (GTM workshop, positioning sprint). Priced in credits against the ALC Menu.</li>
+        </ul>
+        <div class="callout" style="margin-top: var(--s-4); background: rgba(255,255,255,0.06); border-left-color: var(--lime); color: rgba(255,255,255,0.82);">
+          <h4 style="color: var(--lime);">Revision rounds</h4>
+          <p style="margin:0;">One revision round per deliverable is already priced into the initiative. Additional rounds draw from your monthly allocation or rollover — you'll always know the credit cost before we proceed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INITIATIVE 01 ───────────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">Initiative 01 · Brand &amp; Messaging Refresh</span>
+      <h2>Sharpen positioning for the enterprise IT buyer.</h2>
+      <p>42 credits · Weeks 1–3 May · Lead: Kim · Dependency chain anchors the whole month.</p>
+    </div>
+
+    <div class="init">
+      <div class="top">
+        <span class="no">Initiative 01 · 42 credits · 4 deliverables</span>
+        <span class="cr"><strong>Weeks 1–3</strong> · 72-hr review windows</span>
+      </div>
+      <h3>Brand &amp; Messaging Refresh</h3>
+
+      <div class="ob">
+        <div class="k">Objective</div>
+        <div>Sharpen Helio's positioning for the enterprise IT buyer segment identified in Month 2 discovery. Rewrite core messaging and update homepage, product and pricing pages to reflect the new ICP and competitive differentiation.</div>
+        <div class="k">Approach</div>
+        <div>Positioning workshop output first, then a 3-level messaging hierarchy (category / company / product). GritFuel rewrites homepage hero, product overview and pricing copy. Copy-to-live handoff pack included.</div>
+      </div>
+
+      <h4 class="sub-head">Deliverables this month</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Deliverable</th>
+            <th>Week</th>
+            <th>Review</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cell-strong">Positioning &amp; ICP Narrative</td>
+            <td>Week 1</td>
+            <td>72 hrs</td>
+            <td><span class="chip in-progress">In progress</span></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Messaging House (3-level hierarchy)</span>
+              <span class="dep">Depends on: Positioning doc approved</span>
+            </td>
+            <td>Week 2</td>
+            <td>72 hrs</td>
+            <td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Homepage Rewrite (hero + value props)</span>
+              <span class="dep">Depends on: Messaging house approved</span>
+            </td>
+            <td>Week 2</td>
+            <td>72 hrs</td>
+            <td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Product Page Rewrite (2 pages)</span>
+              <span class="dep">Depends on: Messaging house approved</span>
+            </td>
+            <td>Week 3</td>
+            <td>72 hrs</td>
+            <td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Pricing Page Rewrite</span>
+              <span class="dep">Depends on: Messaging house approved</span>
+            </td>
+            <td>Week 3</td>
+            <td>72 hrs</td>
+            <td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout orange">
+        <h4>Client action required</h4>
+        The positioning document (Week 1) is the hard dependency for everything else in this initiative. Consolidated feedback within 72 hours keeps the month on schedule.
+      </div>
+
+      <h4 class="sub-head">Success metrics</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>KPI</th>
+            <th>Target</th>
+            <th>How we measure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Messaging clarity (internal review)</td><td class="cell-strong">4.5 / 5</td><td>Structured review vs. ICP brief</td></tr>
+          <tr><td>Homepage bounce rate</td><td class="cell-strong">&lt; 58%</td><td>Google Analytics — 30d post-launch</td></tr>
+          <tr><td>Demo conversion (homepage)</td><td class="cell-strong">&gt; 2.5%</td><td>HubSpot form submissions / sessions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── INITIATIVE 02 ───────────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">Initiative 02 · SEO Content Engine Launch</span>
+      <h2>Four pillars, one keyword map, a compounding asset for the next 12 months.</h2>
+      <p>48 credits · Weeks 1–4 May · Lead: Kim + content specialist.</p>
+    </div>
+
+    <div class="init o">
+      <div class="top">
+        <span class="no">Initiative 02 · 48 credits · 6 deliverables</span>
+        <span class="cr"><strong>Weeks 1–4</strong> · 48-hr review windows on pillars</span>
+      </div>
+      <h3>SEO Content Engine Launch</h3>
+
+      <div class="ob">
+        <div class="k">Objective</div>
+        <div>Establish Helio's content engine with four high-intent pillar articles targeting decision-stage enterprise buyers. Build the keyword infrastructure and internal linking plan that compounds over 6–12 months.</div>
+        <div class="k">Approach</div>
+        <div>Keyword cluster mapping from current ranking data and competitor gap analysis. Four pillars drafted, optimised and published. Internal linking plan connects pillars to the relevant product pages.</div>
+      </div>
+
+      <h4 class="sub-head">Deliverables this month</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Deliverable</th>
+            <th>Week</th>
+            <th>Review</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="cell-strong">Keyword Cluster Map (8 target clusters)</td><td>Week 1</td><td class="cell-muted">No review</td><td><span class="chip in-progress">In progress</span></td></tr>
+          <tr><td class="cell-strong">Pillar #1 — "IT Monitoring for Scale"</td><td>Week 1</td><td>48 hrs</td><td><span class="chip in-progress">In progress</span></td></tr>
+          <tr><td class="cell-strong">Pillar #2 — "Reducing Alert Fatigue"</td><td>Week 2</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr><td class="cell-strong">Pillar #3 — "SRE vs. DevOps Tools"</td><td>Week 3</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr><td class="cell-strong">Pillar #4 — "Enterprise Observability"</td><td>Week 4</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr><td class="cell-strong">Internal Linking Plan</td><td>Week 4</td><td class="cell-muted">No review</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="sub-head">Success metrics</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>KPI</th>
+            <th>Target</th>
+            <th>How we measure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Organic impressions (GSC)</td><td class="cell-strong">+15% MoM by July</td><td>Google Search Console</td></tr>
+          <tr><td>Keyword rankings (target terms)</td><td class="cell-strong">8 in top 20 by June</td><td>Ahrefs rank tracking</td></tr>
+          <tr><td>Blog sessions per article</td><td class="cell-strong">&gt; 250 in first 30 days</td><td>Google Analytics</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── INITIATIVE 03 ───────────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">Initiative 03 · LinkedIn Demand Generation</span>
+      <h2>Build the campaign in May. Launch paid in June.</h2>
+      <p>28 credits · Weeks 2–4 May · Goes live 1 June. Paid media spend billed separately.</p>
+    </div>
+
+    <div class="init k">
+      <div class="top">
+        <span class="no">Initiative 03 · 28 credits · 6 deliverables</span>
+        <span class="cr"><strong>Weeks 2–4</strong> · Live 1 June</span>
+      </div>
+      <h3>LinkedIn Demand Generation</h3>
+
+      <div class="ob">
+        <div class="k">Objective</div>
+        <div>Design and brief a 6-week LinkedIn paid campaign targeting VP Engineering and Head of SRE at companies with 200–2,000 employees in DACH and Benelux. Campaign goes live June following creative production.</div>
+        <div class="k">Approach</div>
+        <div>Campaign architecture, audience strategy and ad copy produced this month. Creative direction brief to design team. HubSpot attribution configured before launch. Paid media ad spend billed separately on the invoice.</div>
+      </div>
+
+      <h4 class="sub-head">Deliverables this month</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Deliverable</th>
+            <th>Week</th>
+            <th>Review</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="cell-strong">Campaign Brief &amp; Architecture</td><td>Week 2</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr><td class="cell-strong">Audience Strategy (3 segments)</td><td>Week 2</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Ad Copy — 3 ad sets × 3 variations</span>
+              <span class="dep">Depends on: Campaign brief approved</span>
+            </td>
+            <td>Week 3</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <span class="cell-strong">Creative Direction Brief</span>
+              <span class="dep">Depends on: Campaign brief approved</span>
+            </td>
+            <td>Week 3</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td>
+          </tr>
+          <tr><td class="cell-strong">HubSpot Attribution Setup</td><td>Week 4</td><td class="cell-muted">No review</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+          <tr><td class="cell-strong">Launch Readiness Report</td><td>Week 4</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="sub-head">Success metrics (measured in June)</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>KPI</th>
+            <th>Target</th>
+            <th>How we measure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cost per lead (CPL)</td><td class="cell-strong">&lt; 90 credits equiv.</td><td>LinkedIn Campaign Manager + HubSpot</td></tr>
+          <tr><td>Click-through rate (CTR)</td><td class="cell-strong">&gt; 0.6%</td><td>LinkedIn Campaign Manager</td></tr>
+          <tr><td>Demo requests from LinkedIn (June)</td><td class="cell-strong">≥ 5 in first 2 weeks</td><td>HubSpot source attribution</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── DELIVERY TIMELINE ────────────────────────────────────── -->
+  <section class="s dark">
+    <div class="s-head">
+      <span class="eyebrow">04 · Delivery timeline</span>
+      <h2>All deliverables, in week order.</h2>
+      <p>Items flagged with ⚑ have a dependency — they can't begin until the preceding deliverable is approved. Timely feedback keeps the whole month on track.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Deliverable</th>
+          <th>Initiative</th>
+          <th>Review</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-strong">Wk 1</td><td>Positioning &amp; ICP Narrative</td><td>01</td><td>72 hrs</td><td><span class="chip in-progress">In progress</span></td></tr>
+        <tr><td class="cell-strong">Wk 1</td><td>Keyword Cluster Map</td><td>02</td><td class="cell-muted">No review</td><td><span class="chip in-progress">In progress</span></td></tr>
+        <tr><td class="cell-strong">Wk 1</td><td>Pillar #1 — IT Monitoring for Scale</td><td>02</td><td>48 hrs</td><td><span class="chip in-progress">In progress</span></td></tr>
+        <tr><td class="cell-strong">Wk 2</td><td>⚑ Messaging House <span class="dep" style="display:inline; margin:0;">depends on positioning</span></td><td>01</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 2</td><td>Homepage Rewrite</td><td>01</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 2</td><td>Pillar #2 — Reducing Alert Fatigue</td><td>02</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 2</td><td>Campaign Brief &amp; Audience Strategy</td><td>03</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 3</td><td>Product Page Rewrite (2 pages)</td><td>01</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 3</td><td>Pricing Page Rewrite</td><td>01</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 3</td><td>Pillar #3 — SRE vs. DevOps Tools</td><td>02</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 3</td><td>⚑ Ad Copy (3 ad sets)</td><td>03</td><td>72 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 3</td><td>⚑ Creative Direction Brief</td><td>03</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 4</td><td>Pillar #4 — Enterprise Observability</td><td>02</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 4</td><td>Internal Linking Plan</td><td>02</td><td class="cell-muted">No review</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 4</td><td>HubSpot Attribution Setup</td><td>03</td><td class="cell-muted">No review</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+        <tr><td class="cell-strong">Wk 4</td><td>Launch Readiness Report</td><td>03</td><td>48 hrs</td><td><span class="chip scheduled">Scheduled</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── NEXT MONTH PREVIEW ──────────────────────────────────── -->
+  <section class="s">
+    <div class="s-head">
+      <span class="eyebrow">05 · Next month preview</span>
+      <h2>Where June takes this.</h2>
+      <p>Not a commitment yet — Helio signs off June's Playbook at the end of May, after the Dashboard refreshes with this month's signal. This is the current forecast shape.</p>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h4 class="sub-head">Planned initiatives</h4>
+        <ul class="list-clean">
+          <li><strong>LinkedIn campaign goes live</strong> — full campaign managed by GritFuel, Wk 1 June.</li>
+          <li><strong>Email nurture sequence</strong> — 5-email onboarding drip for trial sign-ups.</li>
+          <li><strong>Mid-funnel case study</strong> — first client story from the pilot programme.</li>
+          <li><strong>Monthly Playbook review</strong> — 30 min, 1 June 2026. Agenda sent 48 hrs prior.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="sub-head">Credit outlook — June</h4>
+        <table>
+          <tbody>
+            <tr><td>Monthly allocation</td><td class="num">125 cr</td></tr>
+            <tr><td>+ May rollover</td><td class="num cell-ok">+7 cr</td></tr>
+            <tr class="total"><td>Total available</td><td class="num">132 cr</td></tr>
+            <tr><td class="cell-muted">Est. committed</td><td class="num cell-muted">~95 cr</td></tr>
+          </tbody>
+        </table>
+        <div class="callout lime" style="margin-top: var(--s-4);">
+          <h4>Decision point</h4>
+          June's Playbook arrives for sign-off on <strong>28 May</strong>. Confirm this month's positioning sharpens the ICP, and we'll bake that into next month's demand assets.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STRATEGIST NOTE ─────────────────────────────────────── -->
+  <div class="strategist">
+    <div class="avatar">K</div>
+    <div>
+      <div class="eyebrow">Strategist's note</div>
+      <p>The positioning document in Week 1 is the dependency that shapes the rest of the month. Once that's approved, the messaging house, the web copy rewrites and the LinkedIn brief all move in parallel. Please prioritise your review and send consolidated feedback within 72 hours of delivery — I'll send a reminder if the window's close to closing.</p>
+      <p>The April numbers tell a clear story: organic and LinkedIn are compounding faster than the benchmark, so May is about doubling down on what's working rather than chasing a new channel. June is where we start to see the LinkedIn ad spend land, and whether the messaging refresh converts better than the old copy on the homepage.</p>
+      <p>If anything here looks off, flag it before you sign off. Once this lands, we run it.</p>
+      <div class="sig">Kim van der Berg</div>
+      <div class="sig-sub">Lead Strategist · GritFuel</div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────── -->
+  <div class="page-foot">
+    <span>GritFuel · Monthly Playbook · Helio · May 2026</span>
+    <span>Prepared 28 April 2026 · Confidential</span>
+  </div>
+
+</div>
+
+</body>
+</html>

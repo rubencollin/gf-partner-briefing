@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GritFuel · Partner Briefing</title>
+<meta name="description" content="A partner recalibration briefing for Tlali, Micha, and Kim — walking through the solo sprint and the decisions that need the four of us before go-live.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<!-- Top nav ------------------------------------------------------------ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html" class="active">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html">Brand</a>
+      <a href="04-finance.html">Finance</a>
+      <a href="05-gtm.html">GTM</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero --------------------------------------------------------------- -->
+<section class="hero">
+  <div class="inner">
+    <span class="eyebrow">Partner Briefing · v1.0 · April 2026</span>
+    <h1 class="display">
+      Let's <span class="accent">recalibrate</span>.
+    </h1>
+    <p class="lead">
+      Tlali, Micha, Kim — I've been heads-down on GritFuel for the past few weeks and the foundations have moved. This site walks you through what shifted, why, and the calls I need the four of us to make together before we go live.
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<!-- Meta row ----------------------------------------------------------- -->
+<div class="container">
+  <div class="meta-row" style="transform: translateY(-48px);">
+    <div class="meta-item">
+      <div class="label">For</div>
+      <div class="value">Tlali · Micha · Kim</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">From</div>
+      <div class="value">Ruben</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Last updated</div>
+      <div class="value">18 April 2026</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Go-live target</div>
+      <div class="value">29 April 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- Honest preamble ---------------------------------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Before anything else</span>
+      <h2>A fair word of warning.</h2>
+      <p class="lead">
+        This sprint happened solo — burning midnight oil, a lot of Claude, and more GitHub credits than I'd like to admit. That means there's a lot to react to, and some of it will need your instinct to correct. The whole point of this briefing is to close that gap: bring you back up to speed fast, then recalibrate together.
+      </p>
+    </div>
+
+    <div class="callout lime">
+      <h4>How to use this briefing</h4>
+      <p style="margin:0;">
+        Each section follows the same shape: <strong>where we started</strong> (the public site and the original premise) → <strong>where we've landed now</strong> (the sprint output) → <strong>what's locked and what still needs the four of us</strong>. Skip the artefacts if you're short on time; the narrative and the decision lists are the primary read.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- The premise — why we even did this sprint ------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Before the shift · the premise</span>
+      <h2>The buyer wants functionality. The market is big enough to build for it.</h2>
+      <p class="lead">
+        Two findings set the direction for this sprint. First — and the real forcing function — the <a href="01-strategy.html">Founder / CEO DeepDive</a> (persona work) landed a clear insight: our buyers value <strong>functionality above emotional resonance</strong>. They don't want to fall in love with their growth partner — they want a system that reliably does the job. That makes productising viable at all; if they wanted a relationship, a team-led model would still be the right answer.
+      </p>
+      <p>
+        Second — the TAM / SAM / SOM work gave us the scale of the prize. The post-seed segment in NL, wider EU, and South Africa sustains a seven-year path from seven clients to hundreds, and from early revenue to roughly €38.8M ARR. That's not what <em>shaped</em> the product; it's what justified building it at this level of ambition. Persona gave us the forcing function. Market sizing gave us the appetite.
+      </p>
+    </div>
+
+    <div class="themes" style="grid-template-columns: 1fr 1fr;">
+      <div class="theme-card t-strategy" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">THE BUYER · persona (Founder DeepDive)</span>
+        <span class="title" style="font-size: 22px;">Wants functionality over resonance</span>
+        <p class="desc">
+          Start-ups, scale-ups, and companies in transformation led by founders who are growth-led and ready to scale. They've been through agency churn and fractional CMO cycles. They don't want another relationship to manage — they want a system they can trust to run growth, so they can stop being the bottleneck. Functional reliability &gt; warmth.
+        </p>
+        <p class="desc small" style="color: var(--gray);">Functionality-first · System-over-relationship · Growth-led &amp; ready to scale</p>
+      </div>
+
+      <div class="theme-card t-product" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">THE OPPORTUNITY · market sizing</span>
+        <span class="title" style="font-size: 22px;">Big enough to justify the build</span>
+        <p class="desc">
+          Post-seed start-ups, scale-ups, and companies in transformation in NL (€500k – €5m AR) + wider EU, plus SA (R5M – R100M AR). The SOM sustains a seven-year path to hundreds of clients and ~€38.8M ARR — headline numbers in the <a href="01-strategy.html">Market Sizing artefact</a>. This is the perspective that justified the sprint's scope; it didn't dictate the product's shape, but it made the work worth doing.
+        </p>
+        <p class="desc small" style="color: var(--gray);">Large · Underserved · Concentrated in our relationship networks</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>The capacity mismatch — and why productising is the only honest answer</h4>
+      <p>
+        Team-led delivery caps at ~<strong>6 clients per Brand Strategist FTE</strong> — the binding constraint is the judgment work (play selection, Playbook narrative, client relationship), and that doesn't compress with effort. To serve the opportunity above at a team-led shape, we'd have to scale headcount linearly with revenue — which crushes margin, kills consistency, and drags the business back toward a consulting shape we explicitly don't want.
+      </p>
+      <p style="margin:0;">
+        Honest trajectory: <strong>Year 1 stays at ~6</strong> — productising doesn't magically escape the cap. What it does is let the cap rise over time. <strong>Year 2–3 ~10 / FTE</strong> as tool leverage shifts the strategist's hours from ~100% per client toward 60–70%, and partner elasticity on Stream 2 (.frank, Bluegyfu, BFL) means delivery scales outside our headcount. <strong>Year 4+ ~20+ / FTE</strong> as Phase 3 AI on the Compounding Engine and Escalation Router compresses the role from "six clients in parallel" to "supervise multiple systems in parallel." That's the only curve that connects seven clients today to hundreds at Y7 without collapsing under our own weight.
+      </p>
+    </div>
+
+    <div class="callout lime" style="margin-top: var(--s-5);">
+      <h4>The response (the rest of this briefing)</h4>
+      <p style="margin:0;">
+        The buyer wants a system. The market justifies building one. Team-led can't deliver both at the scale we need. Productising delivery — <strong>GritFuel OS</strong>, with a Compounding Growth Dashboard as the client-facing hero, a Monthly Playbook as the ritual, and a two-stream pricing model behind it — is the shape that lets the cap rise over time. Everything that follows is an expression of that single move.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Starting point vs current landing ---------------------------------- -->
+<section class="band" style="padding-top: 0; padding-bottom: var(--s-9);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The shift, in one page</span>
+      <h2>From embedded team to Growth OS — with a Dashboard at the centre.</h2>
+      <p class="lead">
+        The public site today positions GritFuel as <em>"the embedded growth engine"</em> — a service-led, senior-operator model. The sprint pushed us into a more productized posture: a Growth OS, a Compounding Growth Dashboard as the client-facing hero, a Monthly Playbook as the ritual behind it, and explicit pricing logic. <strong>Same thesis, sharper shape.</strong>
+      </p>
+      <p>
+        The move didn't come from preference — it came from the <a href="01-strategy.html">JTBD / Value Proposition Canvas</a> work we ran mid-sprint. Walking the buyer through their jobs, pains, and gains made two things obvious: (1) the thing founders actually want is a <em>system</em> they can point at, not a senior operator they rent; and (2) the emotional payoff they're chasing — <em>"our growth is compounding, and I can see it"</em> — lives in a live view, not in a monthly document. Those two findings reshaped the product shape, the hero artefact, and the pricing logic in that order.
+      </p>
+    </div>
+
+    <div class="themes" style="grid-template-columns: 1fr 1fr;">
+      <div class="theme-card t-strategy" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">STARTING POINT · gritfuel.works</span>
+        <span class="title" style="font-size: 22px;">Embedded Growth Engine</span>
+        <p class="desc">
+          <em>"Not an agency. Not an internal hire. A structured growth operating partner."</em>
+          Three plans (Core / Growth / Performance), senior embedded team, Monthly Growth System as the artefact. Tagline: <strong>Human thinking. Relentless execution.</strong>
+        </p>
+        <p class="desc small" style="color: var(--gray);">Service-led · Consulting-shaped · Case-by-case scope</p>
+      </div>
+
+      <div class="theme-card t-product" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">CURRENT LANDING · this sprint</span>
+        <span class="title" style="font-size: 22px;">GritFuel OS — Dashboard-led</span>
+        <p class="desc">
+          The first Growth Operating System. <strong>Compounding Growth Dashboard</strong> as the client-facing hero: a live view of the four compounding signals that feed the Compound Score. Behind it: a Monthly Playbook as the ritual, four supporting tools (Intake, Compounding Engine, Escalation Router, Credit Allocation), a Scoping Configurator, an ALC Menu, a Fixed-Cost Model, and Brand Guide v2.
+        </p>
+        <p class="desc small" style="color: var(--gray);">Product-led · Dashboard-first · Playbook as ritual <em>(hero call still open)</em></p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>The recalibration question</h4>
+      <p style="margin:0;">
+        Both can be true — and probably should be. The Growth OS is the engine behind the embedded team. But we haven't yet agreed as a team on how much of the public story shifts from service language to product language, or when — and whether the Dashboard replaces the Playbook as the hero artefact or sits alongside it. That's the spine of this briefing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- How we got here — the arc --------------------------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">How we got from there to here</span>
+      <h2>One premise, three pivots, in sequence.</h2>
+      <p class="lead">
+        The premise (market bigger than shape) set the direction. Each of the three pivots below is a response to it — and each was the output of a specific exercise, not a preference or a rebrand. Reading them in order shows why the pieces hang together the way they do, and where a partner challenge would actually land.
+      </p>
+    </div>
+
+    <div class="decisions">
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Step 0 · Premise · Buyers want functionality over resonance</h4>
+          <p><strong>Exercise that drove it:</strong> Founder / CEO DeepDive (persona work). Our buyers value functional reliability above emotional warmth — they want a system they can trust to run growth, not a relationship to manage. That's the finding that makes productising viable at all; without it, a team-led shape would remain the right answer. <strong>TAM / SAM / SOM sizing</strong> supplied the second input — perspective on the scale of the prize (hundreds of clients, ~€38.8M ARR over seven years) — but it gave us appetite, not direction. The combination (functionality-first buyer + scale-justifying market + capped team-led shape) is what forced the three pivots that follow.</p>
+        </div>
+        <span class="status">Premise</span>
+      </div>
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Pivot 1 · Embedded engine → Growth OS</h4>
+          <p><strong>Exercise that drove it:</strong> JTBD / Value Proposition Canvas (Strategy). With the premise forcing a productised shape, we went back to the buyer to check whether they'd actually want one. Founders don't articulate their job as "find me a senior operator" — they articulate it as <em>"give me a system I trust to run growth, so I can stop being the bottleneck."</em> That reframes the product from a relationship into an operating system. The embedded team stays — but as the engine behind the OS, not the front door.</p>
+        </div>
+        <span class="status">Step 1</span>
+      </div>
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Pivot 2 · Playbook-as-hero → Compounding Growth Dashboard-as-hero</h4>
+          <p><strong>Exercise that drove it:</strong> the Gain Creators column of the VPC, then pressure-tested against the Founder DeepDive. The gain founders name most often — and the thing they'd pay to keep feeling — is <em>compounding visibility</em>: the sense that growth is stacking and they can see it. A monthly document doesn't produce that feeling; an always-on view does. The Playbook remains essential as the monthly ritual, but it's no longer the artefact we lead with.</p>
+        </div>
+        <span class="status">Step 2</span>
+      </div>
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Pivot 3 · Service retainer → two revenue streams</h4>
+          <p><strong>Exercise that drove it:</strong> the Fixed-Cost Model + ALC Menu work (Finance). Once the product became a <em>system</em> rather than a team, the economics split naturally: pricing access to the system (Stream 1 · fixed subscription, SaaS-like margin) is a different motion from pricing the work done inside it (Stream 2 · credit pool on the ALC Menu, 75% cost-share to delivery partners). Collapsing them back into one number reads like an agency retainer, which is exactly what we're not.</p>
+        </div>
+        <span class="status">Step 3</span>
+      </div>
+    </div>
+
+    <div class="callout lime" style="margin-top: var(--s-5);">
+      <h4>What this means for the rest of the briefing</h4>
+      <p style="margin:0;">
+        Every section downstream — Product, Brand, Finance, GTM — is the expression of one of these three pivots. If a pivot is wrong, the downstream work inherits that wrongness. So if you disagree with a pivot, flag it <em>here</em> first, before you read the section that builds on it. That's the fastest way to keep us aligned before go-live.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Themes ------------------------------------------------------------- -->
+<section class="band dark" style="padding-bottom: var(--s-9);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The five themes</span>
+      <h2>Pick a lane — or read all five.</h2>
+      <p>Each section runs ~8–12 minutes. The narrative and the decisions are the core; the artefacts are for when you want to go deeper.</p>
+    </div>
+
+    <div class="themes">
+      <a class="theme-card t-strategy" href="01-strategy.html">
+        <div class="accent-bar"></div>
+        <span class="num">01 / STRATEGY</span>
+        <span class="title">Strategy</span>
+        <p class="desc">Positioning, ICP, JTBD, and market size. The shift from "embedded partner" to "Growth OS with an embedded team behind it."</p>
+        <span class="count">4 artefacts · ~10 min</span>
+      </a>
+
+      <a class="theme-card t-product" href="02-product.html">
+        <div class="accent-bar"></div>
+        <span class="num">02 / PRODUCT</span>
+        <span class="title">Product</span>
+        <p class="desc">GritFuel OS — the five tools, the Monthly Playbook, and how they turn the Monthly Growth System into a repeatable product.</p>
+        <span class="count">7 artefacts · ~12 min</span>
+      </a>
+
+      <a class="theme-card t-brand" href="03-brand.html">
+        <div class="accent-bar"></div>
+        <span class="num">03 / BRAND</span>
+        <span class="title">Brand</span>
+        <p class="desc">Brand Guide v2 — the voice, type, colour, layout, and application system. Builds on the 2025 guide; doesn't throw it out.</p>
+        <span class="count">1 artefact · ~8 min</span>
+      </a>
+
+      <a class="theme-card t-finance" href="04-finance.html">
+        <div class="accent-bar"></div>
+        <span class="num">04 / FINANCE</span>
+        <span class="title">Finance</span>
+        <p class="desc">Fixed-cost model, headcount / capacity plan, Scoping Configurator, ALC menu, and the Core / Growth / Performance price logic.</p>
+        <span class="count">5 artefacts · ~10 min</span>
+      </a>
+
+      <a class="theme-card t-gtm" href="05-gtm.html">
+        <div class="accent-bar"></div>
+        <span class="num">05 / GTM</span>
+        <span class="title">GTM</span>
+        <p class="desc">Assumption-to-tactic map, PMF &amp; positioning note, and the onboarding flow — how we translate all of this into a first cohort.</p>
+        <span class="count">3 artefacts · ~8 min</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- What I need --------------------------------------------------------- -->
+<section class="band">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What I'd like from you</span>
+      <h2>Read, react, recalibrate.</h2>
+    </div>
+
+    <ol class="steps" style="max-width: 820px;">
+      <li>
+        <div class="step-body">
+          <h4>First pass — skim all five overviews (~25 min)</h4>
+          <p>Just the narrative + decision blocks on each section page. Don't open artefacts yet. Get a sense of where things have moved.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h4>Second pass — open the artefacts in your lane</h4>
+          <p>Tlali — Strategy + GTM. Micha — Product + Finance. Kim — Brand + GTM. Click through the live tools. Poke at anything that feels off.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h4>Reply with reactions — not edits</h4>
+          <p>Each section ends with two or three specific questions. Hit those first. Everything else — free-form — welcome in the same reply.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h4>We meet to close the open calls</h4>
+          <p>Once all three of you have replied, we do a 60–90 min working session to resolve anything still open before go-live on 29 April.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- Timeline / what's next --------------------------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The next 10 days</span>
+      <h2>From recalibration to go-live.</h2>
+    </div>
+
+    <div class="decisions">
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>This week (18–22 April) — partner review window</h4>
+          <p>All three of you review the briefing and reply with reactions. I'll consolidate a "what's still open" list from your replies.</p>
+        </div>
+        <span class="status">Now</span>
+      </div>
+      <div class="decision open">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Early next week (23–25 April) — working session + refinement pass</h4>
+          <p>60–90 min session to close any outstanding calls. Refinement pass on anything the group wants changed before go-live.</p>
+        </div>
+        <span class="status">Next</span>
+      </div>
+      <div class="decision">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>29 April — go-live</h4>
+          <p>gritfuel.works updated with the recalibrated positioning, the GritFuel OS story, and the first pilot cohort intake open. This briefing becomes a living library we update as we learn.</p>
+        </div>
+        <span class="status">Then</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer ------------------------------------------------------------- -->
+<footer class="site">
+  <div class="inner">
+    <div style="display:flex; gap: var(--s-3); align-items:center;">
+      <img src="assets/brand-assets/logomark-white.png" alt="gritfuel.works">
+      <span class="small">Partner Briefing · v1.0</span>
+    </div>
+    <span class="small">Updated 18 April 2026 · Prepared by Ruben</span>
+  </div>
+</footer>
+
+</body>
+</html>

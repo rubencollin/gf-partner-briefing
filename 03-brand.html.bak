@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand · GritFuel Partner Briefing</title>
+<meta name="description" content="Brand Guide v2 — voice, type, colour, layout, and application. Builds on the 2025 guide; surfaces the decisions the three of you need to sign off.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<!-- Top nav ------------------------------------------------------------ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html" class="active">Brand</a>
+      <a href="04-finance.html">Finance</a>
+      <a href="05-gtm.html">GTM</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero --------------------------------------------------------------- -->
+<section class="hero">
+  <div class="inner">
+    <span class="eyebrow">Section 03 · Brand</span>
+    <h1 class="display">
+      Same <span class="accent">soul</span>. Sharper <span class="accent">system</span>.
+    </h1>
+    <p class="lead">
+      Brand Guide v2 doesn't throw out the 2025 guide — it builds on it. The voice is the same. The colours are the same. What's new is a tighter application system, a productised tone, and a couple of open questions on type that genuinely need the three of you.
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<!-- Starting point vs current landing ---------------------------------- -->
+<section class="band" style="padding-top: var(--s-8);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The shift</span>
+      <h2>From an identity to an application system.</h2>
+      <p class="lead">
+        The 2025 guide defined the identity beautifully — logo, core palette, primary voice. What it didn't specify: how the brand behaves across a product surface, a dashboard, an intake form, a playbook PDF, a sales deck, a LinkedIn post. v2 adds that layer without disturbing the first.
+      </p>
+    </div>
+
+    <div class="themes" style="grid-template-columns: 1fr 1fr;">
+      <div class="theme-card t-brand" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">STARTING POINT · Brand Guide 2025</span>
+        <span class="title" style="font-size: 22px;">Identity system</span>
+        <p class="desc">
+          Logo, charcoal + lime + orange palette, display/body type pairing, voice principles, photographic style. Tagline on the live site: <strong>HUMAN THINKING. RELENTLESS EXECUTION.</strong>
+        </p>
+        <p class="desc small" style="color: var(--gray);">Identity-led · Established 2025 · Still load-bearing</p>
+      </div>
+
+      <div class="theme-card t-product" style="min-height: auto;">
+        <div class="accent-bar"></div>
+        <span class="num">CURRENT LANDING · Brand Guide v2</span>
+        <span class="title" style="font-size: 22px;">Application system</span>
+        <p class="desc">
+          Adds: voice matrix by surface (founder-facing vs operator-facing vs public), layout grids for the product UI, rules for the Monthly Playbook, data-viz palette, illustration guidelines, and a motion primer.
+        </p>
+        <p class="desc small" style="color: var(--gray);">Application-led · Extends 2025 · Productises the identity</p>
+      </div>
+    </div>
+
+    <div class="callout lime">
+      <h4>What has <em>not</em> changed</h4>
+      <p style="margin:0;">
+        Logo. Core palette. Voice principles. Positioning verbs. The "Human thinking. Relentless execution." tagline still stands unless we collectively decide to revisit it. v2 is additive, not a rebrand.
+      </p>
+    </div>
+
+    <div class="callout" style="margin-top: var(--s-5);">
+      <h4>Naming consistency — heads-up</h4>
+      <p style="margin:0;">
+        During the sprint, the product was temporarily labelled <em>"Brandformance OS"</em> in several artefacts — Brand Guide v2, the BMC, JTBD/VPC, the Founder DeepDive, pricing review, and the market sizing all carry that name. <strong>The correct name is GritFuel OS</strong> (or simply <em>GritFuel — the first Growth Operating System</em>). "Brandformance" is a separate entity (BFL = events/activations arm) and keeping it on the OS conflates two brands. A consistency pass across those six artefacts is on the pre-go-live list.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Narrative ---------------------------------------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The one real tension</span>
+      <h2>Serif display on the site. Sans display in v2.</h2>
+      <p class="lead">
+        The live site (<a href="https://www.gritfuel.works" target="_blank" rel="noopener">gritfuel.works</a>) uses a high-contrast serif for display type — editorial, confident, a little old-money. Brand Guide v2 is all Montserrat — cleaner, more systematic, better for product surfaces. Both are defensible. They're just not the same answer.
+      </p>
+      <p>
+        This is the single biggest brand call in front of us. It shows up everywhere: the site hero, the Monthly Playbook cover, the dashboard chrome, the pitch deck, the LinkedIn templates. Picking one and committing it is worth more than hedging.
+      </p>
+    </div>
+
+    <!-- Key decisions -->
+    <div class="section-head" style="margin-top: var(--s-8);">
+      <span class="eyebrow">Key decisions</span>
+      <h2>What's locked, what's open.</h2>
+    </div>
+
+    <div class="decisions">
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Core palette — locked</h4>
+          <p>Charcoal, lime, orange, paper, gray. No changes. These carry from the 2025 guide and through the site, product, playbook, and dashboard.</p>
+        </div>
+        <span class="status">Locked</span>
+      </div>
+      <div class="decision locked">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Voice principles — locked</h4>
+          <p>Signal over noise. Structure over chaos. Compounding over sprints. Still the three pillars the voice rests on. v2 adds <em>how</em> those show up by surface.</p>
+        </div>
+        <span class="status">Locked</span>
+      </div>
+      <div class="decision open">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Display type — serif (site today) or Montserrat (v2)?</h4>
+          <p>Editorial-serif feels premium and distinctive but is harder to apply in product UI. Montserrat is more functional across surfaces but risks feeling SaaS-generic. This is the biggest call.</p>
+        </div>
+        <span class="status">Open</span>
+      </div>
+      <div class="decision open">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Tagline — stay with "Human thinking. Relentless execution." or evolve?</h4>
+          <p>v2 proposes keeping it but giving it a companion line tied to GritFuel OS (e.g. <em>"The operating system for growth you were going to build yourself."</em>). Welcome push-back.</p>
+        </div>
+        <span class="status">Open</span>
+      </div>
+      <div class="decision open">
+        <div class="marker"></div>
+        <div class="body">
+          <h4>Photography — parallelogram team treatment, keep or retire?</h4>
+          <p>The slanted parallelogram mask on team photography is distinctive but it's fiddly to apply at scale. v2 quietly retires it in favour of a soft-edge portrait style. Preference?</p>
+        </div>
+        <span class="status">Open</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Artefacts ---------------------------------------------------------- -->
+<section class="band dark" style="padding-top: var(--s-8); padding-bottom: var(--s-8);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The artefacts</span>
+      <h2>The guide, side-by-side with 2025.</h2>
+      <p>Open v2 in a new tab and keep the 2025 PDF open alongside for comparison. Most of what's there is recognisably the same system.</p>
+    </div>
+
+    <div class="artefacts">
+
+      <!-- Brand Guide v2 -->
+      <article class="artefact">
+        <span class="tag html">HTML · Brand Guide v2</span>
+        <h3>GritFuel Brand Guide v2</h3>
+        <p class="desc">The full v2 guide — voice matrix by surface, type, colour, layout grids, data-viz palette, motion primer, illustration notes, and the application examples.</p>
+        <p class="look"><strong>Look at:</strong> the Voice Matrix section (founder-facing vs operator-facing vs public) — this is the most genuinely new piece.</p>
+        <div class="links">
+          <a class="btn" href="artefacts/GritFuel_BrandGuide_v2.html" target="_blank">Open guide →</a>
+        </div>
+      </article>
+
+      <!-- Brand Guide 2025 -->
+      <article class="artefact">
+        <span class="tag pdf">PDF · Reference</span>
+        <h3>GritFuel Brand Guide 2025 (reference)</h3>
+        <p class="desc">The 2025 guide. This is the foundation v2 builds on. Keep it open as the reference — anywhere v2 is silent, the 2025 guide still governs.</p>
+        <p class="look"><strong>Look at:</strong> the logo and palette sections — confirm those are still correct, and that v2 hasn't quietly drifted.</p>
+        <div class="links">
+          <a class="btn ghost" href="downloads/GritFuel_Brand_Guide_2025.pdf" target="_blank">Open PDF →</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Asks --------------------------------------------------------------- -->
+<section class="band" style="padding-top: var(--s-8);">
+  <div class="container">
+    <div class="asks">
+      <span class="eyebrow" style="color: var(--lime);">What I need from you</span>
+      <h3>Three specific questions on Brand.</h3>
+      <ol>
+        <li><strong>Display type:</strong> editorial serif (as on the live site) or Montserrat sans (as in v2)? One pick, committed everywhere.</li>
+        <li><strong>Tagline:</strong> keep "Human thinking. Relentless execution." as-is, add a GritFuel OS companion, or rework entirely?</li>
+        <li><strong>Parallelogram team photos:</strong> retire in favour of a cleaner portrait style, or keep as a signature treatment?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Pager -------------------------------------------------------------- -->
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="pager">
+      <a class="prev" href="02-product.html">
+        <span class="eyebrow">← Back</span>
+        <span class="title">02 · Product</span>
+      </a>
+      <a class="next" href="04-finance.html">
+        <span class="eyebrow">Next →</span>
+        <span class="title">04 · Finance</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer ------------------------------------------------------------- -->
+<footer class="site">
+  <div class="inner">
+    <div style="display:flex; gap: var(--s-3); align-items:center;">
+      <img src="assets/brand-assets/logomark-white.png" alt="gritfuel.works">
+      <span class="small">Partner Briefing · Brand</span>
+    </div>
+    <span class="small">Updated 18 April 2026 · Prepared by Ruben</span>
+  </div>
+</footer>
+
+</body>
+</html>

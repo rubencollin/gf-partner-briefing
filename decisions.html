@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decisions · GritFuel Partner Briefing</title>
+<meta name="description" content="Every decision I need the four of us to make — ranked by urgency, tagged by owner, linked to the section that raised it.">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .dec-legend { display: flex; flex-wrap: wrap; gap: var(--s-4); margin: var(--s-5) 0 var(--s-7); padding: var(--s-4); background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-m); }
+  .dec-legend .item { font-family: var(--f-mono); font-size: 11px; color: var(--charcoal); display: flex; align-items: center; gap: var(--s-2); }
+  .dec-legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.pre { background: var(--orange); }
+  .dot.post { background: var(--lime); }
+  .dot.adv { background: var(--gray); }
+
+  .dec-table { display: grid; gap: var(--s-3); }
+  .dec-row {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-left: 4px solid var(--gray-300);
+    border-radius: var(--radius-m);
+    padding: var(--s-5);
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--s-4);
+    align-items: start;
+  }
+  .dec-row.pre { border-left-color: var(--orange); }
+  .dec-row.post { border-left-color: var(--lime); }
+  .dec-row.adv { border-left-color: var(--gray); }
+
+  .dec-num { font-family: var(--f-mono); font-weight: 700; font-size: 28px; color: var(--ink); line-height: 1; }
+  .dec-ask { }
+  .dec-ask h3 { font-family: var(--f-body); font-weight: 700; font-size: 17px; letter-spacing: 0; margin: 0 0 var(--s-2); color: var(--ink); line-height: 1.35; }
+  .dec-ask p { font-size: 14px; color: var(--charcoal); margin: 0 0 var(--s-2); }
+  .dec-meta { display: flex; gap: var(--s-2); flex-wrap: wrap; font-family: var(--f-mono); font-size: 10.5px; }
+  .dec-meta .chip { padding: 3px 8px; border-radius: 99px; border: 1px solid var(--gray-300); color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.08em; background: var(--gray-100); }
+  .dec-meta .chip.tlali { background: #FFF4EE; border-color: #FFD8C4; color: #B8401F; }
+  .dec-meta .chip.micha { background: #F0F5D0; border-color: #D7E270; color: #5E6A1F; }
+  .dec-meta .chip.kim { background: #EEF3FF; border-color: #CFDCFD; color: #2E4AA8; }
+  .dec-meta .chip.all { background: var(--ink); border-color: var(--ink); color: var(--lime); }
+  .dec-src { font-family: var(--f-mono); font-size: 10.5px; color: var(--gray); align-self: start; padding-top: 6px; white-space: nowrap; }
+  .dec-src a { color: var(--orange); }
+
+  .urgency-header {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--gray-200);
+    margin: var(--s-7) 0 var(--s-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .urgency-header strong { color: var(--ink); font-weight: 700; }
+  .urgency-header:first-of-type { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html">Brand</a>
+      <a href="04-finance.html">Operating Model</a>
+      <a href="05-gtm.html">GTM</a>
+      <a href="decisions.html" class="active">Decisions</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="launch.html">Launch</a>
+      <a href="risks.html">Risks</a>
+      <a href="pipeline.html">Pipeline</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <img class="hero-icon" src="assets/icons/playbook.svg" alt="">
+    <span class="eyebrow">Decisions · What I need the four of us to call</span>
+    <h1 class="display">
+      16 calls. <span class="accent">Four of us.</span> 11 days.
+    </h1>
+    <p class="lead">
+      Every section raises questions. This is the single index of all of them — ranked by urgency, tagged by owner, and linked back to the section that raised each one. Hit the pre-soft-launch block first; post-launch and advisory can settle during the 22 April – 18 May window as inner-circle feedback lands.
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<!-- Review-doc CTA ---------------------------------------------------- -->
+<section class="band" style="padding-top: var(--s-6); padding-bottom: 0;">
+  <div class="container">
+    <div style="background: var(--ink); color: var(--paper); border-radius: var(--radius-l); padding: var(--s-7); display: grid; grid-template-columns: 1fr auto; gap: var(--s-7); align-items: center;">
+      <div>
+        <span class="eyebrow" style="color: var(--lime); font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;">Where to respond</span>
+        <h3 style="font-family: var(--f-display); font-weight: 800; font-size: 28px; letter-spacing: -0.5px; margin: var(--s-3) 0 var(--s-3); color: var(--paper);">Companion review doc — one place to land your positions.</h3>
+        <p style="margin: 0 0 var(--s-2); font-size: 15px; line-height: 1.55; color: #D8D8D8; max-width: 640px;">Every decision below has a matching slot in a Google Doc — three short bullets per partner: your <em>position</em>, your <em>reasoning</em>, and <em>what would change your mind</em>. No polish required. Voice-notes and Slack fragments are fine — I'll synthesise.</p>
+        <p style="margin: 0; font-family: var(--f-mono); font-size: 12px; color: var(--gray);">If a decision doesn't speak to your lane, leave it blank.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--s-3); min-width: 240px;">
+        <a href="https://docs.google.com/document/d/1P5vqAM1IcWA6I2PV8pipOjMxZFg9Fw5Y0zSTQR2IjD4/edit?tab=t.0" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); background: var(--lime); color: var(--ink); font-family: var(--f-body); font-weight: 700; font-size: 15px; padding: var(--s-4) var(--s-5); border-radius: var(--radius-m); text-decoration: none; letter-spacing: 0.2px;">Open the review doc →</a>
+        <a href="artefacts/GritFuel_Review_and_Decisions.docx" style="display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); background: transparent; color: var(--paper); font-family: var(--f-mono); font-size: 11px; padding: var(--s-2) var(--s-3); border: 1px solid #4A4A4A; border-radius: var(--radius-s); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase;">Download .docx</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="padding-top: var(--s-7);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">How to read this page</span>
+      <h2>Hit the orange block. The lime block can wait.</h2>
+      <p class="lead">
+        Orange = pre-launch. These calls change what the 22 April soft launch actually looks like, so I need a position by <strong>Monday 20 April</strong> (decision sync) at the latest. Lime = post-launch. Important but not blocking — these resolve during the 22 April – 18 May refinement window. Grey = advisory. I have a working answer; I want to hear yours but won't hold the launch on it.
+      </p>
+    </div>
+
+    <div class="dec-legend">
+      <div class="item"><span class="dot pre"></span> Pre-launch · blocks 22 April soft launch</div>
+      <div class="item"><span class="dot post"></span> Post-launch · resolves during 22 Apr – 18 May window</div>
+      <div class="item"><span class="dot adv"></span> Advisory · input welcome, not blocking</div>
+      <div class="item"><span class="dot" style="background: #FFD8C4;"></span> Tlali</div>
+      <div class="item"><span class="dot" style="background: #D7E270;"></span> Micha</div>
+      <div class="item"><span class="dot" style="background: #CFDCFD;"></span> Kim</div>
+      <div class="item"><span class="dot" style="background: var(--ink);"></span> All three</div>
+    </div>
+
+    <!-- PRE-LAUNCH -->
+    <div class="urgency-header">
+      <span><strong>Pre-launch</strong> · needs a call by Mon 20 April (decision sync)</span>
+      <span>7 calls</span>
+    </div>
+
+    <div class="dec-table">
+      <div class="dec-row pre">
+        <div class="dec-num">00</div>
+        <div class="dec-ask">
+          <h3>Capability split + product-engineering hire path</h3>
+          <p>Positioning GritFuel as a Growth OS asks a capability of the partnership the original service shape didn't: client-facing multi-tenant product engineering. Proposed: align on the capability map (automation lane / integration zone / product-engineering lane), agree which partner leads which lane in conversation, then pick a hire path for the product-engineering lead — phased equity-for-work contractor, straight contractor, or dev shop + revenue-share — and look at WBSO + MIT / Innovation Credit NL to offset the cost. Existing shareholdings stay where they are; this is about naming additive scope.</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Strategic conversation · Pre-launch</span>
+            <span class="chip">Shapes product-engineering ownership</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="04-finance.html#capability-map">→ Capability map</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">01</div>
+        <div class="dec-ask">
+          <h3>Client-facing hero: Dashboard or Playbook?</h3>
+          <p>Is the Compounding Growth Dashboard the #1 artefact a founder sees (and the one we demo / lead the site with), with the Monthly Playbook as the ritual behind it — or is the Playbook the hero with the Dashboard narrative-only? This is upstream of tool exposure.</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Blocks site hero</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="02-product.html#asks">→ 02 Product</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">02</div>
+        <div class="dec-ask">
+          <h3>Public-site language: "GritFuel OS" or "Monthly Growth System"?</h3>
+          <p>Does "GritFuel OS — the first Growth Operating System" lead on the public site, or does "Monthly Growth System" stay as the front door with GritFuel OS sitting behind it as the engine?</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip kim">Kim lead</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Blocks homepage copy</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="02-product.html#asks">→ 02 Product</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">03</div>
+        <div class="dec-ask">
+          <h3>Display type: editorial serif or Montserrat sans?</h3>
+          <p>Editorial serif (as on the live site) or Montserrat sans (as in Brand Guide v2)? One pick, committed everywhere. This needs to land before we push final copy to the site.</p>
+          <div class="dec-meta">
+            <span class="chip kim">Kim</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Blocks site typography</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="03-brand.html#asks">→ 03 Brand</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">04</div>
+        <div class="dec-ask">
+          <h3>Surface credits publicly?</h3>
+          <p>We've agreed no public prices in beta. But do we publish <em>credit counts</em> per tier (70 / 110 / 180) and a one-liner on what a credit does — to trigger "how does that work?" without anchoring a euro number?</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Affects sales-call ramp</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="04-finance.html#asks">→ 04 Operating Model</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">05</div>
+        <div class="dec-ask">
+          <h3>Geographies in cohort one: NL + SA parallel, or NL-only?</h3>
+          <p>NL €500k – €5m and SA R5M – R100M as parallel test markets — does that split hold, or do we start NL-only and phase SA in after cohort one? If parallel, what shifts in the SA range?</p>
+          <div class="dec-meta">
+            <span class="chip tlali">Tlali lead</span>
+            <span class="chip all">All</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Shapes outbound list</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="01-strategy.html#asks">→ 01 Strategy</a></div>
+      </div>
+
+      <div class="dec-row pre">
+        <div class="dec-num">06</div>
+        <div class="dec-ask">
+          <h3>Outbound ownership for cohort one</h3>
+          <p>A partner rotates in, we hire a junior BDR, or we use an outbound partner on results-only? Each has a cost the group has to accept — and it affects capacity math immediately.</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Pre-launch</span>
+            <span class="chip">Commits headcount / spend</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="05-gtm.html#asks">→ 05 GTM</a></div>
+      </div>
+    </div>
+
+    <!-- POST-LAUNCH -->
+    <div class="urgency-header">
+      <span><strong>Post-launch</strong> · resolves in cohort one</span>
+      <span>6 calls</span>
+    </div>
+
+    <div class="dec-table">
+      <div class="dec-row post">
+        <div class="dec-num">07</div>
+        <div class="dec-ask">
+          <h3>Beachhead: one vertical or horizontal?</h3>
+          <p>Do we go narrow (one vertical — consumer DTC or vertical SaaS) for cohort one, or stay horizontal? Your instinct and why?</p>
+          <div class="dec-meta">
+            <span class="chip tlali">Tlali lead</span>
+            <span class="chip">Post-launch</span>
+            <span class="chip">Can settle after first 5 beta calls</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="01-strategy.html#asks">→ 01 Strategy</a></div>
+      </div>
+
+      <div class="dec-row post">
+        <div class="dec-num">08</div>
+        <div class="dec-ask">
+          <h3>Escalation Router start state</h3>
+          <p>Human-in-the-loop for the first cohort (slower, better data) or automated from day one (faster, rougher)?</p>
+          <div class="dec-meta">
+            <span class="chip micha">Micha lead</span>
+            <span class="chip">Post-launch</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="02-product.html#asks">→ 02 Product</a></div>
+      </div>
+
+      <div class="dec-row post">
+        <div class="dec-num">09</div>
+        <div class="dec-ask">
+          <h3>Stream transparency with clients</h3>
+          <p>Do we show clients the fixed-vs-credit split (clean, defensible, negotiable) or only the headline (simpler, stronger pricing power)?</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Post-launch</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="04-finance.html#asks">→ 04 Operating Model</a></div>
+      </div>
+
+      <div class="dec-row post">
+        <div class="dec-num">10</div>
+        <div class="dec-ask">
+          <h3>Performance tier economics</h3>
+          <p>Bonus on Stream 2 outcomes, lower Stream 1 + rev share, or pure rev share? Where's the group's risk appetite?</p>
+          <div class="dec-meta">
+            <span class="chip all">All</span>
+            <span class="chip">Post-launch</span>
+            <span class="chip">Needs first 1–2 Performance wins as signal</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="04-finance.html#asks">→ 04 Operating Model</a></div>
+      </div>
+
+      <div class="dec-row post">
+        <div class="dec-num">11</div>
+        <div class="dec-ask">
+          <h3>Channel weighting (60 / 30 / 10)</h3>
+          <p>Is the 60/30/10 split (outbound / partner-led / content inbound) for cohort one the right shape? If not — what moves?</p>
+          <div class="dec-meta">
+            <span class="chip tlali">Tlali</span>
+            <span class="chip">Post-launch</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="05-gtm.html#asks">→ 05 GTM</a></div>
+      </div>
+
+      <div class="dec-row post">
+        <div class="dec-num">12</div>
+        <div class="dec-ask">
+          <h3>Intake participants: founder-only or founder + growth lead?</h3>
+          <p>Founder-only (simpler, faster) or founder + growth lead (more work to schedule, better brief)?</p>
+          <div class="dec-meta">
+            <span class="chip micha">Micha</span>
+            <span class="chip">Post-launch</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="05-gtm.html#asks">→ 05 GTM</a></div>
+      </div>
+    </div>
+
+    <!-- ADVISORY -->
+    <div class="urgency-header">
+      <span><strong>Advisory</strong> · input welcome, I have a working answer</span>
+      <span>3 calls</span>
+    </div>
+
+    <div class="dec-table">
+      <div class="dec-row adv">
+        <div class="dec-num">13</div>
+        <div class="dec-ask">
+          <h3>JTBD phrasing land?</h3>
+          <p>After reading the canvas, does the current job statement land for you, or is it still abstract? If abstract — what would you sharpen? <em>(Working answer: it lands for me. Want your read.)</em></p>
+          <div class="dec-meta">
+            <span class="chip tlali">Tlali</span>
+            <span class="chip">Advisory</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="01-strategy.html#asks">→ 01 Strategy</a></div>
+      </div>
+
+      <div class="dec-row adv">
+        <div class="dec-num">14</div>
+        <div class="dec-ask">
+          <h3>SOM capture rate — too aggressive?</h3>
+          <p>The 1.2% SAM capture assumption (~675 clients at Y7) is aggressive on purpose. Push back if you think it's unrealistic for year one, but the seven-year path is the sustainability question, not the first-year target.</p>
+          <div class="dec-meta">
+            <span class="chip tlali">Tlali</span>
+            <span class="chip">Advisory</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="01-strategy.html#asks">→ 01 Strategy</a></div>
+      </div>
+
+      <div class="dec-row adv">
+        <div class="dec-num">15</div>
+        <div class="dec-ask">
+          <h3>Parallelogram team photos — keep or retire?</h3>
+          <p>Retire in favour of a cleaner portrait style, or keep as a signature treatment? <em>(Working answer: retire. Cleaner portraits scale better across channels.)</em></p>
+          <div class="dec-meta">
+            <span class="chip kim">Kim</span>
+            <span class="chip">Advisory</span>
+          </div>
+        </div>
+        <div class="dec-src"><a href="03-brand.html#asks">→ 03 Brand</a></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="callout lime">
+      <h4>Response format</h4>
+      <p style="margin:0;">
+        You don't need to write a document. Three bullets per call is fine: your position, your reasoning, the one thing that would change your mind. Send them however works — Slack, email, voice note. The pre-launch six matter most; the rest can land in the Tuesday 21 April go/no-go review, or during the 22 April – 18 May refinement window.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="pager">
+      <a class="prev" href="index.html">
+        <span class="eyebrow">← Back</span>
+        <span class="title">Overview</span>
+      </a>
+      <a class="next" href="launch.html">
+        <span class="eyebrow">Next →</span>
+        <span class="title">Launch Readiness</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="small">GritFuel · Partner Briefing · Decisions</span>
+      <span class="small">v1.0 · 18 April 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icon preview · GritFuel</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  :root {
+    --charcoal: #3C3C3C;
+    --ink: #1A1A1A;
+    --paper: #FAFAF7;
+    --lime: #DEE450;
+    --lime-50: #F4F6D3;
+    --orange: #FC4E2B;
+    --gray: #929292;
+    --gray-100: #ECECE8;
+  }
+  body { background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; margin: 0; padding: 64px 48px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.01em; margin: 0 0 8px; }
+  h2 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 22px; margin: 64px 0 24px; }
+  .lede { color: var(--gray); max-width: 720px; margin: 0 0 48px; line-height: 1.6; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray); margin-bottom: 6px; }
+  code.inline { background: var(--gray-100); padding: 2px 6px; border-radius: 2px; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ---- primary grid — each icon with name, usage, and three sizes ---- */
+  .icon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--gray-100); border: 1px solid var(--gray-100); }
+  .icon-card { background: var(--paper); padding: 28px; display: flex; flex-direction: column; gap: 16px; color: var(--charcoal); }
+  .icon-card .sizes { display: flex; align-items: flex-end; gap: 20px; }
+  .icon-card .size-block { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .icon-card .size-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--gray); }
+  .icon-card h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 17px; margin: 0; color: var(--ink); }
+  .icon-card .slug { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .icon-card p { font-size: 12.5px; line-height: 1.5; color: var(--charcoal); margin: 0; }
+  .icon-card .accent-note { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ---- light / dark pair ---- */
+  .pair-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--gray-100); border: 1px solid var(--gray-100); margin-top: 16px; }
+  .pair-cell { padding: 28px 20px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .pair-cell.light { background: var(--paper); color: var(--charcoal); }
+  .pair-cell.dark { background: var(--ink); color: var(--paper); }
+  .pair-cell .name { font-family: 'Montserrat'; font-weight: 700; font-size: 13px; }
+  .pair-cell .file { font-family: 'JetBrains Mono'; font-size: 9.5px; opacity: 0.6; }
+
+  /* ---- background variants row ---- */
+  .bg-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .bg-swatch { padding: 48px 32px; display: flex; align-items: center; justify-content: center; gap: 32px; position: relative; }
+  .bg-swatch .label { position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; top: 12px; left: 16px; opacity: 0.65; }
+  .bg-paper { background: var(--paper); color: var(--charcoal); border: 1px solid var(--gray-100); }
+  .bg-dark { background: var(--ink); color: var(--paper); }
+  .bg-dark .label { color: var(--lime); opacity: 1; }
+  .bg-lime { background: var(--lime); color: var(--charcoal); }
+
+  /* ---- in-context samples ---- */
+  .sample { background: var(--paper); border: 1px solid var(--gray-100); padding: 32px; margin-bottom: 16px; }
+  .sample h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; color: var(--ink); }
+  .sample p { font-size: 14px; color: var(--charcoal); line-height: 1.55; margin: 0; }
+  .sample.dark { background: var(--ink); border-color: var(--charcoal); }
+  .sample.dark h4 { color: var(--paper); }
+  .sample.dark p { color: rgba(250,250,247,0.8); }
+
+  .btn-sample { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--ink); color: var(--paper); font-family: 'Inter'; font-weight: 600; font-size: 13px; border-radius: 4px; text-decoration: none; }
+
+  .header-sample { display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: var(--ink); color: var(--paper); }
+  .header-sample img { flex-shrink: 0; }
+  .header-sample .eyebrow-inv { font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); margin-bottom: 4px; }
+  .header-sample .title { font-family: 'Montserrat'; font-weight: 700; font-size: 18px; color: var(--paper); }
+
+  /* Ghost / background texture */
+  .ghost-bg { position: relative; background: var(--paper); border: 1px solid var(--gray-100); padding: 48px 32px; overflow: hidden; }
+  .ghost-bg .ghost { position: absolute; right: -40px; bottom: -40px; opacity: 0.07; }
+  .ghost-bg .content { position: relative; max-width: 480px; }
+  .ghost-bg h4 { font-family: 'Montserrat'; font-weight: 800; font-size: 24px; margin: 0 0 8px; }
+  .ghost-bg p { font-size: 14px; color: var(--charcoal); line-height: 1.55; margin: 0; }
+
+  .foot { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--gray-100); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Preview · Icon system v2 · eight icons</div>
+  <h1>Eight icons, two file variants.</h1>
+  <p class="lede">
+    The icon set — now eight strong with <strong>Team</strong> and <strong>Playbook</strong> added to match the original six. Primary strokes are explicit <strong>charcoal</strong> (<code class="inline">#3C3C3C</code>) for light backgrounds, with a paired <strong>paper</strong> (<code class="inline">#FAFAF7</code>) inverted variant per icon for dark. Accent orange (<code class="inline">#FC4E2B</code>) is fixed in both. <em>Why two files?</em> Because <code class="inline">&lt;img src=&quot;icon.svg&quot;&gt;</code> doesn't inherit <code class="inline">currentColor</code> from its parent — each file needs to carry its own colour. One file per variant, named <code class="inline">icon-name.svg</code> for light, <code class="inline">icon-name-inv.svg</code> for dark.
+  </p>
+
+  <!-- ── 1. The eight icons ─────────────────────────────────────────── -->
+  <h2>The system — eight icons</h2>
+  <div class="icon-grid">
+
+    <div class="icon-card">
+      <div><h3>Signal</h3><div class="slug">icon/signal</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/signal.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/signal.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/signal.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Two rings around a filled centre. Focus, prioritisation, the one thing that matters this month.</p>
+      <div class="accent-note">Accent · centre dot</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>System</h3><div class="slug">icon/system</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/system.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/system.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/system.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>3×3 grid with one active cell. Structure, operating rhythm, process. The active node inside a defined model.</p>
+      <div class="accent-note">Accent · top-right cell</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Loop</h3><div class="slug">icon/loop</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/loop.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/loop.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/loop.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Near-complete arc with an arrowhead — always running, never closed. Compounding, iteration, continuous optimisation.</p>
+      <div class="accent-note" style="color: var(--gray);">No accent — pure charcoal</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Momentum</h3><div class="slug">icon/momentum</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/momentum.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/momentum.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/momentum.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Two stacked arrows, orange offset ahead. Speed, trajectory, acceleration past the baseline.</p>
+      <div class="accent-note">Accent · lower arrow</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Control</h3><div class="slug">icon/control</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/control.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/control.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/control.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Mixing-board handles, one live. Performance tuning, multivariate calibration, the right lever at the right moment.</p>
+      <div class="accent-note">Accent · right handle</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Execution</h3><div class="slug">icon/execution</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/execution.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/execution.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/execution.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Arrow breaking through the structure's edge. Deployment, go-live, the moment strategy becomes action.</p>
+      <div class="accent-note">Accent · arrowhead</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Team <span style="color: var(--orange); font-family: 'JetBrains Mono'; font-size: 10px; vertical-align: middle; margin-left: 8px; letter-spacing: 0.1em;">NEW</span></h3><div class="slug">icon/team</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/team.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/team.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/team.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Three nodes in a triangle, the apex filled orange. The named Strategist leading a client's working group. The human face of the OS.</p>
+      <div class="accent-note">Accent · apex node</div>
+    </div>
+
+    <div class="icon-card">
+      <div><h3>Playbook <span style="color: var(--orange); font-family: 'JetBrains Mono'; font-size: 10px; vertical-align: middle; margin-left: 8px; letter-spacing: 0.1em;">NEW</span></h3><div class="slug">icon/playbook</div></div>
+      <div class="sizes">
+        <div class="size-block"><img src="assets/icons/playbook.svg" width="24" height="24"><span class="size-label">24</span></div>
+        <div class="size-block"><img src="assets/icons/playbook.svg" width="32" height="32"><span class="size-label">32</span></div>
+        <div class="size-block"><img src="assets/icons/playbook.svg" width="56" height="56"><span class="size-label">56</span></div>
+      </div>
+      <p>Document with an orange leading line — the month's commitment. The monthly Playbook ritual, signed off at start of cycle.</p>
+      <div class="accent-note">Accent · leading line</div>
+    </div>
+
+  </div>
+
+  <!-- ── 2. Light vs dark variants side by side ─────────────────────── -->
+  <h2>Light &amp; dark variants · side by side</h2>
+  <p class="lede" style="margin-bottom: 16px;">
+    Each icon ships as two files. Use <code class="inline">icon-name.svg</code> on paper, lime, or any light background. Use <code class="inline">icon-name-inv.svg</code> on ink or any dark background. Accent orange stays fixed in both so the visual system reads the same.
+  </p>
+
+  <div class="pair-row">
+    <div class="pair-cell light"><img src="assets/icons/signal.svg"     width="48" height="48"><span class="name">Signal</span><span class="file">signal.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/signal-inv.svg" width="48" height="48"><span class="name">Signal</span><span class="file">signal-inv.svg</span></div>
+    <div class="pair-cell light"><img src="assets/icons/system.svg"     width="48" height="48"><span class="name">System</span><span class="file">system.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/system-inv.svg" width="48" height="48"><span class="name">System</span><span class="file">system-inv.svg</span></div>
+  </div>
+
+  <div class="pair-row">
+    <div class="pair-cell light"><img src="assets/icons/loop.svg"       width="48" height="48"><span class="name">Loop</span><span class="file">loop.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/loop-inv.svg"   width="48" height="48"><span class="name">Loop</span><span class="file">loop-inv.svg</span></div>
+    <div class="pair-cell light"><img src="assets/icons/momentum.svg"   width="48" height="48"><span class="name">Momentum</span><span class="file">momentum.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/momentum-inv.svg" width="48" height="48"><span class="name">Momentum</span><span class="file">momentum-inv.svg</span></div>
+  </div>
+
+  <div class="pair-row">
+    <div class="pair-cell light"><img src="assets/icons/control.svg"    width="48" height="48"><span class="name">Control</span><span class="file">control.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/control-inv.svg" width="48" height="48"><span class="name">Control</span><span class="file">control-inv.svg</span></div>
+    <div class="pair-cell light"><img src="assets/icons/execution.svg"  width="48" height="48"><span class="name">Execution</span><span class="file">execution.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/execution-inv.svg" width="48" height="48"><span class="name">Execution</span><span class="file">execution-inv.svg</span></div>
+  </div>
+
+  <div class="pair-row">
+    <div class="pair-cell light"><img src="assets/icons/team.svg"       width="48" height="48"><span class="name">Team</span><span class="file">team.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/team-inv.svg"   width="48" height="48"><span class="name">Team</span><span class="file">team-inv.svg</span></div>
+    <div class="pair-cell light"><img src="assets/icons/playbook.svg"   width="48" height="48"><span class="name">Playbook</span><span class="file">playbook.svg</span></div>
+    <div class="pair-cell dark"> <img src="assets/icons/playbook-inv.svg" width="48" height="48"><span class="name">Playbook</span><span class="file">playbook-inv.svg</span></div>
+  </div>
+
+  <!-- ── 3. On different backgrounds ────────────────────────────────── -->
+  <h2>On different backgrounds</h2>
+  <p class="lede" style="margin-bottom: 24px;">
+    Paper uses the primary files, ink uses the inverted (<code class="inline">-inv</code>) variants, lime uses the primary files (charcoal reads well on lime).
+  </p>
+  <div class="bg-row">
+    <div class="bg-swatch bg-paper">
+      <span class="label">Paper</span>
+      <img src="assets/icons/signal.svg"   width="48" height="48">
+      <img src="assets/icons/momentum.svg" width="48" height="48">
+      <img src="assets/icons/team.svg"     width="48" height="48">
+    </div>
+    <div class="bg-swatch bg-dark">
+      <span class="label">Ink · use -inv</span>
+      <img src="assets/icons/signal-inv.svg"   width="48" height="48">
+      <img src="assets/icons/momentum-inv.svg" width="48" height="48">
+      <img src="assets/icons/team-inv.svg"     width="48" height="48">
+    </div>
+    <div class="bg-swatch bg-lime">
+      <span class="label">Lime</span>
+      <img src="assets/icons/signal.svg"   width="48" height="48">
+      <img src="assets/icons/momentum.svg" width="48" height="48">
+      <img src="assets/icons/playbook.svg" width="48" height="48">
+    </div>
+  </div>
+
+  <!-- ── 4. In-context samples ──────────────────────────────────────── -->
+  <h2>In context</h2>
+
+  <div class="sample">
+    <h4><img src="assets/icons/signal.svg" width="20" height="20">Priority call this month</h4>
+    <p>Signal sits alongside a heading to mark a prioritisation moment — the bit where the Strategist picks the one thing that matters.</p>
+  </div>
+
+  <div class="sample dark">
+    <h4><img src="assets/icons/loop-inv.svg" width="20" height="20">Each month compounds the last</h4>
+    <p>On dark surfaces we swap to <code class="inline" style="background: rgba(255,255,255,0.12); color: var(--paper);">loop-inv.svg</code>. Same geometry, paper stroke instead of charcoal. Accent stays orange.</p>
+  </div>
+
+  <div class="sample">
+    <div class="header-sample">
+      <img src="assets/icons/system-inv.svg" width="40" height="40">
+      <div>
+        <div class="eyebrow-inv">The machinery</div>
+        <div class="title">GritFuel OS — five tools, one monthly loop</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sample">
+    <div class="header-sample">
+      <img src="assets/icons/team-inv.svg" width="40" height="40">
+      <div>
+        <div class="eyebrow-inv">The human</div>
+        <div class="title">Your Strategist — named at onboarding, present each month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sample">
+    <div class="header-sample">
+      <img src="assets/icons/playbook-inv.svg" width="40" height="40">
+      <div>
+        <div class="eyebrow-inv">The monthly ritual</div>
+        <div class="title">The Playbook — signed off at start of cycle</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sample" style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <a class="btn-sample" href="#">Start the conversation <img src="assets/icons/execution-inv.svg" width="18" height="18"></a>
+    <a class="btn-sample" href="#">See the Playbook <img src="assets/icons/momentum-inv.svg" width="18" height="18"></a>
+    <span style="font-family: 'JetBrains Mono'; font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.14em;">CTA buttons · use -inv in dark button backgrounds</span>
+  </div>
+
+  <div class="ghost-bg">
+    <img class="ghost" src="assets/icons/system.svg" width="360" height="360">
+    <div class="content">
+      <h4>Background texture</h4>
+      <p>At 7% opacity, icons become ambient texture — visible enough to reinforce the section's meaning, quiet enough not to compete with type. Use the charcoal file on light backgrounds, the paper (<code class="inline">-inv</code>) file on dark. Orange accent shouldn't appear at ghost opacity — it'll read as an error.</p>
+    </div>
+  </div>
+
+  <!-- ── 5. File index ─────────────────────────────────────────────── -->
+  <h2>File index</h2>
+  <div class="sample">
+    <p style="margin-bottom: 12px;"><strong>16 SVG files in total</strong> — eight icons, each in two variants:</p>
+    <p style="margin-bottom: 8px; font-family: 'JetBrains Mono'; font-size: 12px; line-height: 1.8;">
+      signal.svg, signal-inv.svg<br>
+      system.svg, system-inv.svg<br>
+      loop.svg, loop-inv.svg<br>
+      momentum.svg, momentum-inv.svg<br>
+      control.svg, control-inv.svg<br>
+      execution.svg, execution-inv.svg<br>
+      team.svg, team-inv.svg<br>
+      playbook.svg, playbook-inv.svg
+    </p>
+    <p style="margin-top: 14px;"><strong>Naming rule:</strong> primary = lowercase name + <code class="inline">.svg</code>. Inverted = same name + <code class="inline">-inv.svg</code>. Use the primary on paper / lime / any light background. Use <code class="inline">-inv</code> on ink / any dark background. Accent orange is identical in both.</p>
+  </div>
+
+  <div class="foot">
+    <span>GritFuel · Icon preview v2 · 2026-04-19</span>
+    <span>assets/icons/</span>
+  </div>
+
+</div>
+</body>
+</html>

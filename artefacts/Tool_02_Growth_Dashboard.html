@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel Growth Dashboard — Momentum Sports BV</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --charcoal: #2D2D2D;
+    --lime: #C8E000;
+    --lime-dim: #a8bc00;
+    --white: #FFFFFF;
+    --bg: #F2F3F4;
+    --card: #FFFFFF;
+    --border: #E2E4E7;
+    --mid: #6B7280;
+    --dark: #1C1C1C;
+    --success: #22C55E;
+    --success-bg: #F0FDF4;
+    --warning: #F59E0B;
+    --warning-bg: #FFFBEB;
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
+    --info: #3B82F6;
+    --int-bg: #181A1B;
+    --int-card: #222426;
+    --int-border: #333638;
+    --int-mid: #9CA3AF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--charcoal);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--charcoal);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--lime);
+  }
+  .header-left { display: flex; align-items: center; gap: 18px; }
+  .wordmark { color: var(--lime); font-size: 18px; font-weight: 800; letter-spacing: 2px; }
+  .header-divider { width: 1px; height: 28px; background: #444; }
+  .client-label { color: #aaa; font-size: 12px; line-height: 1.3; }
+  .client-label strong { color: var(--white); font-size: 14px; display: block; }
+  .header-right { display: flex; align-items: center; gap: 20px; }
+  .period-badge {
+    background: #3a3a3a;
+    color: #ccc;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── TAB SWITCHER ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    background: #3a3a3a;
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .tab-btn {
+    padding: 6px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    background: transparent;
+    color: #888;
+  }
+  .tab-btn.active-client { background: var(--lime); color: var(--charcoal); }
+  .tab-btn.active-internal { background: #EF4444; color: var(--white); }
+
+  /* ── MAIN CONTENT ── */
+  .view { display: none; padding: 28px 32px; }
+  .view.active { display: block; }
+
+  /* Client view background stays light */
+  #view-client { background: var(--bg); }
+
+  /* Internal view — dark */
+  #view-internal {
+    background: var(--int-bg);
+    min-height: calc(100vh - 64px);
+  }
+
+  /* Internal mode: restyle all cards */
+  #view-internal .card {
+    background: var(--int-card);
+    border-color: var(--int-border);
+    color: #E5E7EB;
+  }
+  #view-internal .section-title { color: #E5E7EB; }
+  #view-internal .section-title span { background: var(--int-border); color: #9CA3AF; }
+  #view-internal .kpi-label { color: var(--int-mid); }
+  #view-internal .kpi-value { color: #F3F4F6; }
+  #view-internal .stat-label { color: var(--int-mid); }
+  #view-internal .stat-val { color: #F3F4F6; }
+  #view-internal .table th { background: #2a2c2e; color: #9CA3AF; border-color: var(--int-border); }
+  #view-internal .table td { border-color: var(--int-border); color: #E5E7EB; }
+  #view-internal .table tr:nth-child(even) td { background: #1e2022; }
+  #view-internal .int-restrict {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #EF4444;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  /* ── GRID UTILITIES ── */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card-sm { padding: 16px; }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title span {
+    display: inline-block;
+    background: #F0F0F0;
+    color: #888;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 600;
+  }
+
+  /* ── KPI CARDS ── */
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--lime);
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--mid);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--charcoal);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .kpi-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .badge-up { color: var(--success); font-weight: 700; }
+  .badge-down { color: var(--danger); font-weight: 700; }
+  .kpi-vs { color: var(--mid); }
+  .kpi-icon {
+    position: absolute;
+    top: 16px; right: 18px;
+    font-size: 22px;
+    opacity: 0.15;
+  }
+
+  /* ── CREDIT DONUT ── */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .donut-chart-box {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+  }
+  .donut-legend { flex: 1; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+  .legend-item:last-child { border-bottom: none; }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .legend-name { display: flex; align-items: center; gap: 0; flex: 1; }
+  .legend-credits { font-weight: 700; color: var(--charcoal); }
+  #view-internal .legend-credits { color: #F3F4F6; }
+  #view-internal .legend-item { border-color: var(--int-border); }
+
+  /* ── INITIATIVE CARDS ── */
+  .init-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .init-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .init-num { font-size: 10px; font-weight: 700; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; }
+  .init-title { font-size: 14px; font-weight: 700; color: var(--charcoal); margin-top: 2px; }
+  .status-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .status-inprogress { background: #EFF6FF; color: var(--info); }
+  .status-review { background: var(--warning-bg); color: var(--warning); }
+  .status-done { background: var(--success-bg); color: var(--success); }
+
+  .progress-bar-wrap {
+    background: #F0F0F0;
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--lime);
+    transition: width 0.6s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--mid);
+    margin-top: 5px;
+  }
+
+  .deliverable-list { list-style: none; }
+  .deliverable-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--mid);
+    padding: 3px 0;
+  }
+  .deliverable-list li.done { color: #374151; }
+  .del-check { width: 14px; height: 14px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; margin-top: 1px; }
+  .del-check.done { background: var(--success); color: white; }
+  .del-check.pending { background: #E5E7EB; color: #9CA3AF; }
+  .del-check.review { background: var(--warning); color: white; }
+
+  .dep-flag { font-size: 10px; color: var(--warning); font-weight: 600; }
+
+  /* ── CHART BOXES ── */
+  .chart-box { position: relative; height: 220px; }
+  .chart-box-sm { position: relative; height: 180px; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .table th {
+    background: #F8F9FA;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--mid);
+    padding: 9px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  .table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .table tr:last-child td { border-bottom: none; }
+  .table tr:nth-child(even) td { background: #FAFAFA; }
+  .table tr:hover td { background: #F5F5F5; }
+
+  /* ── PARTNER BADGES (internal only) ── */
+  .partner-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .p-gritfuel { background: rgba(200,224,0,0.2); color: #7a8c00; }
+  .p-frank { background: rgba(59,130,246,0.15); color: #1D4ED8; }
+  .p-bluegyfu { background: rgba(139,92,246,0.15); color: #6D28D9; }
+  .p-bfl { background: rgba(249,115,22,0.15); color: #C2410C; }
+
+  /* ── MARGIN PILL ── */
+  .margin-pill {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(34,197,94,0.12);
+    color: #15803D;
+  }
+
+  /* ── RECOMMENDATION BOX ── */
+  .rec-box {
+    background: rgba(200,224,0,0.08);
+    border: 1px solid rgba(200,224,0,0.35);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .rec-title { font-size: 12px; font-weight: 700; color: var(--lime-dim); margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .rec-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 13px;
+    color: #D1D5DB;
+    border-bottom: 1px solid rgba(200,224,0,0.1);
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-credits {
+    font-weight: 700;
+    color: var(--lime);
+    min-width: 60px;
+    text-align: right;
+  }
+  .rec-delta {
+    font-size: 11px;
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  /* ── FLAG ROWS ── */
+  .flag-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--int-border);
+    font-size: 13px;
+  }
+  .flag-row:last-child { border-bottom: none; }
+  .flag-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .flag-text { color: #D1D5DB; }
+  .flag-text strong { color: #F3F4F6; }
+  .flag-text small { color: var(--int-mid); font-size: 11px; display: block; margin-top: 2px; }
+
+  /* ── REVENUE SUMMARY ── */
+  .rev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--int-border); border-radius: 8px; overflow: hidden; margin-bottom: 0; }
+  .rev-cell { background: var(--int-card); padding: 14px 18px; }
+  .rev-label { font-size: 11px; color: var(--int-mid); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .rev-val { font-size: 22px; font-weight: 800; color: #F3F4F6; }
+  .rev-sub { font-size: 11px; color: #6B7280; margin-top: 3px; }
+
+  /* ── NEXT MONTH PREVIEW ── */
+  .next-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .next-num {
+    width: 28px; height: 28px;
+    background: var(--charcoal);
+    color: var(--lime);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .next-title { font-size: 13px; font-weight: 700; color: var(--charcoal); margin-bottom: 3px; }
+  .next-desc { font-size: 12px; color: var(--mid); }
+  .next-credits {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--charcoal);
+    background: rgba(200,224,0,0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ── CHANNEL METRIC TABLE ── */
+  .channel-icon { font-size: 15px; margin-right: 5px; }
+  .metric-up { color: var(--success); font-weight: 600; font-size: 12px; }
+  .metric-down { color: var(--danger); font-weight: 600; font-size: 12px; }
+  .metric-flat { color: var(--mid); font-weight: 600; font-size: 12px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2-1, .grid-1-2, .grid-3-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Internal tab specific card overrides */
+  #view-internal .init-card { background: var(--int-card); border-color: var(--int-border); }
+  #view-internal .init-title { color: #F3F4F6; }
+  #view-internal .deliverable-list li { color: #9CA3AF; }
+  #view-internal .deliverable-list li.done { color: #D1D5DB; }
+  #view-internal .next-card { background: var(--int-card); border-color: var(--int-border); }
+  #view-internal .next-title { color: #F3F4F6; }
+  #view-internal .next-desc { color: var(--int-mid); }
+  #view-internal .next-credits { background: rgba(200,224,0,0.15); color: var(--lime); }
+  #view-internal .next-num { background: #2a2c2e; }
+  #view-internal .progress-bar-wrap { background: #333; }
+  #view-internal .kpi-card { background: var(--int-card); border-color: var(--int-border); }
+
+  .inline-tag {
+    font-size: 10px;
+    background: rgba(239,68,68,0.15);
+    color: #EF4444;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="wordmark">GRITFUEL</div>
+    <div class="header-divider"></div>
+    <div class="client-label">
+      <strong>Momentum Sports BV</strong>
+      Growth Dashboard
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="period-badge">April 2026 · Month 4</div>
+    <div class="tab-bar">
+      <button class="tab-btn active-client" onclick="switchTab('client')">CLIENT VIEW</button>
+      <button class="tab-btn" onclick="switchTab('internal')">INTERNAL <span class="inline-tag">RESTRICTED</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════
+     CLIENT VIEW
+════════════════════════════════════════ -->
+<div id="view-client" class="view active">
+
+  <!-- KPI Cards -->
+  <div class="grid-4">
+    <div class="kpi-card">
+      <div class="kpi-icon">🌱</div>
+      <div class="kpi-label">Organic Sessions</div>
+      <div class="kpi-value">12,400</div>
+      <div class="kpi-meta">
+        <span class="badge-up">↑ 18%</span>
+        <span class="kpi-vs">vs last month</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📣</div>
+      <div class="kpi-label">Social Reach</div>
+      <div class="kpi-value">45,200</div>
+      <div class="kpi-meta">
+        <span class="badge-up">↑ 22%</span>
+        <span class="kpi-vs">vs last month</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">✉️</div>
+      <div class="kpi-label">Email Subscribers</div>
+      <div class="kpi-value">3,840</div>
+      <div class="kpi-meta">
+        <span class="badge-up">+310</span>
+        <span class="kpi-vs">added this month</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🎯</div>
+      <div class="kpi-label">Qualified Leads</div>
+      <div class="kpi-value">28</div>
+      <div class="kpi-meta">
+        <span class="badge-up">↑ 6</span>
+        <span class="kpi-vs">vs last month</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credit Utilisation + Initiative Status -->
+  <div class="grid-1-2">
+
+    <!-- Donut -->
+    <div class="card">
+      <div class="section-title">Credit Utilisation <span>72 / 80 used</span></div>
+      <div class="donut-wrap">
+        <div class="donut-chart-box">
+          <canvas id="donutClient"></canvas>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-name"><div class="legend-dot" style="background:#C8E000"></div>Brand Content</div>
+            <div class="legend-credits">28 cr</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-name"><div class="legend-dot" style="background:#2D2D2D"></div>SEO Foundation</div>
+            <div class="legend-credits">24 cr</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-name"><div class="legend-dot" style="background:#888"></div>Email Engine</div>
+            <div class="legend-credits">20 cr</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-name"><div class="legend-dot" style="background:#ddd"></div>Reserve</div>
+            <div class="legend-credits">8 cr</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initiative cards -->
+    <div style="display:flex; flex-direction:column; gap:14px;">
+
+      <div class="init-card">
+        <div class="init-header">
+          <div>
+            <div class="init-num">Initiative 01</div>
+            <div class="init-title">Brand Content Series</div>
+          </div>
+          <div class="status-badge status-inprogress">In Progress</div>
+        </div>
+        <div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:75%"></div></div>
+          <div class="progress-label"><span>75% complete</span><span>28 credits</span></div>
+        </div>
+        <ul class="deliverable-list">
+          <li class="done"><div class="del-check done">✓</div>Content audit &amp; strategy</li>
+          <li class="done"><div class="del-check done">✓</div>6× pillar articles — Week 1–2</li>
+          <li><div class="del-check review">⟳</div>Social adaptation set (18 posts) <span class="dep-flag">⚑ awaiting article approval</span></li>
+          <li><div class="del-check pending">○</div>Performance wrap + insights</li>
+        </ul>
+      </div>
+
+      <div class="init-card">
+        <div class="init-header">
+          <div>
+            <div class="init-num">Initiative 02</div>
+            <div class="init-title">SEO Foundation</div>
+          </div>
+          <div class="status-badge status-done">Delivered</div>
+        </div>
+        <div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%"></div></div>
+          <div class="progress-label"><span>100% complete</span><span>24 credits</span></div>
+        </div>
+        <ul class="deliverable-list">
+          <li class="done"><div class="del-check done">✓</div>Technical SEO audit</li>
+          <li class="done"><div class="del-check done">✓</div>Keyword map (80 terms)</li>
+          <li class="done"><div class="del-check done">✓</div>On-page optimisations (12 pages)</li>
+          <li class="done"><div class="del-check done">✓</div>Link building outreach (15 prospects)</li>
+        </ul>
+      </div>
+
+      <div class="init-card">
+        <div class="init-header">
+          <div>
+            <div class="init-num">Initiative 03</div>
+            <div class="init-title">Email Growth Engine</div>
+          </div>
+          <div class="status-badge status-review">Under Review</div>
+        </div>
+        <div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:60%"></div></div>
+          <div class="progress-label"><span>60% complete</span><span>20 credits</span></div>
+        </div>
+        <ul class="deliverable-list">
+          <li class="done"><div class="del-check done">✓</div>List segmentation &amp; clean-up</li>
+          <li class="done"><div class="del-check done">✓</div>Welcome sequence (5 emails)</li>
+          <li><div class="del-check review">⟳</div>Monthly newsletter — feedback window open</li>
+          <li><div class="del-check pending">○</div>Lead magnet landing page</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Growth Trend Chart -->
+  <div class="grid-3-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="section-title" style="margin-bottom:0">Growth Trend <span>6 months</span></div>
+      </div>
+      <div class="chart-box">
+        <canvas id="trendClient"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Channel Mix <span>April</span></div>
+      <div class="chart-box">
+        <canvas id="channelMixClient"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Month Preview -->
+  <div class="card" style="margin-bottom:0">
+    <div class="section-title">Next Month Preview <span>May 2026</span></div>
+    <div class="grid-3" style="margin-bottom:0">
+      <div class="next-card">
+        <div class="next-num">01</div>
+        <div>
+          <div class="next-title">Conversion Landing Pages</div>
+          <div class="next-desc">3 product-focused pages built on SEO keyword map</div>
+        </div>
+        <div class="next-credits">26 cr</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">02</div>
+        <div>
+          <div class="next-title">Paid Social Launch</div>
+          <div class="next-desc">Meta campaign build — creative, copy, audience targeting</div>
+        </div>
+        <div class="next-credits">24 cr</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">03</div>
+        <div>
+          <div class="next-title">Content Compounding</div>
+          <div class="next-desc">Top-5 articles refreshed + distribution layer</div>
+        </div>
+        <div class="next-credits">22 cr</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /view-client -->
+
+
+<!-- ════════════════════════════════════════
+     INTERNAL VIEW
+════════════════════════════════════════ -->
+<div id="view-internal" class="view">
+
+  <!-- Restricted notice -->
+  <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+    <div class="int-restrict">
+      🔒 RESTRICTED — Not for client distribution
+    </div>
+  </div>
+
+  <!-- Revenue Summary -->
+  <div class="card" style="margin-bottom:20px; padding:0; overflow:hidden;">
+    <div class="rev-grid">
+      <div class="rev-cell">
+        <div class="rev-label">Gross Revenue</div>
+        <div class="rev-val">€1,800</div>
+        <div class="rev-sub">72 credits × €25</div>
+      </div>
+      <div class="rev-cell">
+        <div class="rev-label">Partner Cost</div>
+        <div class="rev-val">€990</div>
+        <div class="rev-sub">Bluegyfu + .frank allocation</div>
+      </div>
+      <div class="rev-cell">
+        <div class="rev-label">GritFuel Margin</div>
+        <div class="rev-val" style="color: var(--lime);">€810</div>
+        <div class="rev-sub">45% · on track vs target</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Cards (same as client) -->
+  <div class="grid-4">
+    <div class="kpi-card">
+      <div class="kpi-icon">🌱</div>
+      <div class="kpi-label">Organic Sessions</div>
+      <div class="kpi-value">12,400</div>
+      <div class="kpi-meta"><span class="badge-up">↑ 18%</span><span class="kpi-vs">MoM</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📣</div>
+      <div class="kpi-label">Social Reach</div>
+      <div class="kpi-value">45,200</div>
+      <div class="kpi-meta"><span class="badge-up">↑ 22%</span><span class="kpi-vs">MoM</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">✉️</div>
+      <div class="kpi-label">Email Subscribers</div>
+      <div class="kpi-value">3,840</div>
+      <div class="kpi-meta"><span class="badge-up">+310</span><span class="kpi-vs">this month</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🎯</div>
+      <div class="kpi-label">Qualified Leads</div>
+      <div class="kpi-value">28</div>
+      <div class="kpi-meta"><span class="badge-up">↑ 6</span><span class="kpi-vs">vs last month</span></div>
+    </div>
+  </div>
+
+  <!-- Partner Routing Table -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="section-title">Partner Routing &amp; Credit Breakdown <span>April 2026</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Initiative</th>
+            <th>Delivery Partner</th>
+            <th>Credits</th>
+            <th>EUR Value</th>
+            <th>Partner Cost</th>
+            <th>GritFuel Margin</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>01 Brand Content Series</strong></td>
+            <td><span class="partner-badge p-gritfuel">GritFuel</span></td>
+            <td>28</td>
+            <td>€700</td>
+            <td>€0</td>
+            <td><span class="margin-pill">100%</span></td>
+            <td><span class="status-badge status-inprogress">In Progress</span></td>
+          </tr>
+          <tr>
+            <td><strong>02 SEO Foundation</strong></td>
+            <td><span class="partner-badge p-bluegyfu">Bluegyfu</span></td>
+            <td>24</td>
+            <td>€600</td>
+            <td>€390</td>
+            <td><span class="margin-pill">35%</span></td>
+            <td><span class="status-badge status-done">Delivered</span></td>
+          </tr>
+          <tr>
+            <td><strong>03 Email Growth Engine</strong></td>
+            <td><span class="partner-badge p-frank">.frank</span></td>
+            <td>20</td>
+            <td>€500</td>
+            <td>€300</td>
+            <td><span class="margin-pill">40%</span></td>
+            <td><span class="status-badge status-review">Under Review</span></td>
+          </tr>
+          <tr>
+            <td><em style="color:#6B7280">Reserve (unallocated)</em></td>
+            <td>—</td>
+            <td>8</td>
+            <td>€200</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#9CA3AF">TOTAL</strong></td>
+            <td></td>
+            <td><strong>72 / 80</strong></td>
+            <td><strong>€1,800</strong></td>
+            <td><strong>€690</strong></td>
+            <td><span class="margin-pill" style="font-size:13px">~45%</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Full Channel Metrics + Donut -->
+  <div class="grid-3-2">
+    <div class="card">
+      <div class="section-title">Full Channel Metrics <span>April vs March</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Metric</th>
+              <th>April</th>
+              <th>March</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="channel-icon">🌱</span><strong>SEO / Organic</strong></td>
+              <td>Sessions</td>
+              <td>12,400</td><td>10,500</td>
+              <td><span class="metric-up">↑ 18%</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Top-3 keywords</td>
+              <td>7</td><td>4</td>
+              <td><span class="metric-up">+3</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Backlinks acquired</td>
+              <td>12</td><td>0</td>
+              <td><span class="metric-up">+12</span></td>
+            </tr>
+            <tr>
+              <td><span class="channel-icon">📣</span><strong>Social</strong></td>
+              <td>Total reach</td>
+              <td>45,200</td><td>37,000</td>
+              <td><span class="metric-up">↑ 22%</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Engagement rate</td>
+              <td>4.8%</td><td>3.9%</td>
+              <td><span class="metric-up">↑ 0.9pp</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Posts published</td>
+              <td>18</td><td>12</td>
+              <td><span class="metric-up">+6</span></td>
+            </tr>
+            <tr>
+              <td><span class="channel-icon">✉️</span><strong>Email</strong></td>
+              <td>List size</td>
+              <td>3,840</td><td>3,530</td>
+              <td><span class="metric-up">+310</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Open rate</td>
+              <td>38.2%</td><td>34.1%</td>
+              <td><span class="metric-up">↑ 4.1pp</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Click rate</td>
+              <td>6.1%</td><td>5.4%</td>
+              <td><span class="metric-up">↑ 0.7pp</span></td>
+            </tr>
+            <tr>
+              <td><span class="channel-icon">💸</span><strong>Paid Media</strong></td>
+              <td>Ad spend</td>
+              <td>€0</td><td>€0</td>
+              <td><span class="metric-flat">—</span></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Status</td>
+              <td colspan="3" style="color:#6B7280; font-style:italic">Launching May 2026 — creative in preparation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <!-- Internal donut -->
+      <div class="card" style="flex:1;">
+        <div class="section-title">Credit Utilisation</div>
+        <div class="donut-wrap" style="flex-direction:column; align-items:flex-start; gap:14px;">
+          <div style="width:100%; display:flex; justify-content:center;">
+            <div style="width:130px; height:130px;">
+              <canvas id="donutInternal"></canvas>
+            </div>
+          </div>
+          <div class="donut-legend" style="width:100%;">
+            <div class="legend-item"><div class="legend-name"><div class="legend-dot" style="background:#C8E000"></div>Brand Content</div><div class="legend-credits">28 cr · €700</div></div>
+            <div class="legend-item"><div class="legend-name"><div class="legend-dot" style="background:#6D28D9"></div>SEO Foundation</div><div class="legend-credits">24 cr · €600</div></div>
+            <div class="legend-item"><div class="legend-name"><div class="legend-dot" style="background:#1D4ED8"></div>Email Engine</div><div class="legend-credits">20 cr · €500</div></div>
+            <div class="legend-item"><div class="legend-name"><div class="legend-dot" style="background:#374151"></div>Reserve</div><div class="legend-credits">8 cr · €200</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Playbook Recommendation + Flags -->
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="section-title">Next Playbook Credit Recommendation <span>May 2026</span></div>
+      <div class="rec-box">
+        <div class="rec-title">Recommended Allocation</div>
+        <div class="rec-item">
+          <span>Conversion Landing Pages</span>
+          <span class="rec-delta">↑ new</span>
+          <span class="rec-credits">26 cr</span>
+        </div>
+        <div class="rec-item">
+          <span>Paid Social — Meta Campaign Build</span>
+          <span class="rec-delta">↑ new</span>
+          <span class="rec-credits">24 cr</span>
+        </div>
+        <div class="rec-item">
+          <span>Content Compounding (top-5 refresh)</span>
+          <span class="rec-delta">→ carry</span>
+          <span class="rec-credits">22 cr</span>
+        </div>
+        <div class="rec-item">
+          <span>Reserve</span>
+          <span class="rec-delta">↓ reduce</span>
+          <span class="rec-credits">8 cr</span>
+        </div>
+      </div>
+      <div style="font-size:12px; color:#6B7280; line-height:1.6;">
+        Rationale: SEO foundation is live — conversion layer should follow immediately. Paid social creative is ready. Reserve kept at 10% given early-stage compounding risk.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Dependency &amp; Risk Flags</div>
+      <div class="flag-row">
+        <div class="flag-icon">⚑</div>
+        <div class="flag-text">
+          <strong>Social adaptation set blocked</strong>
+          <small>Waiting on client approval of 6× pillar articles · Review window closes Apr 18</small>
+        </div>
+      </div>
+      <div class="flag-row">
+        <div class="flag-icon">⚑</div>
+        <div class="flag-text">
+          <strong>Lead magnet landing page</strong>
+          <small>Cannot begin until newsletter iteration is approved · Dependency on Initiative 03</small>
+        </div>
+      </div>
+      <div class="flag-row">
+        <div class="flag-icon">⚠️</div>
+        <div class="flag-text">
+          <strong>Paid media — no ad spend history</strong>
+          <small>Bluegyfu flagged: pixel not installed on client site · CRO fix required before launch</small>
+        </div>
+      </div>
+      <div class="flag-row">
+        <div class="flag-icon">✅</div>
+        <div class="flag-text">
+          <strong>SEO Foundation fully wrapped</strong>
+          <small>All deliverables confirmed · 12 on-page optimisations live as of Apr 10</small>
+        </div>
+      </div>
+      <div class="flag-row">
+        <div class="flag-icon">📅</div>
+        <div class="flag-text">
+          <strong>Monthly review call — Apr 24</strong>
+          <small>30-min slot · .frank to join for email strategy Q&amp;A · GritFuel to present playbook draft</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /view-internal -->
+
+<script>
+// ── TAB SWITCH ──────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('view-client').classList.remove('active');
+  document.getElementById('view-internal').classList.remove('active');
+  document.getElementById('view-' + tab).classList.add('active');
+
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b => { b.classList.remove('active-client', 'active-internal'); });
+  if (tab === 'client') {
+    btns[0].classList.add('active-client');
+    document.body.style.background = '#F2F3F4';
+  } else {
+    btns[1].classList.add('active-internal');
+    document.body.style.background = '#181A1B';
+    // Init internal donut if not yet rendered
+    if (!window.internalDonutDone) { renderInternalCharts(); window.internalDonutDone = true; }
+  }
+}
+
+// ── CHART.JS DEFAULTS ───────────────────────────────
+Chart.defaults.font.family = "'Segoe UI', Arial, sans-serif";
+
+// ── CLIENT DONUT ────────────────────────────────────
+new Chart(document.getElementById('donutClient'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Brand Content', 'SEO Foundation', 'Email Engine', 'Reserve'],
+    datasets: [{
+      data: [28, 24, 20, 8],
+      backgroundColor: ['#C8E000', '#2D2D2D', '#888888', '#E5E5E5'],
+      borderWidth: 0,
+      hoverOffset: 4
+    }]
+  },
+  options: {
+    cutout: '72%',
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => ` ${ctx.label}: ${ctx.raw} credits`
+        }
+      }
+    }
+  }
+});
+
+// ── CLIENT TREND ────────────────────────────────────
+new Chart(document.getElementById('trendClient'), {
+  type: 'line',
+  data: {
+    labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+    datasets: [
+      {
+        label: 'Organic Sessions',
+        data: [6800, 7200, 8100, 9400, 10500, 12400],
+        borderColor: '#C8E000',
+        backgroundColor: 'rgba(200,224,0,0.08)',
+        borderWidth: 2.5,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#C8E000',
+      },
+      {
+        label: 'Social Reach',
+        data: [22000, 24000, 28000, 33000, 37000, 45200],
+        borderColor: '#2D2D2D',
+        backgroundColor: 'rgba(45,45,45,0.05)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: false,
+        pointRadius: 3,
+        pointBackgroundColor: '#2D2D2D',
+        yAxisID: 'y2',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      y: {
+        position: 'left',
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { color: '#888', font: { size: 11 }, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v }
+      },
+      y2: {
+        position: 'right',
+        grid: { display: false },
+        ticks: { color: '#bbb', font: { size: 11 }, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v }
+      },
+      x: { grid: { display: false }, ticks: { color: '#888', font: { size: 11 } } }
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: { size: 12 }, color: '#555', boxWidth: 12, padding: 14 }
+      }
+    }
+  }
+});
+
+// ── CLIENT CHANNEL MIX ───────────────────────────────
+new Chart(document.getElementById('channelMixClient'), {
+  type: 'bar',
+  data: {
+    labels: ['Organic', 'Direct', 'Social', 'Email', 'Referral'],
+    datasets: [{
+      label: 'Sessions by channel',
+      data: [12400, 4200, 3800, 2100, 1400],
+      backgroundColor: ['#C8E000','#D0D0D0','#888','#555','#333'],
+      borderRadius: 5,
+      borderWidth: 0,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    scales: {
+      x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#888', font: { size: 11 }, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } },
+      y: { grid: { display: false }, ticks: { color: '#555', font: { size: 12 } } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} sessions` } }
+    }
+  }
+});
+
+// ── INTERNAL CHARTS (lazy) ───────────────────────────
+function renderInternalCharts() {
+  new Chart(document.getElementById('donutInternal'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Brand Content (GritFuel)', 'SEO Foundation (Bluegyfu)', 'Email Engine (.frank)', 'Reserve'],
+      datasets: [{
+        data: [28, 24, 20, 8],
+        backgroundColor: ['#C8E000', '#7C3AED', '#2563EB', '#374151'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      cutout: '72%',
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.raw} cr · €${ctx.raw * 25}` }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Market Opportunity</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Inter', sans-serif; background: #f2f2ee; color: #1a1a1a; }
+
+  .page { max-width: 1200px; margin: 0 auto; padding: 52px 28px 72px; }
+
+  /* HEADER */
+  .page-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: #aaa; text-transform: uppercase; margin-bottom: 6px; }
+  h1 { font-size: 28px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; }
+  .intro { font-size: 13px; color: #666; max-width: 700px; line-height: 1.7; margin-bottom: 12px; }
+  .method-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #89a000; background: #f0f5d0; border-radius: 4px; padding: 3px 8px; text-transform: uppercase; margin-bottom: 40px; }
+
+  /* SECTION LABEL */
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; color: #aaa; text-transform: uppercase; margin-bottom: 16px; }
+
+  /* TERRITORY CARDS */
+  .territories { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+
+  .territory-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1.5px solid #e4e4e0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr 1fr;
+  }
+
+  .territory-label {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .territory-label.lime { background: #C8E000; color: #1a1a1a; }
+  .territory-label.mid  { background: #2e2e2e; }
+
+  .t-name { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .t-title { font-size: 16px; font-weight: 800; line-height: 1.25; }
+  .t-sub   { font-size: 10px; opacity: 0.55; line-height: 1.5; margin-top: 10px; }
+
+  .metric-cell {
+    padding: 20px 22px;
+    border-left: 1px solid #f0f0ec;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .metric-cell:hover { background: #fafafa; }
+
+  .metric-top { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .metric-type { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb; }
+  .metric-badge {
+    font-size: 8px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 3px;
+  }
+  .badge-tam  { background: #f0f0ec; color: #888; }
+  .badge-sam  { background: #edf5c0; color: #6a8000; }
+  .badge-som  { background: #1a1a1a; color: #C8E000; }
+
+  .metric-companies { font-size: 22px; font-weight: 800; color: #1a1a1a; line-height: 1; }
+  .metric-revenue   { font-size: 13px; font-weight: 700; color: #89a000; margin-top: 3px; }
+  .metric-note      { font-size: 10px; color: #aaa; line-height: 1.5; margin-top: 6px; }
+
+  /* TOTALS ROW */
+  .totals-row {
+    background: #1a1a1a;
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr 1fr;
+    gap: 0;
+    margin-bottom: 48px;
+    color: #fff;
+  }
+  .totals-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .totals-label .t-name { color: #fff; opacity: 0.5; }
+  .totals-label .t-title { font-size: 15px; font-weight: 800; color: #fff; }
+
+  .total-cell {
+    border-left: 1px solid #2e2e2e;
+    padding: 0 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .total-type  { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #666; margin-bottom: 4px; }
+  .total-co    { font-size: 20px; font-weight: 800; color: #fff; }
+  .total-rev   { font-size: 13px; font-weight: 700; color: #C8E000; margin-top: 2px; }
+
+  /* SOM SECTION */
+  .som-section { margin-bottom: 48px; }
+  .som-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  .som-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1.5px solid #e4e4e0;
+    padding: 24px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .som-card.featured { border-color: #C8E000; }
+
+  .som-year { font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #bbb; margin-bottom: 6px; }
+  .som-clients { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1; margin-bottom: 2px; }
+  .som-clients-label { font-size: 11px; color: #888; margin-bottom: 14px; }
+  .som-arr { font-size: 18px; font-weight: 800; color: #89a000; margin-bottom: 12px; }
+
+  .som-bar-wrap { background: #f5f5f2; border-radius: 4px; height: 5px; margin-bottom: 14px; }
+  .som-bar { height: 5px; border-radius: 4px; background: #C8E000; }
+
+  .som-breakdown { display: flex; gap: 10px; }
+  .som-tier { font-size: 10px; color: #888; }
+  .som-tier strong { color: #1a1a1a; font-weight: 700; }
+
+  .som-note { font-size: 10px; color: #aaa; line-height: 1.6; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0ec; }
+
+  .som-featured-tag {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 8px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    background: #C8E000; color: #1a1a1a; padding: 3px 8px; border-radius: 3px;
+  }
+
+  /* ASSUMPTIONS */
+  .assumptions { background: #fff; border-radius: 14px; border: 1.5px solid #e4e4e0; padding: 28px; margin-bottom: 48px; }
+  .assumptions h3 { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #bbb; margin-bottom: 18px; }
+  .assumption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .assumption-item { display: flex; gap: 10px; align-items: flex-start; }
+  .assumption-dot { width: 6px; height: 6px; border-radius: 50%; background: #C8E000; flex-shrink: 0; margin-top: 4px; }
+  .assumption-text { font-size: 11px; color: #555; line-height: 1.6; }
+  .assumption-text strong { color: #1a1a1a; }
+
+  /* SOURCES */
+  .sources { font-size: 10px; color: #bbb; line-height: 1.8; }
+  .sources a { color: #89a000; text-decoration: none; }
+  .sources a:hover { text-decoration: underline; }
+
+  .divider { border: none; border-top: 1.5px solid #e0e0d8; margin: 36px 0; }
+
+  .footer { font-size: 10px; color: #bbb; text-align: center; padding-top: 24px; }
+
+  /* FUNNEL VISUAL */
+  .funnel-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
+  .funnel-step { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .funnel-bar { width: 100%; border-radius: 4px; background: #f0f0ec; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; }
+  .funnel-bar.tam { background: #ccc; height: 40px; }
+  .funnel-bar.sam { background: #89a000; height: 32px; }
+  .funnel-bar.som { background: #1a1a1a; height: 22px; }
+  .funnel-label { font-size: 9px; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .funnel-arrow { font-size: 16px; color: #ddd; flex-shrink: 0; }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-label">GritFuel · Market Opportunity · April 2026</div>
+  <h1>Total Addressable Market</h1>
+  <p class="intro">
+    EU (all 27 member states, English as trade language) + English-speaking Sub-Saharan Africa + European companies entering African markets.
+    Bottom-up methodology: company counts filtered by qualifying criteria, revenue potential derived from average contract value by territory.
+  </p>
+  <div class="method-tag">Bottom-up · April 2026</div>
+
+  <!-- TERRITORIES -->
+  <div class="section-label">Market breakdown by territory</div>
+
+  <div class="territories">
+
+    <!-- EU -->
+    <div class="territory-card">
+      <div class="territory-label">
+        <div>
+          <div class="t-name">Territory 01</div>
+          <div class="t-title">European Union</div>
+          <div class="t-sub">All 27 member states · English as trade language · Full EUR pricing</div>
+        </div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">TAM</div>
+          <div class="metric-badge badge-tam">Total market</div>
+        </div>
+        <div class="metric-companies">~125,000</div>
+        <div class="metric-revenue">EUR 7.5B revenue potential</div>
+        <div class="metric-note">Digital-first companies, 10–200 employees, active growth mandate. Filtered from 1.4M EU companies (Eurostat).</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">SAM</div>
+          <div class="metric-badge badge-sam">Serviceable</div>
+        </div>
+        <div class="metric-companies">~50,000</div>
+        <div class="metric-revenue">EUR 3.0B revenue potential</div>
+        <div class="metric-note">Funded startups + scale-ups at inflection point + paid media users/intenders. ~40% of TAM. Cross-checked against 40,000+ funded EU tech companies (Atomico).</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">ACV</div>
+        </div>
+        <div class="metric-companies" style="font-size:18px;">EUR 5,000/mo</div>
+        <div class="metric-revenue">EUR 60,000/year avg</div>
+        <div class="metric-note">Blended Core/Growth/Performance mix. No public pricing in beta phase — validated through prospect conversations.</div>
+      </div>
+    </div>
+
+    <!-- SSA -->
+    <div class="territory-card">
+      <div class="territory-label mid">
+        <div>
+          <div class="t-name">Territory 02</div>
+          <div class="t-title">English-speaking Sub-Saharan Africa</div>
+          <div class="t-sub">Nigeria · Kenya · South Africa · Ghana · Rwanda · Uganda · Tanzania</div>
+        </div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">TAM</div>
+          <div class="metric-badge badge-tam">Total market</div>
+        </div>
+        <div class="metric-companies">~25,000</div>
+        <div class="metric-revenue">EUR 750M revenue potential</div>
+        <div class="metric-note">Digital-first companies, 10–200 employees, growth mandate. Concentrated in fintech, healthtech, e-commerce, agritech, edtech.</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">SAM</div>
+          <div class="metric-badge badge-sam">Serviceable</div>
+        </div>
+        <div class="metric-companies">~7,500</div>
+        <div class="metric-revenue">EUR 225M revenue potential</div>
+        <div class="metric-note">Funded startups + scale-ups at inflection point. ~30% of TAM. Cross-checked against active funded companies (Disrupt Africa 2024).</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">ACV</div>
+        </div>
+        <div class="metric-companies" style="font-size:18px;">EUR 2,500/mo</div>
+        <div class="metric-revenue">EUR 30,000/year avg</div>
+        <div class="metric-note">Market-adjusted ACV. VC-backed companies benchmarking against USD costs can sustain full EU pricing — blended rate applied.</div>
+      </div>
+    </div>
+
+    <!-- EU → AFRICA -->
+    <div class="territory-card">
+      <div class="territory-label lime">
+        <div>
+          <div class="t-name">Territory 03</div>
+          <div class="t-title">European companies entering Africa</div>
+          <div class="t-sub">EU-domiciled SMEs &amp; scale-ups expanding into SSA markets · Full EUR pricing</div>
+        </div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">TAM</div>
+          <div class="metric-badge badge-tam">Total market</div>
+        </div>
+        <div class="metric-companies">~1,500</div>
+        <div class="metric-revenue">EUR 90M revenue potential</div>
+        <div class="metric-note">European SMEs and scale-ups with active SSA expansion plans, digital growth mandate, 10–200 employees. Smaller pool, higher value per client.</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">SAM</div>
+          <div class="metric-badge badge-sam">Serviceable</div>
+        </div>
+        <div class="metric-companies">~450</div>
+        <div class="metric-revenue">EUR 27M revenue potential</div>
+        <div class="metric-note">At active growth inflection point in African market entry. GritFuel's cross-territory capability (EU brand standards + SSA execution) is a unique fit.</div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="metric-top">
+          <div class="metric-type">ACV</div>
+        </div>
+        <div class="metric-companies" style="font-size:18px;">EUR 5,000/mo</div>
+        <div class="metric-revenue">EUR 60,000/year avg</div>
+        <div class="metric-note">Full EU pricing — these clients have European budgets and are benchmarking against EU agency costs. Premium positioning justified.</div>
+      </div>
+    </div>
+
+  </div><!-- /territories -->
+
+  <!-- TOTALS -->
+  <div class="totals-row">
+    <div class="totals-label">
+      <div class="t-name">Combined</div>
+      <div class="t-title">All territories</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-type">TAM — Total market</div>
+      <div class="total-co">~151,500</div>
+      <div class="total-rev">EUR 8.3B revenue potential</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-type">SAM — Serviceable</div>
+      <div class="total-co">~57,950</div>
+      <div class="total-rev">EUR 3.25B revenue potential</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-type">1.2% SAM capture (7-year SOM target)</div>
+      <div class="total-co">~675 clients</div>
+      <div class="total-rev">EUR 38.8M ARR</div>
+    </div>
+  </div>
+
+  <!-- SOM -->
+  <div class="section-label">Serviceable Obtainable Market — 3-year trajectory</div>
+  <div class="som-section">
+    <div class="som-grid">
+
+      <div class="som-card">
+        <div class="som-year">Year 1 · Beta</div>
+        <div class="som-clients">15–20</div>
+        <div class="som-clients-label">clients</div>
+        <div class="som-arr">~EUR 1.0M ARR</div>
+        <div class="som-bar-wrap"><div class="som-bar" style="width:14%;"></div></div>
+        <div class="som-breakdown">
+          <div class="som-tier">EU <strong>~14</strong></div>
+          <div class="som-tier">SSA <strong>~3</strong></div>
+          <div class="som-tier">EU→Africa <strong>~1</strong></div>
+        </div>
+        <div class="som-note">Core team capacity. Netherlands-first. First beta clients across Core and Growth tiers. Ops/Client Success hire triggered at ~12 clients.</div>
+      </div>
+
+      <div class="som-card featured">
+        <div class="som-featured-tag">Target</div>
+        <div class="som-year">Year 2 · Growth</div>
+        <div class="som-clients">40–60</div>
+        <div class="som-clients-label">clients</div>
+        <div class="som-arr">~EUR 2.8–3.5M ARR</div>
+        <div class="som-bar-wrap"><div class="som-bar" style="width:38%;"></div></div>
+        <div class="som-breakdown">
+          <div class="som-tier">EU <strong>~40</strong></div>
+          <div class="som-tier">SSA <strong>~12</strong></div>
+          <div class="som-tier">EU→Africa <strong>~4</strong></div>
+        </div>
+        <div class="som-note">2–3 additional strategists from SA pool formalised. PM capacity expanded. SSA hub established (Lagos or Nairobi). Tech Lead hired for GritFuel OS build.</div>
+      </div>
+
+      <div class="som-card">
+        <div class="som-year">Year 3 · Scale</div>
+        <div class="som-clients">90–120</div>
+        <div class="som-clients-label">clients</div>
+        <div class="som-arr">~EUR 5.5–7.2M ARR</div>
+        <div class="som-bar-wrap"><div class="som-bar" style="width:80%;"></div></div>
+        <div class="som-breakdown">
+          <div class="som-tier">EU <strong>~80</strong></div>
+          <div class="som-tier">SSA <strong>~28</strong></div>
+          <div class="som-tier">EU→Africa <strong>~9</strong></div>
+        </div>
+        <div class="som-note">Full delivery team operational. CTO / Head of Product in place. GritFuel OS partially automated, improving margin per client. VC conversation viable.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ASSUMPTIONS -->
+  <div class="section-label">Key assumptions</div>
+  <div class="assumptions">
+    <h3>Methodology notes — challenge these</h3>
+    <div class="assumption-grid">
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>EU digital-first filter (20%):</strong> Applied conservatively. Post-COVID digital acceleration suggests this could be 25–30%, which would expand the TAM by ~60,000 companies.</div>
+      </div>
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>SSA ACV (EUR 2,500/mo):</strong> Blended rate. VC-backed companies in Lagos and Nairobi benchmarking against USD costs may sustain full EUR 5,000/mo — would increase SSA SAM revenue by ~2×.</div>
+      </div>
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>EU SAM filter (40% of TAM):</strong> Based on proportion at active growth inflection point. If paid media intent is broader, this could be 50%+ — SAM expands to ~62,500 companies.</div>
+      </div>
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>EU → Africa segment:</strong> Smaller absolute number but high-margin. Full EU pricing applies. Grows as African markets attract more European commercial interest post-2025.</div>
+      </div>
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>SOM scaling:</strong> Assumes linear headcount growth. GritFuel OS automation (80% target) could significantly improve clients-per-strategist ratio, accelerating Year 3 capacity.</div>
+      </div>
+      <div class="assumption-item">
+        <div class="assumption-dot"></div>
+        <div class="assumption-text"><strong>ACV blend:</strong> EUR 5,000/mo EU average assumes ~50% Core / 35% Growth / 15% Performance mix. If Performance tier adoption is higher, ACV and margin improve materially.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sources">
+    <strong style="color:#888;">Sources:</strong>
+    <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Structural_business_statistics_overview" target="_blank">Eurostat Structural Business Statistics</a> ·
+    <a href="https://www.stateofeuropeantech.com/chapters/startup-investment-trends" target="_blank">Atomico State of European Tech 2024</a> ·
+    <a href="https://disruptafrica.com/2025/03/12/africas-big-four-retained-dominance-funding-wise-in-2024-as-capital-finds-safe-haven/" target="_blank">Disrupt Africa Funding Report 2024</a> ·
+    <a href="https://iabeurope.eu/iab-europes-2024-adex-benchmark-report-european-digital-advertising-market-surpasses-e100bn-for-the-first-time/" target="_blank">IAB Europe AdEx Benchmark 2024</a>
+  </div>
+
+  <div class="footer" style="margin-top:32px;">GritFuel · Market Opportunity · Bottom-up methodology · April 2026 · Internal / Investor use</div>
+
+</div>
+</body>
+</html>

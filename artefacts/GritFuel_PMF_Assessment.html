@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GritFuel — PMF Assessment &amp; Positioning Recommendations</title>
+<style>
+  :root {
+    --ink: #1A1A1A; --ink-2: #232323; --ink-3: #2A2A2A;
+    --paper: #FAFAF7; --paper-dim: #B8B8B5; --muted: #8E8E8B;
+    --lime: #DEE450; --orange: #FC4E2B; --red: #E66A5C;
+  }
+  @page { size: A4 portrait; margin: 18mm 16mm; background: var(--ink); }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--ink); color: var(--paper);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 10.5pt; line-height: 1.55;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 28pt 22pt 40pt; }
+  h1, h2, h3 { font-family: 'Montserrat', sans-serif; color: var(--paper); margin: 0; }
+  h1 { font-size: 24pt; font-weight: 800; letter-spacing: -0.01em; }
+  h2 { font-size: 14pt; font-weight: 700; margin-top: 24pt; margin-bottom: 8pt; color: var(--lime); }
+  h3 { font-size: 11pt; font-weight: 700; margin-top: 14pt; margin-bottom: 4pt; }
+  p { margin: 0 0 8pt 0; color: var(--paper-dim); }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--lime); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+  .rule { height: 1px; background: linear-gradient(90deg, var(--lime), transparent); margin: 10pt 0 14pt; }
+  strong { color: var(--paper); font-weight: 700; }
+  em { color: var(--paper); font-style: italic; }
+  .muted { color: var(--muted); }
+
+  .callout { background: var(--ink-3); border-left: 3pt solid var(--lime); padding: 10pt 14pt; border-radius: 0 4pt 4pt 0; margin: 12pt 0; }
+  .callout-warn { border-left-color: var(--orange); }
+  .callout-red { border-left-color: var(--red); }
+  .callout-title { font-weight: 700; color: var(--lime); margin-bottom: 3pt; font-size: 10pt; }
+  .callout-warn .callout-title { color: var(--orange); }
+  .callout-red .callout-title { color: var(--red); }
+  .callout-body { font-size: 9.5pt; color: var(--paper-dim); }
+  .callout-body strong { color: var(--paper); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 8pt 0; }
+  th, td { text-align: left; padding: 6pt 8pt; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+  th { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  td strong { color: var(--paper); }
+  td.lime { color: var(--lime); font-weight: 700; }
+
+  ul { padding-left: 18pt; margin: 6pt 0 10pt 0; }
+  ul li { color: var(--paper-dim); margin-bottom: 4pt; }
+
+  .score-row { display: flex; align-items: center; gap: 10pt; margin: 4pt 0; }
+  .score-label { flex: 0 0 180pt; font-size: 9.5pt; }
+  .score-bar { flex: 1; background: rgba(255,255,255,0.08); height: 10pt; border-radius: 3pt; position: relative; overflow: hidden; }
+  .score-fill { position: absolute; top: 0; left: 0; bottom: 0; background: var(--lime); border-radius: 3pt; }
+  .score-fill.orange { background: var(--orange); }
+  .score-fill.red { background: var(--red); }
+  .score-num { flex: 0 0 52pt; font-family: 'JetBrains Mono', monospace; font-size: 9.5pt; color: var(--paper); text-align: right; }
+
+  .rec-card { background: var(--ink-2); border: 1px solid rgba(255,255,255,0.08); border-radius: 6pt; padding: 12pt 14pt; margin: 10pt 0; }
+  .rec-id { font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--lime); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3pt; }
+  .rec-title { font-family: 'Montserrat', sans-serif; font-size: 11pt; font-weight: 700; color: var(--paper); margin-bottom: 4pt; }
+  .rec-body { font-size: 9.5pt; color: var(--paper-dim); }
+  .rec-body strong { color: var(--paper); }
+
+  .src { font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--muted); }
+  .home-link { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12pt; }
+  .home-link:hover { color: var(--lime); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<a class="home-link" href="../01-strategy.html">← Back to Strategy</a>
+
+<div class="eyebrow">Internal positioning note · April 2026</div>
+<h1>PMF Assessment &amp; Positioning Recommendations</h1>
+<p class="muted" style="margin-top: 4pt;">A working assessment of GritFuel's product-market fit state and the positioning calls that follow. This is the companion memo behind the Business Model Canvas, JTBD/VPC, and Founder/CEO DeepDive — the "why these choices" document.</p>
+<div class="rule"></div>
+
+<p>This note exists to answer three questions partners should be able to ground the go-live in: <em>(1) Do we have product-market fit?</em> <em>(2) If not, what's missing?</em> <em>(3) What positioning choices follow from the answer?</em> The canvases are the primary source; this memo is the rationale.</p>
+
+<h2>1. PMF Assessment</h2>
+
+<h3>1.1 Where we are on the Sean Ellis curve</h3>
+<p>Classic PMF signal: ≥40% of users saying they'd be "very disappointed" if the product disappeared. We have <strong>no quantitative read</strong> yet — the Growth Dashboard, Compounding Engine, and Monthly Playbook are pre-launch. But qualitative anchors are legible enough to rate each PMF input honestly.</p>
+
+<div class="score-row"><div class="score-label">Problem clarity</div><div class="score-bar"><div class="score-fill" style="width: 85%;"></div></div><div class="score-num">Strong</div></div>
+<div class="score-row"><div class="score-label">Audience definition</div><div class="score-bar"><div class="score-fill" style="width: 75%;"></div></div><div class="score-num">Good</div></div>
+<div class="score-row"><div class="score-label">Solution shape</div><div class="score-bar"><div class="score-fill" style="width: 65%;"></div></div><div class="score-num">Converging</div></div>
+<div class="score-row"><div class="score-label">Pricing coherence</div><div class="score-bar"><div class="score-fill orange" style="width: 55%;"></div></div><div class="score-num">Emerging</div></div>
+<div class="score-row"><div class="score-label">Delivery capability</div><div class="score-bar"><div class="score-fill orange" style="width: 45%;"></div></div><div class="score-num">Partial</div></div>
+<div class="score-row"><div class="score-label">Distribution</div><div class="score-bar"><div class="score-fill red" style="width: 25%;"></div></div><div class="score-num">Untested</div></div>
+
+<p class="muted" style="font-size: 9pt; margin-top: 8pt;">Scale: <span style="color: var(--paper);">Strong</span> = defensible with evidence · <span style="color: var(--paper);">Good</span> = defensible with reasoning · <span style="color: var(--paper);">Converging</span> = call is made but not tested · <span style="color: var(--paper);">Emerging</span> = first-pass, needs iteration · <span style="color: var(--paper);">Partial</span> = lane open but not staffed · <span style="color: var(--paper);">Untested</span> = unknown.</p>
+
+<h3>1.2 The honest read</h3>
+<p>We do not yet have PMF. We have <strong>pre-PMF signal</strong>: a problem founders name the same way across conversations ("I don't have a growth function"), a solution shape (a Growth OS + monthly Playbook) that plausibly resolves it, and a set of delivery partners (.frank, Bluegyfu, BFL) that can execute the work. What we do not have is a single client running a full monthly cycle against the product at the price.</p>
+
+<div class="callout callout-warn">
+  <div class="callout-title">The precise state</div>
+  <div class="callout-body">Problem-solution fit: <strong>plausible</strong>. Product-market fit: <strong>unverified</strong>. Founder-channel fit: <strong>untested</strong>. The 22 April soft launch moves us from "built" to "in front of the inner circle," and the 18 May official launch moves us from "in front of a circle" to "running" — it's the first condition under which PMF can be measured at all.</div>
+</div>
+
+<h2>2. The positioning problem we were solving</h2>
+
+<p>Prior framing described GritFuel as a "brandformance agency" — implying embedded service delivery with a brand and performance layer. That positioning has three problems:</p>
+
+<ul>
+  <li><strong>Category overlap.</strong> "Brandformance" is already used by other shops in the EU market. Claiming it makes us hard to differentiate.</li>
+  <li><strong>Pricing ceiling.</strong> Agencies are priced on retainer bands shaped by market comps. A new shop enters at the bottom of the curve; existing shops are priced ~40–60% higher for the same output shape.</li>
+  <li><strong>Delivery shape.</strong> The partnership is already four-way (GritFuel + .frank + Bluegyfu + BFL). An "agency" framing hides the orchestration layer — which is the thing that is actually novel.</li>
+</ul>
+
+<h2>3. Positioning Recommendations</h2>
+
+<div class="rec-card">
+  <div class="rec-id">R1 · Category</div>
+  <div class="rec-title">Position as a Growth Operating System, not an agency.</div>
+  <div class="rec-body">A product the founder logs into, with the agency work happening <em>behind</em> the product, not instead of it. This reframes every downstream choice: pricing becomes subscription + credits (not retainer), delivery becomes orchestrated multi-partner (not single-shop), and the primary interaction surface becomes software (the five OS tools + Monthly Playbook), not account-management. <strong>Why:</strong> "Growth OS" is an open category in the EU SMB/scale-up segment — no one has claimed it. <strong>Cost:</strong> we carry the burden of actually having a product, which introduces the product-engineering capability gap called out elsewhere in this briefing.</div>
+</div>
+
+<div class="rec-card">
+  <div class="rec-id">R2 · Umbrella &amp; tagline</div>
+  <div class="rec-title">Three-layer tagline system — resolves the petrol-brand collision.</div>
+  <div class="rec-body"><strong>Umbrella:</strong> "Human thinking. Relentless execution." <strong>Descriptor:</strong> "The growth operating system." <strong>Companion:</strong> "Growth that compounds. Visibly." A layered system is needed because "GritFuel" alone triggers fuel/petrol associations in EU markets — the descriptor disambiguates instantly. <strong>Why:</strong> single-tagline systems force a choice between category-naming and emotional-resonance; a three-layer system lets us lead with whichever fits the surface (investor deck: umbrella; sales page: descriptor; social: companion).</div>
+</div>
+
+<div class="rec-card">
+  <div class="rec-id">R3 · Revenue architecture</div>
+  <div class="rec-title">Two-stream — fixed subscription plus credit pool.</div>
+  <div class="rec-body"><strong>Stream 1 (fixed):</strong> €3,500 / €5,250 / €8,000 per month for OS access, Monthly Playbook, strategic oversight. High-margin, covers overhead. <strong>Stream 2 (credits):</strong> a monthly credit pool the client spends against the ALC Menu — 75% cost-share to partners, €25/credit output value. Low-margin but high-volume. <strong>Why:</strong> a single-stream retainer collapses either into an agency (low margin, high overhead) or a SaaS (too thin to include real delivery). The two-stream model lets us <em>be</em> a product and <em>deliver</em> service without one cannibalising the other.</div>
+</div>
+
+<div class="rec-card">
+  <div class="rec-id">R4 · ICP &amp; segment</div>
+  <div class="rec-title">EU/NL seed-to-Series-A founders, 3–30 person teams, post-traction pre-scale.</div>
+  <div class="rec-body">Specifically: founders with real revenue (€30k+ MRR or €500k+ ARR) who have outgrown founder-led growth but cannot yet afford an in-house VP Growth (€120–160k fully-loaded). They need a growth <em>function</em>, not a growth <em>hire</em>. <strong>Why:</strong> this segment has the problem acutely (they're actively losing to more-resourced competitors), can afford the €3.5–8k/month spend, and is small enough to be reachable through founder-community channels. <strong>Avoid:</strong> pre-revenue founders (wrong time), 50+ person companies (they'll hire in-house), and sector-specialist verticals (wrong depth).</div>
+</div>
+
+<div class="rec-card">
+  <div class="rec-id">R5 · Go-to-market wedge</div>
+  <div class="rec-title">Lead with the 43% GTM failure stat; lead with the Playbook as the signature artefact.</div>
+  <div class="rec-body">The 43% figure (CB Insights 2024, n=431 VC-backed shutdowns — startup failures that trace to poor PMF / GTM execution) is precise, sourced, and defensible. It sets up the problem without overclaiming market size. The Monthly Playbook is the signature artefact — the thing partners can hold up and say "this is what we produce." Everything else (dashboard, router, ALC menu) is load-bearing but invisible; the Playbook is the public face. <strong>Why:</strong> campaigns need a single emblem; founders trust artefacts more than marketing pages.</div>
+</div>
+
+<h2>4. What this does NOT claim</h2>
+
+<div class="callout callout-red">
+  <div class="callout-title">We are not claiming PMF.</div>
+  <div class="callout-body">The recommendations above are pre-PMF positioning choices — how we enter the market. PMF is confirmed (or not) by the first three signed clients running full monthly cycles at full price. If fewer than 2 of the first 3 cohort-one clients would score "very disappointed" after 90 days, the positioning is wrong and we rebuild it.</div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-title">We are not claiming the category is empty.</div>
+  <div class="callout-body">"Growth OS" is an uncrowded phrase but the work underneath it is adjacent to growth agencies, fractional VP-growth services, HubSpot partner agencies, and RevOps consultancies. The differentiator is the <em>product surface</em> (the Monthly Playbook + five tools), not the service shape.</div>
+</div>
+
+<h2>5. The three tests that disprove this</h2>
+
+<table>
+  <thead><tr><th>Test</th><th>What would disprove</th><th>When we'll know</th></tr></thead>
+  <tbody>
+    <tr><td>Cohort-one retention</td><td>&lt;2 of 3 clients renew at month 4</td><td>Sep 2026</td></tr>
+    <tr><td>Sean Ellis score</td><td>&lt;40% "very disappointed"</td><td>Month 3 of cohort-one</td></tr>
+    <tr><td>Credit pool usage</td><td>Average &lt;70% of credits used monthly</td><td>Month 2 of cohort-one</td></tr>
+  </tbody>
+</table>
+
+<p class="muted" style="margin-top: 6pt; font-size: 9pt;">If any of these fails, the positioning is the first place to look — before we touch product shape, pricing, or delivery model. Positioning is cheaper to change than any of the three.</p>
+
+<h2>6. Action items for go-live</h2>
+
+<ul>
+  <li><strong>Before 22 April soft launch:</strong> align all four partners on R1–R3 (category / tagline system / two-stream revenue). R4–R5 can be tested against cohort-one without prior alignment.</li>
+  <li><strong>Month 1 of cohort-one:</strong> instrument the Sean Ellis survey inside the Growth Dashboard. Fire at day 45, 90, 120.</li>
+  <li><strong>Month 3 of cohort-one:</strong> first positioning retrospective. Keep / kill / iterate each of R1–R5 based on signal.</li>
+  <li><strong>Month 6:</strong> if any of the three failure tests fires, convene a positioning working session with partners. Do not wait for month 12.</li>
+</ul>
+
+<p class="muted" style="margin-top: 24pt; font-size: 9pt;">Prepared April 2026 · Internal only · Companion to the Business Model Canvas, JTBD/VPC, and Founder/CEO DeepDive · Sources: CB Insights Venture Capital Failure Report 2024, Atomico State of European Tech 2024.</p>
+
+</div>
+</body>
+</html>

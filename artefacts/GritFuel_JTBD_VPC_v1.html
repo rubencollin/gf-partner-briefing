@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — JTBD / VPC Canvas v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #3C3C3C;
+    --lime: #DEE450;
+    --orange: #FC4E2B;
+    --gray: #929292;
+    --light: #F4F4F2;
+    --white: #FFFFFF;
+    --ink: #1E1E1E;
+    --hairline: #E5E5E3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--light); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* HEADER */
+  header { margin-bottom: 40px; position: relative; }
+  .eyebrow { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 56px; line-height: 1.0; letter-spacing: -1.5px; color: var(--charcoal); margin-bottom: 18px; }
+  h1 .accent { background: var(--lime); padding: 0 8px; }
+  .sub { font-size: 17px; color: var(--gray); max-width: 780px; line-height: 1.5; }
+  .meta-strip { display: flex; gap: 28px; margin-top: 28px; padding: 14px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); flex-wrap: wrap; }
+  .meta-strip > div { font-size: 12px; }
+  .meta-strip .label { color: var(--gray); font-weight: 500; text-transform: uppercase; letter-spacing: 1.2px; margin-right: 8px; }
+  .meta-strip .value { color: var(--charcoal); font-weight: 600; }
+
+  /* SECTION HEADS */
+  .section { margin-top: 64px; }
+  .section-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 28px; }
+  .section-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 38px; color: var(--lime); line-height: 1; }
+  .section-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.5px; color: var(--charcoal); }
+  .section-sub { color: var(--gray); font-size: 14px; margin-top: 6px; }
+
+  /* PERSONA CARDS */
+  .persona-header { background: var(--charcoal); color: var(--white); padding: 24px 28px; border-radius: 4px 4px 0 0; display: flex; align-items: center; gap: 24px; }
+  .persona-avatar { width: 64px; height: 64px; background: var(--lime); color: var(--charcoal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 22px; flex-shrink: 0; }
+  .persona-meta h3 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
+  .persona-meta .role { font-size: 13px; color: var(--lime); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .persona-desc { margin-left: auto; font-size: 12px; color: #c8c8c8; max-width: 340px; line-height: 1.4; text-align: right; }
+
+  /* JTBD STRIP */
+  .jtbd { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hairline); padding: 1px; }
+  .jtbd-cell { background: var(--white); padding: 20px 22px; }
+  .jtbd-cell h4 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange); margin-bottom: 4px; }
+  .jtbd-cell .job-type { font-size: 11px; color: var(--gray); margin-bottom: 14px; font-weight: 500; }
+  .jtbd-cell ul { list-style: none; }
+  .jtbd-cell li { font-size: 13px; color: var(--ink); margin-bottom: 8px; padding-left: 14px; position: relative; line-height: 1.45; }
+  .jtbd-cell li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 2px; background: var(--charcoal); }
+
+  /* VPC GRID */
+  .vpc { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); padding: 1px 1px 0 1px; margin-bottom: 48px; }
+  .vpc-side { background: var(--white); padding: 24px 26px; }
+  .vpc-side .side-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+  .vpc-side .side-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--charcoal); margin-bottom: 20px; letter-spacing: -0.2px; }
+  .vpc-block { margin-bottom: 22px; }
+  .vpc-block:last-child { margin-bottom: 0; }
+  .vpc-block .block-title { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--charcoal); margin-bottom: 10px; }
+  .tag { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border-radius: 2px; }
+  .tag.pain { background: var(--orange); color: var(--white); }
+  .tag.gain { background: var(--lime); color: var(--charcoal); }
+  .tag.job { background: var(--charcoal); color: var(--white); }
+  .tag.prod { background: var(--charcoal); color: var(--lime); }
+  .tag.reliever { background: var(--orange); color: var(--white); }
+  .tag.creator { background: var(--lime); color: var(--charcoal); }
+  .vpc-block ul { list-style: none; }
+  .vpc-block li { font-size: 13px; color: var(--ink); margin-bottom: 7px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .vpc-block li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 2px; background: var(--lime); }
+  .vpc-block.pains li::before { background: var(--orange); }
+  .vpc-block li strong { color: var(--charcoal); font-weight: 600; }
+
+  /* FIT BAR */
+  .fit-bar { grid-column: 1 / -1; background: var(--charcoal); color: var(--white); padding: 14px 26px; font-size: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .fit-bar .fit-label { font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; font-size: 11px; color: var(--lime); }
+  .fit-bar .fit-score { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 22px; color: var(--lime); margin-left: auto; }
+  .fit-bar .fit-note { font-size: 12px; color: #d0d0d0; flex: 1; min-width: 200px; }
+
+  /* STRESS TEST */
+  .stress-intro { background: var(--charcoal); color: var(--white); padding: 28px 32px; margin-bottom: 32px; border-left: 6px solid var(--orange); }
+  .stress-intro .kicker { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); margin-bottom: 10px; }
+  .stress-intro p { font-size: 15px; color: #f0f0f0; max-width: 820px; line-height: 1.55; }
+
+  .stress-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .stress-card { background: var(--white); border: 1px solid var(--hairline); padding: 26px 28px; }
+  .stress-card h4 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--charcoal); margin-bottom: 6px; letter-spacing: -0.2px; }
+  .stress-card .subtitle { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 16px; }
+  .assumption { padding: 14px 0; border-bottom: 1px solid var(--hairline); }
+  .assumption:last-child { border-bottom: none; }
+  .assumption .ass-title { font-weight: 600; font-size: 14px; color: var(--charcoal); margin-bottom: 5px; display: flex; gap: 10px; align-items: flex-start; }
+  .assumption .ass-num { display: inline-block; background: var(--orange); color: var(--white); width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 800; text-align: center; line-height: 22px; flex-shrink: 0; font-family: 'Montserrat', sans-serif; }
+  .assumption .ass-body { font-size: 13px; color: #4a4a4a; line-height: 1.55; padding-left: 32px; }
+
+  /* FIT GAP TABLE */
+  .gap-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .gap-table th { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gray); text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--charcoal); background: var(--light); }
+  .gap-table td { padding: 14px; font-size: 13px; border-bottom: 1px solid var(--hairline); vertical-align: top; line-height: 1.5; }
+  .gap-table td:first-child { font-weight: 600; color: var(--charcoal); width: 26%; }
+  .gap-table td:nth-child(2) { width: 28%; color: #4a4a4a; }
+  .gap-table td:nth-child(3) { color: var(--ink); }
+  .gap-severity { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border-radius: 2px; margin-right: 8px; }
+  .sev-high { background: var(--orange); color: var(--white); }
+  .sev-med { background: #f5c518; color: var(--charcoal); }
+  .sev-low { background: var(--lime); color: var(--charcoal); }
+
+  /* QUESTIONS */
+  .questions { background: var(--charcoal); color: var(--white); padding: 36px 40px; margin-top: 32px; position: relative; overflow: hidden; }
+  .questions::before { content: "?"; position: absolute; font-family: 'Montserrat', sans-serif; font-size: 360px; font-weight: 900; color: rgba(222, 228, 80, 0.08); right: 20px; top: -80px; line-height: 1; }
+  .questions h4 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; position: relative; }
+  .questions .qsub { color: var(--lime); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 24px; position: relative; }
+  .q-list { counter-reset: q; position: relative; }
+  .q-list li { list-style: none; padding: 14px 0 14px 60px; position: relative; font-size: 15px; line-height: 1.5; border-bottom: 1px solid #555; }
+  .q-list li:last-child { border-bottom: none; }
+  .q-list li::before { counter-increment: q; content: "0" counter(q); position: absolute; left: 0; top: 14px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 20px; color: var(--lime); }
+
+  /* FOOTER */
+  footer { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--hairline); color: var(--gray); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--charcoal); font-size: 14px; letter-spacing: -0.3px; }
+  footer .logo .dot { color: var(--lime); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    h1 { font-size: 38px; }
+    .jtbd, .vpc, .stress-grid { grid-template-columns: 1fr; }
+    .persona-desc { display: none; }
+    .persona-header { flex-wrap: wrap; }
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; }
+    .wrap { padding: 20px; }
+    .section { page-break-inside: avoid; margin-top: 30px; }
+    .persona-header { break-inside: avoid; }
+  }
+
+  /* Little arrow motif */
+  .arrow-bg { position: absolute; right: 0; top: 30px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 180px; color: var(--lime); opacity: 0.25; line-height: 1; pointer-events: none; user-select: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="arrow-bg">→</div>
+  <div class="eyebrow">Canvas · v1 · Internal Working Doc</div>
+  <h1>JTBD &amp; Value <span class="accent">Proposition</span><br>Canvas</h1>
+  <p class="sub">First-pass Jobs-to-be-Done and Strategyzer Value Proposition Canvas for GritFuel's primary EU segment — plus a stress test designed to break the offering before prospects do.</p>
+  <div class="meta-strip">
+    <div><span class="label">Segment</span><span class="value">EU tech SME · 10–200 employees · €50k–€500k mktg budget</span></div>
+    <div><span class="label">Personas</span><span class="value">Founder/CEO + Head of Growth</span></div>
+    <div><span class="label">Framework</span><span class="value">JTBD + Strategyzer VPC</span></div>
+    <div><span class="label">Date</span><span class="value">April 2026</span></div>
+  </div>
+</header>
+
+<!-- PERSONA 1 -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-num">01</div>
+    <div>
+      <div class="section-title">Persona A — Founder / CEO</div>
+      <div class="section-sub">The budget holder. Owns growth outcome. Emotional buyer. Signs the contract.</div>
+    </div>
+  </div>
+
+  <div class="persona-header">
+    <div class="persona-avatar">F/C</div>
+    <div class="persona-meta">
+      <h3>"Lars" — Founder / CEO</h3>
+      <div class="role">Series A · 25 employees · 18 months runway</div>
+    </div>
+    <div class="persona-desc">Raised €3M, has an MVP with early customers, board wants a credible growth function before the next round. Cannot yet justify a €150k/yr CMO.</div>
+  </div>
+
+  <!-- JTBD STRIP -->
+  <div class="jtbd">
+    <div class="jtbd-cell">
+      <h4>Functional Jobs</h4>
+      <div class="job-type">What they're trying to get done</div>
+      <ul>
+        <li>Convert MVP traction into repeatable, defensible market share</li>
+        <li>Hit monthly &amp; quarterly growth milestones the board tracks</li>
+        <li>Extend runway by growing revenue faster than burn</li>
+        <li>Build a growth function <strong>without</strong> hiring a full in-house marketing team</li>
+        <li>Know per-euro what is working and what to cut</li>
+      </ul>
+    </div>
+    <div class="jtbd-cell">
+      <h4>Emotional Jobs</h4>
+      <div class="job-type">How they want to feel</div>
+      <ul>
+        <li>In control of growth — not hostage to an agency's creative director</li>
+        <li>Confident when presenting traction to the board &amp; next-round investors</li>
+        <li>Relieved that burn-rate vs. traction anxiety has a rhythm</li>
+        <li>Credible as a CEO who "runs a real company"</li>
+      </ul>
+    </div>
+    <div class="jtbd-cell">
+      <h4>Social Jobs</h4>
+      <div class="job-type">How they want to be perceived</div>
+      <ul>
+        <li>Seen as a founder who "gets" modern growth</li>
+        <li>Respected by peer CEOs for disciplined, data-led scaling</li>
+        <li>Avoid the silent shame of "we couldn't make it work"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- VPC -->
+  <div class="vpc">
+    <!-- CUSTOMER PROFILE -->
+    <div class="vpc-side">
+      <div class="side-label">Customer Profile</div>
+      <div class="side-title">What Lars carries into the room</div>
+
+      <div class="vpc-block pains">
+        <div class="block-title"><span class="tag pain">Pains</span></div>
+        <ul>
+          <li><strong>Agency fatigue</strong> — paid for deliverables, didn't get growth. Monthly reset, no compounding.</li>
+          <li><strong>Fractional CMO ceiling</strong> — got a strategy deck, nothing to execute it with.</li>
+          <li><strong>In-house is too expensive</strong> — €30–50k/mo burn before a single piece of work ships.</li>
+          <li><strong>Attribution fog</strong> — can't confidently answer "where did each marketing euro go, and what came back?"</li>
+          <li><strong>Strategy-vs-execution blame</strong> — when results are flat, nobody knows if the idea was wrong or the delivery was weak.</li>
+          <li><strong>Vendor sprawl</strong> — 5 vendors, 5 reports, 5 invoices, no coherence.</li>
+          <li><strong>Board pressure</strong> — every quarter is "show me growth" with a ticking cash runway.</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag gain">Gains</span></div>
+        <ul>
+          <li>Predictable monthly growth rhythm with visible progress</li>
+          <li><strong>One contract, one accountable partner</strong> for both strategy and execution</li>
+          <li>Data that <strong>accumulates</strong> — every month builds on the last</li>
+          <li>Board-ready narrative: "here's spend, here's return, here's next month"</li>
+          <li>Headcount-light, variable-cost growth function that scales with revenue</li>
+          <li>Senior thinking without a €180k/yr CMO hire</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- VALUE MAP -->
+    <div class="vpc-side">
+      <div class="side-label">GritFuel Value Map</div>
+      <div class="side-title">What GritFuel brings to the table</div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag prod">Products &amp; Services</span></div>
+        <ul>
+          <li>Monthly subscription (Core €3.5k · Growth €5.25k · Performance €8k)</li>
+          <li>GritFuel OS — 5 integrated tools in a closed monthly loop</li>
+          <li>Dedicated Strategist — named, the human face of GritFuel (6 clients per FTE)</li>
+          <li>Invisible delivery network — brand, performance, events, content</li>
+          <li>Credit-based execution layer (1 credit = €25 output · 3-month rollover)</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag reliever">Pain Relievers</span></div>
+        <ul>
+          <li><strong>Compounding Engine</strong> kills the monthly-reset problem — every cycle builds on the last</li>
+          <li><strong>Monthly Playbook</strong> replaces strategy decks with an execution contract tied to credits</li>
+          <li><strong>Growth Dashboard</strong> answers "where did each euro go, what came back" per channel, per month</li>
+          <li><strong>Escalation Router</strong> eliminates coordination tax — one brief, routed to the right partner</li>
+          <li><strong>70% of EU benchmark pricing + 0% paid-media markup</strong> — budget goes further, trust goes up</li>
+          <li><strong>One contract</strong> replaces 3–5 vendor relationships</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag creator">Gain Creators</span></div>
+        <ul>
+          <li><strong>Compound Score 0–100</strong> — a single board-ready progress metric</li>
+          <li><strong>4-signal scoring</strong> (channel momentum · goal proximity · credit efficiency · dependency sequencing) gives data a founder has never had before</li>
+          <li><strong>Strategy track</strong> (Accelerate / Maintain / Rebalance / Pivot) turns data into decisions</li>
+          <li><strong>Data accumulation moat</strong> — switching cost works FOR the client, not against them</li>
+          <li><strong>EU + SSA positioning</strong> — unique advantage for founders with Africa ambitions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fit-bar">
+      <span class="fit-label">Problem–Solution Fit</span>
+      <span class="fit-note">Strong on functional jobs (attribution, execution, rhythm). Weaker on emotional jobs — trust/relationship layer needs more explicit product expression.</span>
+      <span class="fit-score">7 / 10</span>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONA 2 -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">Persona B — Head of Growth / Marketing Lead</div>
+      <div class="section-sub">The user. Often the champion inside the account. Power dynamics with the founder. Career stakes.</div>
+    </div>
+  </div>
+
+  <div class="persona-header">
+    <div class="persona-avatar">HoG</div>
+    <div class="persona-meta">
+      <h3>"Sanne" — Head of Growth</h3>
+      <div class="role">3–5 yrs experience · direct report to founder · team of 0–2</div>
+    </div>
+    <div class="persona-desc">Owns the number, doesn't always own the budget. Juggles 2 agencies, 4 freelancers, a 7-tool martech stack, and a board deck every month.</div>
+  </div>
+
+  <div class="jtbd">
+    <div class="jtbd-cell">
+      <h4>Functional Jobs</h4>
+      <div class="job-type">What they're trying to get done</div>
+      <ul>
+        <li>Hit the growth numbers their CEO committed to the board</li>
+        <li>Orchestrate specialists without becoming a full-time coordinator</li>
+        <li>Build repeatable playbooks, not ad-hoc projects</li>
+        <li>Prove marketing's contribution to revenue — not just activity</li>
+        <li>Make the budget go 30–40% further than it does today</li>
+      </ul>
+    </div>
+    <div class="jtbd-cell">
+      <h4>Emotional Jobs</h4>
+      <div class="job-type">How they want to feel</div>
+      <ul>
+        <li>Supported — not alone on an island between CEO and vendors</li>
+        <li>Competent when board asks technical attribution questions</li>
+        <li>Confident their role is indispensable, not replaceable</li>
+        <li>Energised by strategic partners, not drained by vendor management</li>
+      </ul>
+    </div>
+    <div class="jtbd-cell">
+      <h4>Social Jobs</h4>
+      <div class="job-type">How they want to be perceived</div>
+      <ul>
+        <li>Seen as the operator who made growth work, not the bottleneck</li>
+        <li>Build a portfolio of results to take into the next role</li>
+        <li>Respected by specialists — not just a brief-writer</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="vpc">
+    <div class="vpc-side">
+      <div class="side-label">Customer Profile</div>
+      <div class="side-title">What Sanne carries into the room</div>
+
+      <div class="vpc-block pains">
+        <div class="block-title"><span class="tag pain">Pains</span></div>
+        <ul>
+          <li><strong>Coordination tax</strong> — briefing 5 vendors = 5 interpretations, 5 chase-ups, 5 reports to reconcile</li>
+          <li><strong>Brand-OR-performance dilemma</strong> — budget forces the choice, both are starved</li>
+          <li><strong>Martech stack debt</strong> — 7 tools, 3 underused, 1 renewing next month</li>
+          <li><strong>Imposter syndrome</strong> when the board drills into attribution methodology</li>
+          <li><strong>"Last one fired"</strong> — growth slowing = marketing lead's head first on the block</li>
+          <li><strong>Agency patronisation</strong> — pitched in glossy meetings, talked down to in working sessions</li>
+          <li><strong>Career plateau risk</strong> — no senior operator to learn from in-house</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag gain">Gains</span></div>
+        <ul>
+          <li>A strategy co-pilot who stress-tests their ideas before the CEO does</li>
+          <li>One dashboard to walk the CEO through — not five spreadsheets</li>
+          <li>Specialist firepower on call, not managed full-time</li>
+          <li>Real attribution evidence for their own career narrative</li>
+          <li>Time back to think strategically, not chase deliverables</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="vpc-side">
+      <div class="side-label">GritFuel Value Map</div>
+      <div class="side-title">What GritFuel brings to the HoG</div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag prod">Products &amp; Services</span></div>
+        <ul>
+          <li>GritFuel OS as <strong>their</strong> operating system, not a replacement</li>
+          <li>Strategist as their monthly thinking partner — and the human who holds the relationship</li>
+          <li>Playbook + Dashboard as their executive reporting tools</li>
+          <li>Invisible partner network they can brief via one channel</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag reliever">Pain Relievers</span></div>
+        <ul>
+          <li><strong>Router kills coordination tax</strong> — they write one brief, not five</li>
+          <li><strong>Playbook is their own monthly artifact</strong> — shippable to CEO, no reformatting</li>
+          <li><strong>Compound Score</strong> gives them a defensible story for every board meeting</li>
+          <li><strong>Strategist relationship</strong> shortcuts imposter syndrome on technical questions</li>
+          <li><strong>Credit transparency</strong> — they always know where budget is deployed</li>
+        </ul>
+      </div>
+
+      <div class="vpc-block">
+        <div class="block-title"><span class="tag creator">Gain Creators</span></div>
+        <ul>
+          <li><strong>Career upside</strong> — GritFuel makes them look senior, not bottlenecked</li>
+          <li><strong>Learning loop</strong> with a senior strategist every month</li>
+          <li><strong>Proof of execution</strong> — attribution data they can take to the next role</li>
+          <li><strong>Time recovered</strong> to do strategic, not operational, work</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fit-bar">
+      <span class="fit-label">Problem–Solution Fit</span>
+      <span class="fit-note">Strong functional fit. Real emotional risk: HoG may read "we run your growth" as a threat to their role — positioning must lead with empowerment, not replacement.</span>
+      <span class="fit-score">6.5 / 10</span>
+    </div>
+  </div>
+</section>
+
+<!-- STRESS TEST -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-num">03</div>
+    <div>
+      <div class="section-title">Stress Test — Where This Is Soft</div>
+      <div class="section-sub">The point of this exercise is to break the canvas before prospects do. Here's where I'd push.</div>
+    </div>
+  </div>
+
+  <div class="stress-intro">
+    <div class="kicker">Principle</div>
+    <p>A value proposition is only strong if it survives hostile questioning. The six assumptions below are the ones I'd interrogate first with real prospects — if any of them break, the canvas doesn't just need a tweak, it needs a rewrite.</p>
+  </div>
+
+  <div class="stress-grid">
+    <div class="stress-card">
+      <h4>Weakest assumptions</h4>
+      <div class="subtitle">The six things most likely to break</div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">1</span> Founders will pay for a system they can't see.</div>
+        <div class="ass-body">The OS is 5 tools — but tools aren't emotional; growth is. Why sign €3.5–8k/mo for a system vs. 2 fractional people they can Zoom with? <strong>The Compound Score and Dashboard must be the emotional hook, not the back-office.</strong> Right now they're described as outputs, not as the product.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">2</span> Partners stay invisible and cooperative at 75% cost share.</div>
+        <div class="ass-body">As GritFuel scales, .frank / Bluegyfu / BFL notice their labor is the backbone. This is a <strong>pyramid held together by relationships</strong>. What happens when Bluegyfu goes direct to a client they delivered for? The competitive moat is behind someone else's door — the single biggest structural risk in the model.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">3</span> SMEs with €50–500k budgets want a system, not a relationship.</div>
+        <div class="ass-body">EU mid-market buying behavior is deeply relationship-driven. The OS is the rational argument but the human/trust layer closes the deal. Do target founders actually want a "system"? Or do they want <em>Ruben and the founders</em>, with the system as proof they'll deliver?</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">4</span> The credit model reduces friction.</div>
+        <div class="ass-body">It may add cognitive load. "What is a credit? How much is a blog post? Did I use my 70 this month?" Every budget-minded client will see credits as <strong>abstraction disguised as transparency</strong>. Test with actual prospects — do they find it clarifying or confusing?</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">5</span> EU and SSA share a JTBD.</div>
+        <div class="ass-body">Cultural and structural buying norms differ. The same canvas won't work for both — which is partly why this one is EU-only. But when GTM activates in SSA, plan for a <strong>parallel canvas, not a translation</strong>.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">6</span> No agency can copy this.</div>
+        <div class="ass-body">S4 Capital, WPP's SME arms, M&amp;C Saatchi, Dept — any of them could copy the OS model in 12–18 months once it's validated. The <strong>data-accumulation moat is real but slow</strong> (6–12 months per client). Head start &gt; inherent defensibility.</div>
+      </div>
+    </div>
+
+    <div class="stress-card">
+      <h4>Missing pains</h4>
+      <div class="subtitle">What the canvas doesn't yet capture</div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">+</span> Procurement &amp; legal friction</div>
+        <div class="ass-body">SMEs above 50 FTE have procurement processes. One monthly subscription invoice is a selling feature — but only if the MSA, DPA, and SLA are frictionless. None of this shows up in current GTM narrative. Add it.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">+</span> Switching-away-from-incumbent pain</div>
+        <div class="ass-body">Many target SMEs are 12–24 months into a 36-month agency contract. The pain of <strong>leaving</strong> is as real as the pain of staying. Need an explicit "migration playbook" offer.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">+</span> Board reporting pain</div>
+        <div class="ass-body">Founders don't just want growth — they want <em>narratable</em> growth for board decks. The Dashboard needs a one-click board-ready export. Not implied in current product description.</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">+</span> Internal politics with HoG</div>
+        <div class="ass-body">When the founder signs without looping in the HoG, the HoG blocks delivery from day one. GritFuel needs an explicit co-pilot narrative for the HoG — not just empty "we empower you."</div>
+      </div>
+
+      <div class="assumption">
+        <div class="ass-title"><span class="ass-num">+</span> Founder's own credibility pain</div>
+        <div class="ass-body">Many founders hire agencies partly <em>so they can blame them</em> when growth is slow. GritFuel's "one throat to choke" model concentrates accountability — which is a feature for rational CEOs, a risk for anxious ones. Know which you're selling to.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIT GAPS TABLE -->
+  <div class="stress-card" style="margin-bottom:32px">
+    <h4>Fit gaps — pain relievers vs. actual pains</h4>
+    <div class="subtitle">Where the current product language doesn't land the punch</div>
+    <table class="gap-table">
+      <thead>
+        <tr>
+          <th>Customer pain</th>
+          <th>Current reliever</th>
+          <th>Gap &amp; fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="gap-severity sev-high">High</span>Agencies reset monthly</td>
+          <td>Compounding Engine</td>
+          <td>Engine only relieves the pain if it's <strong>visible and tangible</strong> to the client. A backend score the founder never sees isn't a reliever. <em>Fix:</em> make the Compound Score the first thing they see each month. Email it. Put it on the Dashboard. Make it the brag.</td>
+        </tr>
+        <tr>
+          <td><span class="gap-severity sev-high">High</span>"I don't know what my marketing budget actually bought"</td>
+          <td>Credit allocation transparency</td>
+          <td>Relief only lands if €X → credits → output → result is shown as one flow. <em>Fix:</em> add a visual spend-to-result pipeline (Sankey or waterfall) into the Playbook and Dashboard. Currently implied, not expressed.</td>
+        </tr>
+        <tr>
+          <td><span class="gap-severity sev-med">Med</span>Coordination burden across vendors</td>
+          <td>Escalation Router</td>
+          <td>Client never sees the Router — its benefit is invisible. <em>Fix:</em> show a client-facing "your month" flow: brief in → routed → delivered → measured. Make the invisible backbone a visible promise.</td>
+        </tr>
+        <tr>
+          <td><span class="gap-severity sev-high">High</span>"Can't prove ROI"</td>
+          <td>Dashboard with KPIs</td>
+          <td>Dashboards show <em>activity</em>; <strong>attribution</strong> shows <em>causation</em>. Very different claims. <em>Fix:</em> be precise about what kind of attribution is promised (channel-level, MMM-lite, deterministic-with-gaps). Overclaim here = churn trigger.</td>
+        </tr>
+        <tr>
+          <td><span class="gap-severity sev-med">Med</span>Fractional CMO ceiling (strategy without execution)</td>
+          <td>Strategy + execution in one contract</td>
+          <td>Strong positioning, but the <strong>senior-strategist brand</strong> isn't yet built. <em>Fix:</em> publish founder POV content monthly. Without it, prospects can't tell whether they're getting a senior operator or a junior account lead.</td>
+        </tr>
+        <tr>
+          <td><span class="gap-severity sev-low">Low</span>"My team is too small"</td>
+          <td>Variable-cost growth function</td>
+          <td>Already well-addressed in positioning. Keep.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="questions">
+    <h4>Five questions for the first ten prospect conversations</h4>
+    <div class="qsub">These will validate or break the canvas faster than any desk research</div>
+    <ol class="q-list">
+      <li>When was the last time you changed marketing vendor — and what, specifically, triggered the switch?</li>
+      <li>If we took GritFuel away from you tomorrow, what would you fall back to? Walk me through day one.</li>
+      <li>What would you miss first: the strategy, the execution, or the data?</li>
+      <li>Which month were you closest to cancelling? What saved it?</li>
+      <li>Who have you told about us — and what exactly did you say?</li>
+    </ol>
+  </div>
+
+</section>
+
+<footer>
+  <div class="logo">GritFuel<span class="dot">.</span>works — JTBD / VPC Canvas v1</div>
+  <div>Internal working doc · April 2026 · Confidential</div>
+</footer>
+
+</div>
+</body>
+</html>

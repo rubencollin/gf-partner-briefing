@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>GritFuel — Capital Burn Calculation (pressure-test memo)</title>
+<style>
+  :root {
+    --ink: #1A1A1A; --ink-2: #232323; --ink-3: #2A2A2A;
+    --paper: #FAFAF7; --paper-dim: #B8B8B5; --muted: #8E8E8B;
+    --lime: #DEE450; --orange: #FC4E2B; --red: #E66A5C;
+  }
+  @page { size: A4 portrait; margin: 18mm 16mm; background: var(--ink); }
+  @font-face { font-family: 'Inter'; font-weight: 400; src: url('fonts/inter-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 600; src: url('fonts/inter-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 700; src: url('fonts/inter-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 800; src: url('fonts/inter-latin-800-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 700; src: url('fonts/montserrat-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; src: url('fonts/montserrat-latin-800-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: url('fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 700; src: url('fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2'); }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--ink); color: var(--paper);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 10.5pt; line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: 'Montserrat', sans-serif; color: var(--paper); margin: 0; }
+  h1 { font-size: 24pt; font-weight: 800; letter-spacing: -0.01em; }
+  h2 { font-size: 14pt; font-weight: 700; margin-top: 22pt; margin-bottom: 8pt; color: var(--lime); }
+  h3 { font-size: 11pt; font-weight: 700; margin-top: 12pt; margin-bottom: 4pt; }
+  p { margin: 0 0 8pt 0; color: var(--paper-dim); }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--lime); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+  .rule { height: 1px; background: linear-gradient(90deg, var(--lime), transparent); margin: 10pt 0 14pt; }
+  strong { color: var(--paper); font-weight: 700; }
+  .muted { color: var(--muted); }
+  .callout { background: var(--ink-3); border-left: 3pt solid var(--lime); padding: 10pt 14pt; border-radius: 0 4pt 4pt 0; margin: 12pt 0; }
+  .callout-warn { border-left-color: var(--orange); }
+  .callout-red { border-left-color: var(--red); }
+  .callout-title { font-weight: 700; color: var(--lime); margin-bottom: 3pt; font-size: 10pt; }
+  .callout-warn .callout-title { color: var(--orange); }
+  .callout-red .callout-title { color: var(--red); }
+  .callout-body { font-size: 9.5pt; color: var(--paper-dim); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 8pt 0; }
+  th, td { text-align: left; padding: 6pt 8pt; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+  th { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  td.num { font-family: 'JetBrains Mono', monospace; text-align: right; color: var(--paper); }
+  td.total { font-weight: 700; color: var(--lime); }
+  tr.total td { border-top: 1px solid rgba(255,255,255,0.18); font-weight: 700; color: var(--paper); }
+
+  ul { padding-left: 18pt; margin: 6pt 0 10pt 0; }
+  ul li { color: var(--paper-dim); margin-bottom: 4pt; }
+
+  .src { font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="eyebrow">Internal memo · Pressure-test version</div>
+<h1>Capital Burn Calculation</h1>
+<p class="muted" style="margin-top: 4pt;">How the "€15–25B wasted annually in W. Europe + SSA" figure reconstructs — and where it breaks.</p>
+<div class="rule"></div>
+
+<p>The figure appears in two places (Context Doc §11, Investor Deck v1.1 market-gap slide) but <strong>without a derivation</strong>. This memo rebuilds it from publicly-cited anchors so we can decide whether to: <em>(a)</em> keep it as-is, <em>(b)</em> narrow it to a defensible sub-figure, or <em>(c)</em> drop it in favour of cleaner anchors.</p>
+
+<h2>1. What the figure is trying to say</h2>
+<p>"Every year, ~€15–25B of capital deployed across W. Europe and Sub-Saharan Africa ends up in ventures that never achieve traction. A large share of that failure traces to GTM / execution gaps — the specific problem GritFuel's OS addresses."</p>
+
+<h2>2. Bottom-up reconstruction</h2>
+
+<h3>A. W. Europe — VC-backed failure burn</h3>
+<table>
+  <thead><tr><th>Input</th><th>Figure</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>European VC capital deployed, 2024</td><td class="num">~$45B (≈€42B)</td><td class="src">Atomico State of European Tech 2024</td></tr>
+    <tr><td>Eventual failure rate, VC-backed cos (5–10yr horizon)</td><td class="num">~60–70%</td><td class="src">Harvard / CB Insights portfolio mortality studies</td></tr>
+    <tr><td>Share of deployed capital that ends up in eventual losses</td><td class="num">~45–55%</td><td class="src">VC power-law — top deciles return the fund; middle &amp; tail lose principal</td></tr>
+    <tr><td>Annualised &quot;failure burn&quot; flow (5–7yr average life to failure)</td><td class="num">€3–6B / yr</td><td class="src">Derived: 50% × €42B ÷ ~6yr</td></tr>
+  </tbody>
+</table>
+<p class="muted" style="font-size: 9pt; margin-top: 4pt;">Note: Atomico's 2025 preliminary read is ~$44B — flat-to-down on 2024. We use the audited 2024 figure as the base.</p>
+
+<h3>B. W. Europe — non-VC capital burn</h3>
+<p>Founder equity, angel, bootstrap, corporate-venture, and accelerator-backed ventures. Much harder to measure — no single registry. Typical proxy: <strong>non-VC early-stage capital is roughly 0.5–1.0x VC flow</strong> across mature ecosystems (OECD / Invest Europe methodology notes).</p>
+<ul>
+  <li>Implied non-VC annual burn on failed EU ventures: <strong>€2–5B / yr</strong></li>
+</ul>
+
+<h3>C. Sub-Saharan Africa</h3>
+<table>
+  <thead><tr><th>Input</th><th>Figure</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>SSA startup funding, 2025 — equity only</td><td class="num">~$1.1B</td><td class="src">Disrupt Africa 2025</td></tr>
+    <tr><td>SSA startup funding, 2025 — equity + debt</td><td class="num">~$3.2B</td><td class="src">Partech Africa Report 2025</td></tr>
+    <tr><td>Working mid-range (blended methodologies)</td><td class="num">~$2B (≈€1.9B)</td><td class="src">Briter Bridges ($2.8B) · Africa The Big Deal ($2.2B)</td></tr>
+    <tr><td>Failure rate on SSA-backed early-stage</td><td class="num">~80–90%</td><td class="src">Higher than EU — infra, capital, and talent constraints</td></tr>
+    <tr><td>Annualised SSA failure burn (VC + bootstrap blend)</td><td class="num">€1–2B / yr</td><td class="src">Derived from VC flow + assumed 1× non-VC tail</td></tr>
+  </tbody>
+</table>
+<p class="muted" style="font-size: 9pt; margin-top: 4pt;">Methodology matters: equity-only vs equity+debt roughly 3× apart. We anchor on the mid-range, but flag the spread because it's the first thing a rigorous reader will challenge.</p>
+
+<h2>3. Summed range</h2>
+<table>
+  <thead><tr><th>Component</th><th>Low</th><th>High</th></tr></thead>
+  <tbody>
+    <tr><td>EU — VC-backed failure burn</td><td class="num">€3B</td><td class="num">€6B</td></tr>
+    <tr><td>EU — non-VC founder / angel / corporate capital</td><td class="num">€2B</td><td class="num">€5B</td></tr>
+    <tr><td>SSA — combined early-stage failure burn</td><td class="num">€1B</td><td class="num">€2B</td></tr>
+    <tr><td>Founder opportunity cost (salaries, time on failed ventures)</td><td class="num">€3B</td><td class="num">€5B</td></tr>
+    <tr class="total"><td>Total annual capital + opportunity burn</td><td class="num">€9B</td><td class="num">€18B</td></tr>
+  </tbody>
+</table>
+
+<p>The honest range is <strong>€9–18B / yr</strong> — meaningfully lower than the €15–25B in the Context Doc. The original upper bound likely came from (a) a higher EU VC base assumption, (b) more generous non-VC capital assumptions, or (c) including 10–15yr cohort tails. None of those are unreasonable, but none are clean enough to defend under pressure.</p>
+
+<h2>4. The sharper, narrower claim</h2>
+<p>Not all failure burn is addressable by GritFuel. CB Insights 2024 (431 VC-backed shutdowns analysed) finds <strong>43% of startup failures trace to poor PMF / GTM execution</strong>, followed by bad timing (29%) and unsustainable unit economics (19%). Applied to our range:</p>
+<div class="callout">
+  <div class="callout-title">GritFuel-addressable wedge</div>
+  <div class="callout-body">43% × €9–18B = <strong>€3.9–7.7B / yr of failure burn in W. Europe + SSA is attributable to the specific gap GritFuel's OS closes</strong> — GTM execution infrastructure that founders never built.</div>
+</div>
+
+<h2>5. Where this calculation breaks — trap list</h2>
+
+<div class="callout callout-warn">
+  <div class="callout-title">Trap 1 — VC power-law is not "waste"</div>
+  <div class="callout-body">VCs <em>expect</em> 50–70% of portfolio to fail. That is the business model, not the market inefficiency. Citing it as waste to a VC audience will read as naïve.</div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-title">Trap 2 — Correlation ≠ causation</div>
+  <div class="callout-body">43% of failures "trace to" GTM is not the same as "43% would have been saved by better GTM." Some would have failed anyway — wrong market, wrong moment, wrong founder. The <em>truly addressable</em> share is smaller.</div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-title">Trap 3 — Double-counting risk</div>
+  <div class="callout-body">EU VC + non-VC + founder opportunity cost may overlap. A failed founder's €200k savings burn is already partly captured in the salary line.</div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-title">Trap 4 — Audience mismatch</div>
+  <div class="callout-body">For <strong>founders</strong>, the figure reads as scary validation. For <strong>VCs</strong>, it reads as either a truism (they know) or an indictment (their portfolios fail). The framing has to flip by audience.</div>
+</div>
+
+<h2>6. Recommendation</h2>
+
+<div class="callout callout-red">
+  <div class="callout-title">Don't anchor on "€15–25B wasted"</div>
+  <div class="callout-body">The number is directionally defensible but the upper bound is shaky and the framing invites pushback — especially from the VC audience we actively want in the room.</div>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Do anchor on the narrower wedge</div>
+  <div class="callout-body">
+    <strong>Founder-facing:</strong> "Thousands of bold ideas die every year across Europe and Africa — not from lack of product, but from lack of execution infrastructure. 43% of startup failures trace to GTM, not the idea." <em>(Qualitative. Sources: CB Insights 2024.)</em><br><br>
+    <strong>VC/accelerator-facing:</strong> "Portfolio mortality doesn't have to trace to GTM gaps. GritFuel is the execution layer that removes the 43% of failure modes founders can't self-solve." <em>(Reframes the VC as solution-buyer, not waste-owner.)</em>
+  </div>
+</div>
+
+<h2>7. Action items</h2>
+<ul>
+  <li><strong>Investor Deck v1.1</strong> — consider replacing "€15–25B burned annually" with a qualitative pain framing + the 43% GTM stat. Keep the $45B EU VC deployment figure as market scale context.</li>
+  <li><strong>Context Doc §11</strong> — either remove the €15–25B line or retain it as "internal anchor" with a footnote stating the assumptions.</li>
+  <li><strong>Sales pitch</strong> — lead with the 43% GTM stat (sourced, precise, defensible, n=431 VC-backed shutdowns). The aggregate burn figure is a tail-end reinforcement at best.</li>
+  <li><strong>If we do keep a burn figure</strong> — use €9–18B as the range. Tightens the claim and removes the vulnerable upper bound.</li>
+</ul>
+
+<p class="muted" style="margin-top: 24pt; font-size: 9pt;">Prepared April 2026 · Internal only · Numbers are reconstructed estimates — treat as directional, not audited.</p>
+
+</body>
+</html>

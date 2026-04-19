@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" width="32" height="32" role="img" aria-label="Momentum">
+  <line x1="4" y1="12" x2="20" y2="12" stroke="#FAFAF7" stroke-width="1.75" stroke-linecap="square"/>
+  <polygon points="20,8.5 25.25,12 20,15.5" fill="#FAFAF7"/>
+  <line x1="9" y1="21" x2="25" y2="21" stroke="#FC4E2B" stroke-width="1.75" stroke-linecap="square"/>
+  <polygon points="25,17.5 30.25,21 25,24.5" fill="#FC4E2B"/>
+</svg>

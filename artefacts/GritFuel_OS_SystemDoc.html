@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>GritFuel OS — System Document</title>
+<style>
+  /* --- fonts (bundled locally — no network required) --- */
+  @font-face { font-family: 'Inter'; font-weight: 400; font-style: normal; src: url('fonts/inter-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 500; font-style: normal; src: url('fonts/inter-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 600; font-style: normal; src: url('fonts/inter-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 700; font-style: normal; src: url('fonts/inter-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-weight: 800; font-style: normal; src: url('fonts/inter-latin-800-normal.woff2') format('woff2'); }
+
+  @font-face { font-family: 'Montserrat'; font-weight: 400; font-style: normal; src: url('fonts/montserrat-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 600; font-style: normal; src: url('fonts/montserrat-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 700; font-style: normal; src: url('fonts/montserrat-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 800; font-style: normal; src: url('fonts/montserrat-latin-800-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Montserrat'; font-weight: 900; font-style: normal; src: url('fonts/montserrat-latin-900-normal.woff2') format('woff2'); }
+
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 400; font-style: normal; src: url('fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 500; font-style: normal; src: url('fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 700; font-style: normal; src: url('fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2'); }
+
+  :root {
+    --ink:        #1A1A1A;
+    --ink-2:      #232323;
+    --ink-3:      #2A2A2A;
+    --paper:      #FAFAF7;
+    --paper-dim:  #B8B8B5;
+    --muted:      #8E8E8B;
+    --lime:       #DEE450;
+    --orange:     #FC4E2B;
+    --blue:       #5BA3D0;
+    --green:      #71C989;
+    --purple:     #B888D4;
+    --red:        #E66A5C;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 16mm 16mm;
+    background: var(--ink);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    color: var(--paper);
+    background: var(--ink);
+    font-size: 10pt;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 100%;
+    min-height: 260mm;
+    page-break-after: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  .page-body {
+    flex: 1;
+  }
+
+  /* ---- typography ---- */
+  h1, h2, h3, h4 {
+    margin: 0;
+    font-family: "Montserrat", "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--paper);
+  }
+  h1 { font-size: 36pt; letter-spacing: -0.01em; }
+  h2 { font-size: 22pt; letter-spacing: -0.005em; }
+  h3 { font-size: 12pt; letter-spacing: 0; }
+  h4 { font-size: 10pt; letter-spacing: 0; }
+  p  { margin: 0 0 8pt 0; color: var(--paper); }
+  small { color: var(--muted); }
+
+  .eyebrow {
+    font-family: "JetBrains Mono", "Menlo", "Consolas", monospace;
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--lime);
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--lime);
+    line-height: 1.3;
+  }
+  .muted { color: var(--muted); }
+  .body-dim { color: var(--paper-dim); }
+
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--lime) 0, var(--lime) 40%, rgba(222,228,80,0.0) 100%);
+    margin: 10pt 0 14pt 0;
+  }
+
+  .lime { color: var(--lime); }
+
+  /* ---- cover ---- */
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24pt;
+  }
+  .wordmark {
+    font-family: "Montserrat", "Inter", sans-serif;
+    font-weight: 800;
+    font-size: 32pt;
+    letter-spacing: -0.01em;
+    color: var(--lime);
+    line-height: 1;
+  }
+  .wordmark-sub {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8pt;
+    color: var(--paper-dim);
+    letter-spacing: 0.08em;
+    margin-top: 2pt;
+  }
+  .cover-tab {
+    width: 24pt;
+    height: 8pt;
+    background: var(--lime);
+  }
+  .cover-title {
+    font-size: 54pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 34pt 0 8pt 0;
+  }
+  .cover-sub {
+    font-size: 15pt;
+    font-weight: 600;
+    color: var(--lime);
+    margin-bottom: 16pt;
+  }
+  .cover-desc {
+    font-size: 11pt;
+    color: var(--paper-dim);
+    max-width: 120mm;
+    margin-bottom: 22pt;
+  }
+  .tool-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    padding: 7pt 0;
+    border-bottom: 0;
+  }
+  .tool-pill {
+    background: var(--lime);
+    color: var(--ink);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 3pt 6pt;
+    border-radius: 2pt;
+    min-width: 18pt;
+    text-align: center;
+    margin-top: 2pt;
+  }
+  .tool-name {
+    font-weight: 700;
+    font-size: 11pt;
+  }
+  .tool-desc {
+    color: var(--paper-dim);
+    font-size: 9.5pt;
+  }
+
+  /* ---- footer ---- */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    color: var(--muted);
+    font-size: 8.5pt;
+    font-family: "JetBrains Mono", monospace;
+    margin-top: 18pt;
+  }
+  .footer-r { text-align: right; }
+
+  /* ---- section header ---- */
+  .section-head {
+    margin-bottom: 14pt;
+  }
+
+  /* ---- cards & grids ---- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18pt; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14pt; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10pt; }
+
+  .card {
+    background: var(--ink-3);
+    border-radius: 4pt;
+    padding: 12pt 14pt;
+  }
+  .card-tall { min-height: 46mm; }
+
+  .stat-card {
+    background: var(--ink-3);
+    border-radius: 4pt;
+    padding: 14pt 16pt 14pt 18pt;
+    border-left: 4pt solid var(--lime);
+  }
+  .stat-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--lime);
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+  .stat-num {
+    font-size: 30pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 8pt;
+  }
+  .stat-desc {
+    font-size: 9pt;
+    color: var(--paper-dim);
+    line-height: 1.4;
+  }
+
+  .callout {
+    background: var(--ink-3);
+    border-left: 3pt solid var(--lime);
+    padding: 10pt 14pt;
+    border-radius: 0 4pt 4pt 0;
+  }
+  .callout-title {
+    font-weight: 700;
+    color: var(--lime);
+    margin-bottom: 4pt;
+    font-size: 10pt;
+  }
+  .callout-body {
+    font-size: 9.5pt;
+    color: var(--paper-dim);
+    line-height: 1.45;
+  }
+
+  /* ---- bullet lists ---- */
+  ul.clean { list-style: none; padding: 0; margin: 0; }
+  ul.clean li {
+    padding-left: 14pt;
+    position: relative;
+    color: var(--paper-dim);
+    font-size: 9.5pt;
+    line-height: 1.5;
+    margin-bottom: 5pt;
+  }
+  ul.clean li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6pt;
+    width: 4pt; height: 4pt;
+    background: var(--lime);
+    border-radius: 50%;
+  }
+
+  /* numbered intake list */
+  ul.numbered { list-style: none; padding: 0; margin: 0; }
+  ul.numbered li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    margin-bottom: 9pt;
+  }
+  ul.numbered .num {
+    background: var(--lime);
+    color: var(--ink);
+    width: 16pt; height: 16pt;
+    border-radius: 50%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 7.5pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1pt;
+  }
+  ul.numbered .n-body { flex: 1; }
+  ul.numbered .n-title { font-weight: 700; color: var(--paper); font-size: 10pt; line-height: 1.3; }
+  ul.numbered .n-desc { color: var(--paper-dim); font-size: 9pt; line-height: 1.4; }
+
+  /* key-features stacked */
+  .kf { margin-bottom: 10pt; }
+  .kf-title { font-weight: 700; font-size: 10pt; color: var(--paper); margin-bottom: 2pt; }
+  .kf-desc  { font-size: 9pt; color: var(--paper-dim); line-height: 1.45; }
+
+  /* trigger cards with coloured accents */
+  .trigger {
+    background: var(--ink-3);
+    padding: 10pt 12pt;
+    border-radius: 3pt;
+    border-left: 3pt solid var(--lime);
+  }
+  .trigger-t { font-weight: 700; font-size: 10pt; color: var(--paper); margin-bottom: 2pt; }
+  .trigger-tag {
+    display: inline-block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 7.5pt;
+    color: var(--lime);
+    margin-bottom: 4pt;
+    letter-spacing: 0.05em;
+  }
+  .trigger-d { font-size: 9pt; color: var(--paper-dim); line-height: 1.45; }
+  .t-blue   { border-left-color: var(--blue); }
+  .t-blue   .trigger-tag { color: var(--blue); }
+  .t-purple { border-left-color: var(--purple); }
+  .t-purple .trigger-tag { color: var(--purple); }
+  .t-green  { border-left-color: var(--green); }
+  .t-green  .trigger-tag { color: var(--green); }
+  .t-orange { border-left-color: var(--orange); }
+  .t-orange .trigger-tag { color: var(--orange); }
+
+  /* score table */
+  .score-row {
+    display: grid;
+    grid-template-columns: 58pt 86pt 1fr;
+    gap: 10pt;
+    align-items: center;
+    padding: 7pt 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .score-range {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 4pt 6pt;
+    border-radius: 2pt;
+    text-align: center;
+    color: var(--ink);
+  }
+  .score-lime   { background: var(--lime); }
+  .score-blue   { background: var(--blue); }
+  .score-orange { background: var(--orange); color: var(--paper); }
+  .score-red    { background: var(--red); color: var(--paper); }
+
+  .score-label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 10pt;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .score-l-lime   { color: var(--lime); }
+  .score-l-blue   { color: var(--blue); }
+  .score-l-orange { color: var(--orange); }
+  .score-l-red    { color: var(--red); }
+
+  .score-desc { font-size: 9pt; color: var(--paper-dim); }
+
+  /* flow overview */
+  .flow { display: grid; grid-template-columns: 86pt 1fr; gap: 18pt; align-items: start; }
+
+  .flow-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+  }
+  .flow-box {
+    background: var(--ink-3);
+    border: 1.5pt solid var(--lime);
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+    position: relative;
+  }
+  .flow-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8pt;
+    color: var(--lime);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+  .flow-name {
+    font-weight: 700;
+    font-size: 10pt;
+    line-height: 1.2;
+  }
+  .flow-arrow {
+    height: 10pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--lime);
+    font-size: 12pt;
+    line-height: 1;
+  }
+  .flow-arrow::before {
+    content: "";
+    width: 0; height: 0;
+    border-left: 5pt solid transparent;
+    border-right: 5pt solid transparent;
+    border-top: 7pt solid var(--lime);
+  }
+
+  .flow-descriptions { display: flex; flex-direction: column; gap: 9pt; }
+  .flow-d-title { font-weight: 700; font-size: 10.5pt; color: var(--paper); margin-bottom: 2pt; }
+  .flow-d-body  { font-size: 9pt; color: var(--paper-dim); line-height: 1.45; }
+
+  /* credit tiles */
+  .credit-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    padding: 12pt 14pt;
+    background: var(--ink-3);
+    border-left: 3pt solid var(--lime);
+    border-radius: 0 4pt 4pt 0;
+  }
+  .credit-tile { }
+  .credit-tile .ct-num { font-size: 16pt; font-weight: 800; line-height: 1; }
+  .credit-tile .ct-lbl { font-size: 8.5pt; color: var(--paper-dim); margin-top: 3pt; }
+
+  /* commercial model columns */
+  .comm-col {
+    background: var(--ink-3);
+    border-radius: 4pt;
+    padding: 12pt 14pt;
+    display: flex;
+    flex-direction: column;
+    min-height: 76mm;
+  }
+  .comm-bar { height: 5pt; width: 60%; background: var(--lime); margin-bottom: 10pt; border-radius: 2pt; }
+  .comm-bar.blue { background: var(--blue); }
+  .comm-bar.grey { background: #8E8E8B; }
+  .comm-title { font-weight: 800; font-size: 12pt; margin-bottom: 8pt; }
+
+  /* partner table */
+  .p-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+  .p-table th, .p-table td {
+    text-align: left;
+    padding: 7pt 8pt;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: top;
+  }
+  .p-table th {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+  }
+  .p-table td.partner { font-weight: 800; }
+  .p-gritfuel { color: var(--lime); }
+  .p-frank    { color: var(--blue); }
+  .p-bluegyfu { color: var(--purple); }
+  .p-bfl      { color: var(--orange); }
+
+  .level-grid {
+    display: grid;
+    grid-template-columns: 80pt 1fr;
+    gap: 6pt 10pt;
+    align-items: baseline;
+  }
+  .level-name {
+    font-weight: 700;
+    color: var(--paper);
+    font-size: 10pt;
+  }
+  .level-desc {
+    color: var(--paper-dim);
+    font-size: 9pt;
+    line-height: 1.45;
+  }
+
+  .two-col-split { display: grid; grid-template-columns: 1fr 1fr; gap: 18pt; align-items: start; }
+  .stack { display: flex; flex-direction: column; gap: 10pt; }
+  .space-lg { margin-bottom: 16pt; }
+  .space-md { margin-bottom: 10pt; }
+
+  .hline { height: 1px; background: rgba(255,255,255,0.1); margin: 10pt 0; }
+
+  /* opp columns: 3 col with 4 stacked items each */
+  .opp-col h4 { color: var(--lime); font-family: "JetBrains Mono", monospace; font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10pt; }
+  .opp-item { margin-bottom: 9pt; }
+  .opp-item .t { font-weight: 700; color: var(--paper); font-size: 10pt; margin-bottom: 1pt; }
+  .opp-item .d { color: var(--paper-dim); font-size: 9pt; line-height: 1.45; }
+  .opp-bar { height: 4pt; background: var(--lime); width: 40pt; margin-bottom: 10pt; border-radius: 2pt; }
+  .opp-bar.blue { background: var(--blue); }
+  .opp-bar.purple { background: var(--purple); }
+
+  .built-list {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: 5pt;
+  }
+  .built-list li {
+    display: flex; align-items: baseline; gap: 8pt;
+    color: var(--paper-dim); font-size: 9pt;
+  }
+  .built-list li::before {
+    content: "";
+    width: 4pt; height: 4pt;
+    background: var(--lime);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transform: translateY(-1pt);
+  }
+  .built-list li strong { color: var(--paper); font-weight: 700; }
+
+  .final-strip {
+    background: var(--ink-3);
+    padding: 14pt 16pt;
+    border-radius: 4pt;
+    margin-top: 14pt;
+  }
+  .final-url { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 14pt; color: var(--lime); }
+  .final-meta { font-family: "JetBrains Mono", monospace; font-size: 8pt; color: var(--muted); margin-top: 4pt; letter-spacing: 0.08em; }
+
+  /* utilities */
+  .mt-0 { margin-top: 0; }
+  .mb-0 { margin-bottom: 0; }
+  .mb-2 { margin-bottom: 6pt; }
+  .mb-4 { margin-bottom: 12pt; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 — COVER ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="cover-top">
+      <div>
+        <div class="wordmark">GRITFUEL</div>
+        <div class="wordmark-sub">Growth · Execution · Results</div>
+      </div>
+      <div class="cover-tab"></div>
+    </div>
+
+    <div class="rule"></div>
+
+    <h1 class="cover-title">GritFuel OS</h1>
+    <div class="cover-sub">The operating system for scalable, compounding growth delivery</div>
+
+    <p class="cover-desc">A closed-loop system of five interconnected tools that turns client onboarding into a repeatable, data-driven growth engine — from the first intake session to monthly credit allocation and partner routing.</p>
+
+    <div class="tool-row">
+      <div class="tool-pill">01</div>
+      <div>
+        <div class="tool-name">Onboarding Intake</div>
+        <div class="tool-desc">First-session client intelligence</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <div class="tool-pill">02</div>
+      <div>
+        <div class="tool-name">Growth Dashboard</div>
+        <div class="tool-desc">Live performance — client &amp; internal view</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <div class="tool-pill">03</div>
+      <div>
+        <div class="tool-name">Compounding Engine</div>
+        <div class="tool-desc">Performance data → next playbook</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <div class="tool-pill">04</div>
+      <div>
+        <div class="tool-name">Escalation &amp; Handoff Router</div>
+        <div class="tool-desc">Brief routing to the right partner</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <div class="tool-pill">05</div>
+      <div>
+        <div class="tool-name">Dynamic Credit Allocation</div>
+        <div class="tool-desc">Live credit splits across initiatives</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      gritfuel.works<br>
+      hello@gritfuel.works
+    </div>
+    <div class="footer-r">
+      Confidential<br>
+      April 2026
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 — CONTEXT ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Context</div>
+      <h2>The Problem — and the Answer</h2>
+      <div class="rule"></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- left -->
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 6pt;">The Problem</div>
+        <p class="body-dim">Most growth agencies operate as one-off project shops. Each month starts from scratch: no memory, no compounding effect, no system.</p>
+        <p class="body-dim">Clients move between agencies chasing tactics. Budgets are allocated by gut feel. Briefs land on the wrong desks. Performance data sits in dashboards nobody reads.</p>
+        <p class="body-dim">The result: growth that is random, expensive, and impossible to attribute.</p>
+
+        <div class="callout space-md" style="margin-top: 10pt;">
+          <div class="callout-title">Most agencies reset every month.</div>
+          <div class="callout-body">GritFuel compounds every month.</div>
+        </div>
+
+        <div class="eyebrow" style="color: var(--lime); margin: 14pt 0 6pt 0;">The Opportunity</div>
+        <p class="body-dim">Brands that compound — building on last month's data to inform this month's strategy — grow faster, waste less budget, and retain agency relationships longer.</p>
+        <p class="body-dim">The GritFuel OS is our proprietary system for making this happen at scale, across every client, every month.</p>
+      </div>
+
+      <!-- right -->
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 8pt;">What GritFuel Does</div>
+
+        <div class="kf">
+          <div class="kf-title">A retainer model built on credits.</div>
+          <div class="kf-desc">Every GritFuel client runs on a monthly credit subscription. One credit equals €25 of delivered output value. Credits are allocated across active initiatives each month.</div>
+        </div>
+
+        <div class="kf">
+          <div class="kf-title">A specialist partner network — invisible to clients.</div>
+          <div class="kf-desc">GritFuel orchestrates four specialist partners: brand &amp; strategy, performance &amp; data, content &amp; growth, and events. To the client, it is all GritFuel.</div>
+        </div>
+
+        <div class="kf">
+          <div class="kf-title">A system, not a service.</div>
+          <div class="kf-desc">The GritFuel OS links onboarding intelligence to dashboard tracking to compounding recommendations to credit allocation — every month, automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top: 20pt;">
+      <div class="callout">
+        <div class="callout-title">The Business Model</div>
+        <div class="callout-body">Subscription retainer + paid media billed at cost. No agency markup on media.</div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">The Credit Rate</div>
+        <div class="callout-body">1 credit = €25 of delivered output value.</div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">The Edge</div>
+        <div class="callout-body">Compounding strategy that gets sharper every month the client stays.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>2 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 3 — SYSTEM OVERVIEW ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">System Overview</div>
+      <h2>The GritFuel OS</h2>
+      <div style="color: var(--paper-dim); font-size: 11pt; margin-top: 4pt;">Five tools. One loop. Every month, the system gets smarter.</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="flow">
+      <!-- flow boxes -->
+      <div class="flow-col">
+        <div class="flow-box">
+          <div class="flow-num">01</div>
+          <div class="flow-name">Onboarding<br>Intake</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-box">
+          <div class="flow-num">02</div>
+          <div class="flow-name">Growth<br>Dashboard</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-box">
+          <div class="flow-num">03</div>
+          <div class="flow-name">Compounding<br>Engine</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-box">
+          <div class="flow-num">04</div>
+          <div class="flow-name">Escalation &amp;<br>Handoff Router</div>
+        </div>
+        <div class="flow-arrow"></div>
+        <div class="flow-box">
+          <div class="flow-num">05</div>
+          <div class="flow-name">Credit<br>Allocation</div>
+        </div>
+        <div style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: var(--lime); margin-top: 6pt; letter-spacing: 0.1em;">↻ monthly loop</div>
+      </div>
+
+      <!-- descriptions -->
+      <div class="flow-descriptions">
+        <div>
+          <div class="flow-d-title">01 — Onboarding Intake</div>
+          <div class="flow-d-body">Structured 7-step intake wizard. Captures business goals, channel state, audience, brand voice, and working style. Populates the first playbook. Two modes: client-facing and strategist view.</div>
+        </div>
+        <div>
+          <div class="flow-d-title">02 — Growth Dashboard</div>
+          <div class="flow-d-body">Live performance view with client tab (KPIs, trends, initiative status) and internal tab (partner routing, margin, credit efficiency). Feeds raw data into the Compounding Engine each month.</div>
+        </div>
+        <div>
+          <div class="flow-d-title">03 — Compounding Engine</div>
+          <div class="flow-d-body">Scores four signals — channel momentum, goal proximity, credit efficiency, dependency sequencing — to produce a compound score (0–100) and ranked initiative recommendations for next month.</div>
+        </div>
+        <div>
+          <div class="flow-d-title">04 — Escalation &amp; Handoff Router</div>
+          <div class="flow-d-body">Routes every brief to the correct partner based on service category, complexity flags, client signals, and compound score. Generates internal and sanitised client-facing briefs automatically.</div>
+        </div>
+        <div>
+          <div class="flow-d-title">05 — Credit Allocation</div>
+          <div class="flow-d-body">Distributes the monthly credit budget across active initiatives. Supports mid-month reallocation, locking, auto-balance, and exports both an internal brief and a client-facing allocation summary.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 18pt;">
+      <div class="callout-title">The compounding effect</div>
+      <div class="callout-body">Every month, the Compounding Engine reads last month's dashboard data and generates a sharper playbook. The longer a client stays, the more precise the allocation — and the better the results.</div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>3 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 4 — TOOL 01 ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Tool 01</div>
+      <h2>Onboarding Intake</h2>
+      <div class="subtitle">First-session client intelligence — structured, consistent, actionable</div>
+      <div class="rule"></div>
+    </div>
+
+    <p class="body-dim space-lg">Before a first playbook can be built, GritFuel needs to understand the client's business, goals, situation, audience, brand, channels, and working style. The Onboarding Intake captures all of this in a single structured session — eliminating the back-and-forth that wastes weeks.</p>
+
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">The 7 Sections</div>
+        <ul class="numbered">
+          <li><div class="num">01</div><div class="n-body"><div class="n-title">The Business</div><div class="n-desc">Company, industry, size, market.</div></div></li>
+          <li><div class="num">02</div><div class="n-body"><div class="n-title">Growth Goals</div><div class="n-desc">Primary objective and 90-day priority.</div></div></li>
+          <li><div class="num">03</div><div class="n-body"><div class="n-title">Where You Are Now</div><div class="n-desc">Channels, traffic, frustrations.</div></div></li>
+          <li><div class="num">04</div><div class="n-body"><div class="n-title">Your Audience</div><div class="n-desc">Who they are and how they buy.</div></div></li>
+          <li><div class="num">05</div><div class="n-body"><div class="n-title">Brand &amp; Voice</div><div class="n-desc">Personality, tone, existing assets.</div></div></li>
+          <li><div class="num">06</div><div class="n-body"><div class="n-title">Channels &amp; Budget</div><div class="n-desc">Priority channels, ad spend, tools.</div></div></li>
+          <li><div class="num">07</div><div class="n-body"><div class="n-title">Working Together</div><div class="n-desc">Approvals, feedback, communication.</div></div></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Key Features</div>
+        <div class="kf"><div class="kf-title">Client mode</div><div class="kf-desc">Clean, welcoming form. No internal language or scoring visible.</div></div>
+        <div class="kf"><div class="kf-title">Strategist mode</div><div class="kf-desc">Reveals internal notes fields, 1–5 scoring buttons, and diagnostic prompts alongside every question.</div></div>
+        <div class="kf"><div class="kf-title">Brand tag picker</div><div class="kf-desc">15 personality tags; client selects up to 4 that define their brand voice.</div></div>
+        <div class="kf"><div class="kf-title">Credit tier signal</div><div class="kf-desc">Step 7 recommends a starting credit tier based on scope and ambition.</div></div>
+        <div class="kf"><div class="kf-title">Printable summary</div><div class="kf-desc">One-click summary view (print/PDF) compiling all answers for handoff.</div></div>
+        <div class="kf"><div class="kf-title">First playbook input</div><div class="kf-desc">All answers flow directly into the Compounding Engine's first run.</div></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 16pt;">
+      <div class="callout-title">How it connects</div>
+      <div class="callout-body">Intake answers seed the Compounding Engine's first scoring run. Channel selections pre-populate the dashboard. Credit tier recommendation informs the first allocation. One session, total system context.<br><span style="color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 8pt;">rubencollin.github.io/gritfuel-intakeform-example/</span></div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>4 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 5 — TOOL 02 ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Tool 02</div>
+      <h2>Growth Dashboard</h2>
+      <div class="subtitle">Live performance — what the client sees vs. what GritFuel needs to know</div>
+      <div class="rule"></div>
+    </div>
+
+    <p class="body-dim space-lg">The Growth Dashboard is the single source of truth for every active client. It runs two parallel views inside one interface: a clean client-facing tab showing KPIs and initiative status, and an internal tab showing partner routing, margin, and credit efficiency.</p>
+
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Client Tab</div>
+        <div class="kf"><div class="kf-title">4 KPI cards</div><div class="kf-desc">Sessions, leads, revenue, and conversion — vs. last month.</div></div>
+        <div class="kf"><div class="kf-title">Credit utilisation donut</div><div class="kf-desc">Live view of credits committed vs. budget this month.</div></div>
+        <div class="kf"><div class="kf-title">Initiative status cards</div><div class="kf-desc">Each active initiative with deliverable checklists and dependency flags.</div></div>
+        <div class="kf"><div class="kf-title">6-month growth trend</div><div class="kf-desc">Dual-axis line chart: primary metric vs. credit spend.</div></div>
+        <div class="kf"><div class="kf-title">Channel mix bar chart</div><div class="kf-desc">Horizontal bar showing traffic contribution per channel.</div></div>
+        <div class="kf"><div class="kf-title">Next month preview</div><div class="kf-desc">3 recommended focus areas for the coming month.</div></div>
+      </div>
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Internal Tab (strategists only)</div>
+        <div class="kf"><div class="kf-title">Revenue summary strip</div><div class="kf-desc">Gross credit value, partner cost, and GritFuel margin — per client.</div></div>
+        <div class="kf"><div class="kf-title">Partner routing table</div><div class="kf-desc">Who is doing what, colour-coded by partner — invisible to clients.</div></div>
+        <div class="kf"><div class="kf-title">Full channel metrics</div><div class="kf-desc">Detailed channel-by-channel performance table with MoM deltas.</div></div>
+        <div class="kf"><div class="kf-title">Next playbook credit rec</div><div class="kf-desc">Suggested credit allocation for the following month.</div></div>
+        <div class="kf"><div class="kf-title">Dependency / risk flags</div><div class="kf-desc">Highlighted items blocking progression to the next tier.</div></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 16pt;">
+      <div class="callout-title">How it connects</div>
+      <div class="callout-body">The dashboard is the data source for the Compounding Engine. Each month, channel metrics, credit spend, and initiative completion rates are entered here — and the Compounding Engine turns them into next month's playbook. <span class="muted">Internal tool — GritFuel strategist access only.</span></div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>5 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 6 — TOOL 03 ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Tool 03</div>
+      <h2>Compounding Engine</h2>
+      <div class="subtitle">Last month's performance becomes next month's playbook — automatically</div>
+      <div class="rule"></div>
+    </div>
+
+    <p class="body-dim space-lg">The Compounding Engine is the intelligence layer of the OS. It reads this month's channel performance, compares it to last month, checks milestone progress, and scores four signals to produce a Compound Score and a ranked list of recommended initiatives for the following month.</p>
+
+    <div class="grid-2" style="gap: 12pt;">
+      <div class="stat-card" style="border-left-color: var(--blue);">
+        <div class="stat-label" style="color: var(--blue);">Channel Momentum</div>
+        <div class="stat-num">30%</div>
+        <div class="stat-desc">Measures month-over-month growth per active channel. Fast-growing channels receive more weight in the score. Stagnant channels are flagged for review or reallocation.</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--lime);">
+        <div class="stat-label">Goal Proximity</div>
+        <div class="stat-num">25%</div>
+        <div class="stat-desc">Distance from the client's primary metric target. The closer to goal, the higher the urgency to sustain. Far from target triggers rebalancing recommendations.</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--green);">
+        <div class="stat-label" style="color: var(--green);">Credit Efficiency</div>
+        <div class="stat-num">25%</div>
+        <div class="stat-desc">Output growth generated per credit spent, per channel. Identifies best-performing and worst-performing credit deployments across the portfolio.</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--purple);">
+        <div class="stat-label" style="color: var(--purple);">Dependency Sequencing</div>
+        <div class="stat-num">20%</div>
+        <div class="stat-desc">Tracks which of 12 milestones across 3 tiers have been completed. Completed foundations automatically unlock higher-tier initiatives in the recommendation set.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18pt;">
+      <div class="eyebrow" style="color: var(--lime); margin-bottom: 8pt;">Compound Score → Strategy</div>
+      <div class="score-row">
+        <div class="score-range score-lime">75 – 100</div>
+        <div class="score-label score-l-lime">ACCELERATE</div>
+        <div class="score-desc">Double down on what's working. Push credits into top-performing channels.</div>
+      </div>
+      <div class="score-row">
+        <div class="score-range score-blue">55 – 74</div>
+        <div class="score-label score-l-blue">MAINTAIN</div>
+        <div class="score-desc">Hold course. Optimise efficiency within current channel mix.</div>
+      </div>
+      <div class="score-row">
+        <div class="score-range score-orange">35 – 54</div>
+        <div class="score-label score-l-orange">REBALANCE</div>
+        <div class="score-desc">Shift credits away from underperformers. Test adjacent channels.</div>
+      </div>
+      <div class="score-row">
+        <div class="score-range score-red">0 – 34</div>
+        <div class="score-label score-l-red">PIVOT</div>
+        <div class="score-desc">Fundamental rethink required. Escalate to senior strategy.</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 16pt;">
+      <div class="callout-title">How it connects</div>
+      <div class="callout-body">The Compound Score feeds directly into the Escalation Router (PIVOT scores trigger escalation) and the Credit Allocation tool (ACCELERATE scores concentrate credits; REBALANCE scores redistribute them).</div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>6 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 7 — TOOL 04 ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Tool 04</div>
+      <h2>Escalation &amp; Handoff Router</h2>
+      <div class="subtitle">Every brief routed to the right partner — and the right brief written for each audience</div>
+      <div class="rule"></div>
+    </div>
+
+    <p class="body-dim space-lg">When a brief arrives, the Router decides who handles it and at what escalation level — based on four live inputs. It then generates two versions of the brief: an internal handoff note (naming partners and scores) and a sanitised client-facing brief (using role descriptions only).</p>
+
+    <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">The 4 Trigger Types</div>
+    <div class="grid-2" style="gap: 10pt; margin-bottom: 18pt;">
+      <div class="trigger t-blue">
+        <div class="trigger-t">Service Category</div>
+        <div class="trigger-tag">Baseline</div>
+        <div class="trigger-d">19 service tags pre-weighted to a default partner (content/SEO/PR → GritFuel; brand/creative → brand specialists; paid/data/tech → performance team; events → activations team).</div>
+      </div>
+      <div class="trigger t-purple">
+        <div class="trigger-t">Complexity Flags</div>
+        <div class="trigger-tag">+Score</div>
+        <div class="trigger-d">8 checkboxes — multi-market, regulatory, tech build, etc. Each adds directly to the relevant specialist's score.</div>
+      </div>
+      <div class="trigger t-green">
+        <div class="trigger-t">Client Signals</div>
+        <div class="trigger-tag">+Urgency</div>
+        <div class="trigger-d">7 behavioural cues: churn risk, growth moment, exec escalation, and others. High-signal briefs are flagged for senior review.</div>
+      </div>
+      <div class="trigger t-orange">
+        <div class="trigger-t">Compound Trigger</div>
+        <div class="trigger-tag">+Direction</div>
+        <div class="trigger-d">Current Compound Score quartile feeds directly into routing. PIVOT scores escalate automatically; ACCELERATE briefs may stay with GritFuel.</div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Escalation Levels</div>
+    <div class="level-grid">
+      <div class="level-name">None</div>
+      <div class="level-desc">GritFuel handles the full brief. No specialist involvement required.</div>
+      <div class="level-name">Soft handoff</div>
+      <div class="level-desc">A specialist partner is briefed and contributes. GritFuel remains primary contact.</div>
+      <div class="level-name">Full escalation</div>
+      <div class="level-desc">Specialist partner leads delivery. GritFuel coordinates and client-faces.</div>
+      <div class="level-name">Multi-partner</div>
+      <div class="level-desc">Two or more specialist partners involved. A joint brief and credit split is produced.</div>
+    </div>
+
+    <div class="callout" style="margin-top: 16pt;">
+      <div class="callout-title">Client language rule — always enforced</div>
+      <div class="callout-body">Partner names are never shared with clients. The router automatically substitutes: specialist partners become "our senior brand specialists", "our performance marketing team", "our events &amp; activations team".</div>
+    </div>
+
+    <div class="callout" style="margin-top: 10pt;">
+      <div class="callout-title">How it connects</div>
+      <div class="callout-body">Router output informs the Credit Allocation tool — escalated briefs carry higher credit requirements and partner cost splits.</div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>7 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 8 — TOOL 05 ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Tool 05</div>
+      <h2>Dynamic Credit Allocation</h2>
+      <div class="subtitle">Live credit splits across partners and initiatives — with mid-month reallocation built in</div>
+      <div class="rule"></div>
+    </div>
+
+    <p class="body-dim space-lg">The Credit Allocation tool is where the month is planned and replanned. Strategists set the monthly credit budget, add initiatives from the compounding engine's recommendations, allocate credits per initiative, and lock confirmed items. When a client pauses or changes direction, credits are reallocated in seconds.</p>
+
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Core Capabilities</div>
+        <div class="kf"><div class="kf-title">Initiative management</div><div class="kf-desc">Add from 13 playbook presets or enter custom initiatives. Assign partner, tier, and credit count.</div></div>
+        <div class="kf"><div class="kf-title">Credit spinners</div><div class="kf-desc">Increment or direct-input credits per initiative. Every credit is valued at €25 in the UI.</div></div>
+        <div class="kf"><div class="kf-title">Lock &amp; protect</div><div class="kf-desc">Lock confirmed allocations to prevent accidental edits during mid-month reallocation.</div></div>
+        <div class="kf"><div class="kf-title">Auto-balance</div><div class="kf-desc">One click distributes remaining credits equally across active, unlocked initiatives.</div></div>
+        <div class="kf"><div class="kf-title">Status cycling</div><div class="kf-desc">Mark initiatives Active, Paused, or Complete. Paused credits return to the unallocated pool.</div></div>
+        <div class="kf"><div class="kf-title">Mid-month mode</div><div class="kf-desc">Delta indicators show exactly what has changed from the original monthly plan.</div></div>
+      </div>
+      <div>
+        <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">Export &amp; Partner Breakdown</div>
+        <div class="kf"><div class="kf-title">Partner donut</div><div class="kf-desc">Real-time doughnut chart showing credit split across GritFuel and specialist partners.</div></div>
+        <div class="kf"><div class="kf-title">Partner cards</div><div class="kf-desc">Per-partner credit total, percentage of budget, and €25 equivalent value.</div></div>
+        <div class="kf"><div class="kf-title">Internal brief</div><div class="kf-desc">Full allocation with partner names, lock status, delta tracking, and partner totals.</div></div>
+        <div class="kf"><div class="kf-title">Client-facing brief</div><div class="kf-desc">Sanitised: partner names replaced with role descriptions. Safe to share directly.</div></div>
+        <div class="kf"><div class="kf-title">Internal/Client mode</div><div class="kf-desc">Toggle hides or shows partner names across all views including the brief exports.</div></div>
+      </div>
+    </div>
+
+    <div class="credit-tiles" style="margin-top: 16pt;">
+      <div class="credit-tile"><div class="ct-num">1 credit</div><div class="ct-lbl">€25 output value</div></div>
+      <div class="credit-tile"><div class="ct-num">10 credits</div><div class="ct-lbl">€250 / month</div></div>
+      <div class="credit-tile"><div class="ct-num">20 credits</div><div class="ct-lbl">€500 / month</div></div>
+      <div class="credit-tile"><div class="ct-num">40 credits</div><div class="ct-lbl">€1,000 / month</div></div>
+    </div>
+    <p class="muted" style="font-size: 8.5pt; margin-top: 6pt;">Paid media is billed separately at cost. Retainer credits cover strategy, content, and execution only. GritFuel margin is built into the credit rate — not added on top.</p>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>8 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 9 — COMMERCIAL MODEL ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">Commercial Model</div>
+      <h2>How GritFuel Makes Money</h2>
+      <div class="subtitle">A subscription model built for predictability, margin, and compounding client value</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="comm-col">
+        <div class="comm-bar"></div>
+        <div class="comm-title">Retainer Credits</div>
+        <ul class="clean">
+          <li>Clients subscribe to a monthly credit package.</li>
+          <li>Each credit = €25 of delivered output value.</li>
+          <li>Credits roll up to the GritFuel OS dashboard.</li>
+          <li>Minimum engagement: 10 credits / month (€250).</li>
+          <li>Typical client: 20–40 credits / month.</li>
+        </ul>
+      </div>
+      <div class="comm-col">
+        <div class="comm-bar blue"></div>
+        <div class="comm-title">Partner Margin</div>
+        <ul class="clean">
+          <li>GritFuel orchestrates specialist partners.</li>
+          <li>Partner cost sits below the credit rate.</li>
+          <li>GritFuel retains the margin between the two.</li>
+          <li>Partners are invisible to clients — GritFuel brand only.</li>
+          <li>Target gross margin: 40–55% on partner-routed credits.</li>
+        </ul>
+      </div>
+      <div class="comm-col">
+        <div class="comm-bar grey"></div>
+        <div class="comm-title">Paid Media Pass-through</div>
+        <ul class="clean">
+          <li>Paid media is billed at cost — no markup.</li>
+          <li>This is a trust signal, not a revenue driver.</li>
+          <li>Keeps the model clean and client-aligned.</li>
+          <li>Media tracked in the dashboard; not in credit rate.</li>
+          <li>Positioned as a client benefit, not a concession.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 18pt;">
+      <div class="eyebrow" style="color: var(--lime); margin-bottom: 8pt;">Partner Economics — internal</div>
+      <table class="p-table">
+        <thead>
+          <tr>
+            <th>Partner</th>
+            <th>Speciality</th>
+            <th>Billing</th>
+            <th>Client sees</th>
+            <th>Margin model</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="partner p-gritfuel">GritFuel</td>
+            <td>Content / SEO / Social / PR / Email</td>
+            <td>Direct</td>
+            <td>GritFuel</td>
+            <td>Full margin</td>
+          </tr>
+          <tr>
+            <td class="partner p-frank">.frank</td>
+            <td>Brand / Strategy / Creative</td>
+            <td>Partner rate</td>
+            <td>Our brand specialists</td>
+            <td>Spread</td>
+          </tr>
+          <tr>
+            <td class="partner p-bluegyfu">Bluegyfu</td>
+            <td>Paid / Data / Performance / Tech</td>
+            <td>Partner rate</td>
+            <td>Our performance team</td>
+            <td>Spread</td>
+          </tr>
+          <tr>
+            <td class="partner p-bfl">BFL</td>
+            <td>Events &amp; Activations</td>
+            <td>Partner rate</td>
+            <td>Our events team</td>
+            <td>Spread</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top: 14pt;">
+      <div class="callout-title">Illustrative MRR model — 10 clients at 20 credits / month average</div>
+      <div class="callout-body">
+        10 clients × 20 credits × €25 = €5,000 gross credit revenue / month<br>
+        Partner cost at ~50% = €2,500 / month<br>
+        GritFuel net margin = €2,500 / month · Annualised: €30,000 per 10 clients<br>
+        <span class="muted">Paid media tracked separately — not included in the above.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer"><div>gritfuel.works · Confidential</div><div>9 / 10</div></div>
+</section>
+
+<!-- ============ PAGE 10 — OPPORTUNITY ============ -->
+<section class="page">
+  <div class="page-body">
+    <div class="section-head">
+      <div class="eyebrow">The Opportunity</div>
+      <h2>Why This Matters</h2>
+      <div class="subtitle">For the GritFuel team. For partners. For investors.</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="opp-col">
+        <div class="opp-bar"></div>
+        <h4>For the GritFuel Team</h4>
+        <div class="opp-item"><div class="t">Consistency</div><div class="d">Every client runs through the same five-tool system. Quality doesn't depend on who's in the room.</div></div>
+        <div class="opp-item"><div class="t">Speed</div><div class="d">Onboarding that used to take three calls now takes one session and one tool.</div></div>
+        <div class="opp-item"><div class="t">Accountability</div><div class="d">The Compounding Engine creates a clear record of what was recommended, why, and what happened.</div></div>
+        <div class="opp-item"><div class="t">Scalability</div><div class="d">Adding a client doesn't add proportional overhead — the OS handles the analysis and routing automatically.</div></div>
+      </div>
+      <div class="opp-col">
+        <div class="opp-bar blue"></div>
+        <h4>For Partners</h4>
+        <div class="opp-item"><div class="t">Clear briefs</div><div class="d">Partners receive structured handoff notes — not email threads. Less back-and-forth.</div></div>
+        <div class="opp-item"><div class="t">Fair allocation</div><div class="d">Credit Allocation makes partner billing transparent and traceable.</div></div>
+        <div class="opp-item"><div class="t">Predictable scope</div><div class="d">Escalation levels define exactly how much a partner is involved in each brief.</div></div>
+        <div class="opp-item"><div class="t">Growing relationship</div><div class="d">As GritFuel scales, partner volume grows with it — a shared upside model.</div></div>
+      </div>
+      <div class="opp-col">
+        <div class="opp-bar purple"></div>
+        <h4>For Investors</h4>
+        <div class="opp-item"><div class="t">Proprietary IP</div><div class="d">The GritFuel OS is a defensible system — not a service. It compounds in value with every client month.</div></div>
+        <div class="opp-item"><div class="t">Recurring revenue</div><div class="d">Credit subscriptions are monthly recurring. Churn is disincentivised by the compounding effect itself.</div></div>
+        <div class="opp-item"><div class="t">Margin expansion</div><div class="d">As volume grows, partner rates improve and the system's overhead stays flat.</div></div>
+        <div class="opp-item"><div class="t">Systemised exit</div><div class="d">The OS makes GritFuel acquirable — a buyer buys the system, not just the headcount.</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 22pt;">
+      <div class="eyebrow" style="color: var(--lime); margin-bottom: 10pt;">What Has Been Built</div>
+      <ul class="built-list">
+        <li><strong>Onboarding Intake HTML</strong> — 7-step intake wizard — client &amp; strategist modes — printable summary</li>
+        <li><strong>Growth Dashboard HTML</strong> — Client + internal tabs — KPIs, initiative status, partner routing, margin</li>
+        <li><strong>Compounding Engine HTML</strong> — 4-signal scoring, compound score, ranked initiative recommendations, export</li>
+        <li><strong>Escalation Router HTML</strong> — 19 categories, 8 complexity flags, scoring algorithm, dual-brief generation</li>
+        <li><strong>Credit Allocation HTML</strong> — Full CRUD, auto-balance, mid-month mode, partner donut, brief export</li>
+        <li><strong>Escalation Logic Spec DOCX</strong> — 8-section Word document — 26 trigger rules, decision matrix, brief templates</li>
+        <li><strong>Branded PDFs × 4</strong> — Link cards with QR codes — Intake, Compounding, Escalation, Allocation</li>
+        <li><strong>Playbook Preview JPG</strong> — Visual mock-up of GritFuel playbook format for client-facing use</li>
+      </ul>
+    </div>
+
+    <div class="final-strip">
+      <div class="final-url">gritfuel.works</div>
+      <div class="final-meta">hello@gritfuel.works  ·  GritFuel OS v1.0  ·  April 2026  ·  Confidential</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

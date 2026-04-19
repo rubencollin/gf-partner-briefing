@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Risk Register · GritFuel Partner Briefing</title>
+<meta name="description" content="Top risks to GritFuel OS through cohort one. Named, ranked, with mitigation. The things we're honest about not knowing.">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .risk-top {
+    background: var(--white);
+    color: var(--ink);
+    border-radius: var(--radius-l);
+    padding: var(--s-6);
+    margin: var(--s-5) 0 var(--s-7);
+    border: 1px solid var(--gray-200);
+    border-top: 6px solid var(--orange);
+  }
+  .risk-top .eyebrow { color: var(--orange); }
+  .risk-top h2 { color: var(--ink); }
+  .risk-top p { color: var(--charcoal); font-size: 16px; }
+  .risk-top strong { color: var(--ink); }
+
+  .risk-table { display: grid; gap: var(--s-4); }
+  .risk-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-m);
+    padding: var(--s-5);
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: var(--s-4);
+  }
+  .risk-num {
+    background: var(--ink);
+    color: var(--lime);
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 20px;
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: -1px;
+  }
+  .risk-card.critical .risk-num { background: var(--orange); color: var(--white); }
+  .risk-card.high .risk-num { background: #FFB547; color: var(--ink); }
+  .risk-card.med .risk-num { background: var(--charcoal); color: var(--lime); }
+
+  .risk-body h3 { font-family: var(--f-body); font-weight: 700; font-size: 17px; color: var(--ink); margin: 0 0 var(--s-2); letter-spacing: 0; line-height: 1.35; }
+  .risk-body .rlead { font-size: 14.5px; color: var(--charcoal); margin: 0 0 var(--s-3); }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin-top: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--gray-200); }
+  .risk-grid .cell .label { font-family: var(--f-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gray); margin-bottom: 4px; }
+  .risk-grid .cell .val { font-size: 13.5px; color: var(--charcoal); }
+  .risk-grid .cell .val.critical { color: var(--orange); font-weight: 700; }
+  .risk-grid .cell .val.high { color: #D47A00; font-weight: 700; }
+  .risk-grid .cell .val.med { color: var(--charcoal); }
+
+  .risk-meta { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-top: var(--s-3); }
+  .risk-meta .chip { font-family: var(--f-mono); font-size: 10.5px; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--gray-300); background: var(--gray-100); color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.08em; }
+  .risk-meta .chip.crit { background: #FFEFE8; border-color: #FFBFA3; color: #B8401F; }
+  .risk-meta .chip.high { background: #FFF8E8; border-color: #F1D686; color: #8A6A10; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/brand-assets/logomark-charcoal.png" alt="gritfuel.works">
+      <span>Partner Briefing</span>
+    </a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="01-strategy.html">Strategy</a>
+      <a href="02-product.html">Product</a>
+      <a href="03-brand.html">Brand</a>
+      <a href="04-finance.html">Operating Model</a>
+      <a href="05-gtm.html">GTM</a>
+      <a href="decisions.html">Decisions</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="launch.html">Launch</a>
+      <a href="risks.html" class="active">Risks</a>
+      <a href="pipeline.html">Pipeline</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <img class="hero-icon" src="assets/icons/signal.svg" alt="">
+    <span class="eyebrow">Risk Register · What we're honest about not knowing</span>
+    <h1 class="display">
+      The things that could <span class="accent">break this</span>.
+    </h1>
+    <p class="lead">
+      Seven named risks ranked by exposure. Each has a likelihood, an impact, a short mitigation, and an owner. The top risk — product-engineering capability — is the one that converts the OS story into software over time, and it's a strategic conversation we owe each other rather than a problem to outrun by shipping harder.
+    </p>
+  </div>
+  <img class="hero-arrow" src="assets/brand-assets/arrow-charcoal.png" alt="">
+</section>
+
+<section class="band" style="padding-top: var(--s-7);">
+  <div class="container">
+
+    <!-- TOP RISK -->
+    <div class="risk-top">
+      <span class="eyebrow">Risk #1 · High · Product-engineering capability gap</span>
+      <h2>The OS is positioned as product, but nobody owns the product-engineering build yet.</h2>
+      <p>
+        The story says "Growth Operating System." That's a software claim — a client-facing Dashboard running live, an Escalation Router automating handoffs, a Compounding Engine picking next plays, an ALC Menu where credits resolve into delivered work. Each is an engineering surface. Right now the OS exists as a well-specified set of HTML prototypes and spec docs — <strong>not code a client logs into</strong>. The gap is small at five beta clients and material at fifty.
+      </p>
+      <p style="margin-top: var(--s-4);">
+        Client-facing product engineering is a <em>new</em> capability the OS positioning asks of us — outside the original partnership's service shape. Existing shareholdings stay where they are; this is a new role to discuss, and the question is <strong>what shape the hire takes and how the cost is funded</strong>. Full framing — three lanes, shareholding impact, hire options — on the <a href="04-finance.html#capability-map">capability map</a>.
+      </p>
+      <p style="margin-top: var(--s-4);">
+        Build order once the role is in seat: <strong>(1)</strong> harden the OS as described — Dashboard, Intake, Compounding Engine, Escalation Router, Credit Allocation — to a production standard. <strong>(2)</strong> Automate the ALC Menu — moves Stream 2 margin from "75% cost-share to partners" to actual productised margin. Step 1 sits in the product-engineering lane and needs a dedicated owner; step 2 sits naturally in the automation lane.
+      </p>
+      <div class="risk-meta" style="margin-top: var(--s-4);">
+        <span class="chip high">Likelihood: High if unresolved by Q3</span>
+        <span class="chip high">Impact: Shapes product scalability past 25–50 clients</span>
+        <span class="chip high">Owner: Ruben + All partners</span>
+        <span class="chip high">Mitigation: Agree split; scope hire path by 20 April decision sync</span>
+      </div>
+    </div>
+
+    <!-- OTHER RISKS -->
+    <div class="risk-table">
+
+      <div class="risk-card high">
+        <div class="risk-num">02</div>
+        <div class="risk-body">
+          <h3>Delivery partner capacity under unexpected demand</h3>
+          <p class="rlead">Stream 2 runs on .frank / Bluegyfu / BFL capacity at 75% cost-share. If cohort one converts faster than modeled (5+ clients in the first month), we hit a ceiling on specialist hours before we hit a ceiling on revenue. The Capacity Plan assumes capacity scales; it doesn't commit any of the three partners to a specific bench size.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val high">Medium-high</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val high">High — service quality drop risks beta reputation</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">Formal capacity commitment from each partner before 18 May. Bench size + SLA per tier.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">Ruben + all partners</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card high">
+        <div class="risk-num">03</div>
+        <div class="risk-body">
+          <h3>Credit-rollover cashflow under churn</h3>
+          <p class="rlead">3-month credit rollover sounds customer-friendly, but under churn it stacks liability: a client who pays for 90 credits over 3 months and cancels can still demand delivery on 90 credits after cancellation. The Fixed-Cost Model assumes steady-state — it doesn't model the liability build under a 20% monthly churn scenario.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val med">Medium</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val high">High — cash crunch in month 4–6 if churn spikes</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">Contract clause: unused credits expire on cancellation OR are convertible to a final deliverable. Choose one.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">Ruben · needs legal review by 26 April</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card high">
+        <div class="risk-num">04</div>
+        <div class="risk-body">
+          <h3>SA market entry sequencing</h3>
+          <p class="rlead">Running NL + SA in parallel for cohort one doubles the operating surface (timezones, currencies, delivery partner coordination, contract localisation) while the team is at its smallest. The sizing work supports SA as a market; it doesn't mandate SA in cohort one. Decision 05 resolves this, but the risk is that "parallel" becomes the default by inertia without being chosen deliberately.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val high">High (of inertia, not of the strategy itself)</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val med">Medium — slows NL execution without materially accelerating SA</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">Force the call in the Mon 20 April sync. Default to NL-only unless deliberately chosen otherwise.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">Tlali + all partners · Decision 05</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card med">
+        <div class="risk-num">05</div>
+        <div class="risk-body">
+          <h3>Capital-burn anchor fragility</h3>
+          <p class="rlead">The "€15–25B wasted annually" figure in the Context Doc and Investor Deck v1.1 has no defensible derivation. The reconstructed honest range is €9–18B. The gap invites pushback from a VC audience who knows the underlying data — precisely the audience we want in the room. Not blocking, but worth fixing before the next investor conversation.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val med">Medium (high if a VC does the math live)</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val med">Medium — credibility hit in one deck, recoverable</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">Per <a href="artefacts/capital_burn_calculation.html">Capital Burn memo</a>: swap aggregate for the 43% PMF/GTM stat. Keep the €45B deployment figure as context only.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">Ruben · fix in Investor Deck v1.2</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card med">
+        <div class="risk-num">06</div>
+        <div class="risk-body">
+          <h3>Pricing transparency trap</h3>
+          <p class="rlead">Decision 04 (surface credits publicly?) has a second-order risk regardless of which way it goes. Surface them: anchors sales calls lower and attracts price shoppers. Don't surface them: lengthens the sales cycle because prospects can't self-qualify. The split is real; either choice creates a workstream downstream.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val med">Medium</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val med">Medium — affects cohort-one conversion rate</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">A/B test in month two — run both versions to subsets of outbound list, measure call-book rate.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">All · Decision 04</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="risk-card med">
+        <div class="risk-num">07</div>
+        <div class="risk-body">
+          <h3>Category-claim contest</h3>
+          <p class="rlead">"Growth Operating System" is a fresh category but not an uncontested one. Adjacent players (Mutiny, Common Room, Default, North Star metric tooling, the RevOps category generally) can claim operating-system language without much friction. If a better-funded entrant plants a flag in the same phrase while we're still in beta, the category advantage compresses.</p>
+          <div class="risk-grid">
+            <div class="cell"><div class="label">Likelihood</div><div class="val med">Medium (higher if we stay quiet past Q3)</div></div>
+            <div class="cell"><div class="label">Impact</div><div class="val med">Medium — positioning erosion, not product erosion</div></div>
+            <div class="cell"><div class="label">Mitigation</div><div class="val">Public "what a Growth OS actually is" content track from May. Own the definition before competitors attempt to.</div></div>
+            <div class="cell"><div class="label">Owner</div><div class="val">Kim + Ruben</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="callout lime">
+      <h4>How this register works</h4>
+      <p style="margin:0;">
+        Reviewed monthly. Risks move down the list as they resolve; new ones get added when they surface. The top risk (the product-engineering scope gap) stays at #1 until the capability split is agreed, a hire path is chosen, and a first engineer is ramping. It sits higher than the others because most of the others are fixable with a decision; this one is fixable with a decision <em>plus</em> a capability build.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="padding-top: 0;">
+  <div class="container">
+    <div class="pager">
+      <a class="prev" href="launch.html">
+        <span class="eyebrow">← Back</span>
+        <span class="title">Launch Readiness</span>
+      </a>
+      <a class="next" href="pipeline.html">
+        <span class="eyebrow">Next →</span>
+        <span class="title">Beta Pipeline</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="small">GritFuel · Partner Briefing · Risk Register</span>
+      <span class="small">v1.0 · 18 April 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

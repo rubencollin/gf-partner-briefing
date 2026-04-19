@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GritFuel — Scoping Configurator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1A1A; --charcoal: #3C3C3C; --gray: #929292;
+    --gray-300: #D9D9D4; --gray-200: #E8E8E3; --gray-100: #F1F1ED;
+    --paper: #FAFAF7; --white: #FFFFFF;
+    --lime: #DEE450; --lime-dark: #B8BE3A; --lime-50: #F4F6D3;
+    --orange: #FC4E2B; --orange-50: #FFE4DC;
+    --blue: #8BB8E8; --amber: #E8B86A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--gray-100); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .shell { max-width: 1160px; margin: 0 auto; padding: 28px 24px 80px; }
+  .home-link { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .home-link:hover { color: var(--ink); }
+
+  h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 6px; }
+  h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 14px; margin-top: 32px; }
+  h3 { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 12px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .intro { color: var(--charcoal); max-width: 780px; margin-bottom: 30px; }
+
+  .layout { display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; }
+
+  .card { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 22px 24px; }
+  .card + .card { margin-top: 18px; }
+
+  .step-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .step-num { background: var(--ink); color: var(--lime); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.08em; }
+  .step-ttl { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; color: var(--ink); }
+
+  select, input[type="text"] { font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; border: 1.5px solid var(--gray-300); border-radius: 8px; background: var(--white); width: 100%; color: var(--ink); }
+  select:focus, input:focus { outline: none; border-color: var(--lime-dark); background: var(--lime-50); }
+
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12px; color: var(--charcoal); font-weight: 600; margin-bottom: 4px; }
+
+  .meta-row { display: grid; grid-template-columns: 110px 1fr; gap: 10px; padding: 7px 0; font-size: 13px; border-bottom: 1px dashed var(--gray-200); }
+  .meta-row:last-child { border: 0; }
+  .meta-row .k { color: var(--gray); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 1px; }
+  .meta-row .v { color: var(--ink); }
+  .partner-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; margin-right: 4px; }
+  .p-gritfuel { background: var(--lime-50); color: #6B700F; }
+  .p-frank { background: var(--orange-50); color: var(--orange); }
+  .p-bluegyfu { background: #DEEBFC; color: #2F5E9A; }
+  .p-bfl { background: #FCEFD8; color: #8A5A13; }
+
+  /* Multiplier grid */
+  .multi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .multi-cell label { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--charcoal); font-weight: 600; margin-bottom: 4px; }
+  .multi-cell label .mx { font-family: 'JetBrains Mono', monospace; background: var(--lime-50); color: var(--charcoal); padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .multi-hint { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+  /* ESTIMATE PANEL */
+  .estimate { background: var(--ink); color: var(--paper); border-radius: 12px; padding: 24px; position: sticky; top: 24px; }
+  .estimate h3 { color: var(--gray); margin-bottom: 4px; }
+  .est-formula { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); margin-bottom: 22px; line-height: 1.6; }
+  .scenarios { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .scen { padding: 16px 18px; border-radius: 10px; background: #2A2A2A; border: 1px solid #3C3C3C; }
+  .scen.rec { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+  .scen-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 4px; }
+  .scen.rec .scen-label { opacity: 0.9; }
+  .scen-val { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
+  .scen-eur { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .scen.rec .scen-eur { color: #3C3C3C; }
+  .scen-note { font-size: 11px; margin-top: 8px; opacity: 0.75; line-height: 1.5; }
+
+  .est-calc { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); padding: 14px 16px; background: #252525; border-radius: 8px; line-height: 1.7; }
+  .est-calc strong { color: var(--lime); font-weight: 500; }
+
+  .note { background: var(--white); border-left: 3px solid var(--lime); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 28px; font-size: 13px; color: var(--charcoal); }
+  .note strong { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .estimate { position: static; }
+    .multi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <a class="home-link" href="../04-finance.html">← Back to Finance</a>
+
+  <div class="eyebrow">Artefact · interactive</div>
+  <h1>Scoping Configurator</h1>
+  <p class="intro">Live tool for client intake on any SCOPED line item. Pick a service, set five universal scope variables with the client, and get a defensible credit estimate (Low / Recommended / High) in both credits and EUR output value.</p>
+
+  <div class="layout">
+    <!-- LEFT: INPUTS -->
+    <div>
+      <!-- STEP 1 -->
+      <div class="card">
+        <div class="step-hdr"><span class="step-num">Step 1</span><span class="step-ttl">Select scoped item</span></div>
+        <div class="field">
+          <label>Service</label>
+          <select id="item-select"></select>
+        </div>
+        <div id="item-meta">
+          <div class="meta-row"><div class="k">Category</div><div class="v" id="m-cat">—</div></div>
+          <div class="meta-row"><div class="k">Partner</div><div class="v" id="m-partner">—</div></div>
+          <div class="meta-row"><div class="k">Description</div><div class="v" id="m-desc">—</div></div>
+          <div class="meta-row"><div class="k">Base Cr</div><div class="v" id="m-base">—</div></div>
+          <div class="meta-row"><div class="k">Key vars</div><div class="v" id="m-keyvars">—</div></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="card">
+        <div class="step-hdr"><span class="step-num">Step 2</span><span class="step-ttl">Set scope variables</span></div>
+        <div class="multi-grid">
+          <div class="multi-cell">
+            <label>Company size <span class="mx" id="mx-size">1.00×</span></label>
+            <select id="v-size"></select>
+            <div class="multi-hint" id="h-size"></div>
+          </div>
+          <div class="multi-cell">
+            <label>Industry complexity <span class="mx" id="mx-ind">1.00×</span></label>
+            <select id="v-ind"></select>
+            <div class="multi-hint" id="h-ind"></div>
+          </div>
+          <div class="multi-cell">
+            <label>Deliverable depth <span class="mx" id="mx-depth">1.00×</span></label>
+            <select id="v-depth"></select>
+            <div class="multi-hint" id="h-depth"></div>
+          </div>
+          <div class="multi-cell">
+            <label>Revision rounds <span class="mx" id="mx-rev">1.00×</span></label>
+            <select id="v-rev"></select>
+            <div class="multi-hint" id="h-rev"></div>
+          </div>
+          <div class="multi-cell">
+            <label>Timeline <span class="mx" id="mx-time">1.00×</span></label>
+            <select id="v-time"></select>
+            <div class="multi-hint" id="h-time"></div>
+          </div>
+          <div class="multi-cell">
+            <label>Compound multiplier <span class="mx" id="mx-total" style="background: var(--ink); color: var(--lime);">1.00×</span></label>
+            <div class="multi-hint">Product of all five selections above.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: ESTIMATE -->
+    <div>
+      <div class="estimate">
+        <h3>Credit estimate</h3>
+        <div class="est-formula">Recommended = Base Mid × Size × Industry × Depth × Revisions × Timeline</div>
+
+        <div class="scenarios">
+          <div class="scen">
+            <div class="scen-label">Low — floor</div>
+            <div class="scen-val"><span id="s-low-cr">—</span> <span style="font-size: 14px; color: var(--gray);">cr</span></div>
+            <div class="scen-eur" id="s-low-eur">—</div>
+            <div class="scen-note">Lite deliverable, single market, small team</div>
+          </div>
+          <div class="scen rec">
+            <div class="scen-label">Recommended</div>
+            <div class="scen-val"><span id="s-rec-cr">—</span> <span style="font-size: 14px; opacity: 0.7;">cr</span></div>
+            <div class="scen-eur" id="s-rec-eur">—</div>
+            <div class="scen-note">Based on your selections above — final figure to agree with client</div>
+          </div>
+          <div class="scen">
+            <div class="scen-label">High — ceiling</div>
+            <div class="scen-val"><span id="s-high-cr">—</span> <span style="font-size: 14px; color: var(--gray);">cr</span></div>
+            <div class="scen-eur" id="s-high-eur">—</div>
+            <div class="scen-note">Comprehensive, complex, accelerated delivery</div>
+          </div>
+        </div>
+
+        <div class="est-calc" id="calc-str">Select an item to see the calculation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>1 credit = €25 output value.</strong> GritFuel prices at ~70% of European market rate. Paid-media ad spend is never included in credits — billed separately. For regulated industries, build in buffer beyond the 1.35× multiplier to capture legal-review cycles. Always confirm the final figure with the delivery partner before committing to the monthly playbook.
+  </div>
+</div>
+
+<script>
+  // ---- DATA ----
+  const ITEMS = [
+    {name:'Full Brand Audit',cat:'Discovery & Audit',partner:'GritFuel / .frank',desc:'Comprehensive audit of brand positioning, messaging, visual identity, and competitive standing.',low:16,mid:26,high:44,kv:'Company size; # competitors; # channels audited; Industry complexity; Deliverable depth'},
+    {name:'Competitive Landscape Audit',cat:'Discovery & Audit',partner:'GritFuel / .frank',desc:'Deep competitive mapping across 3–10+ competitors with positioning, messaging, and channel analysis.',low:10,mid:18,high:32,kv:'# competitors (3/5/8/10+); Analysis depth; Industry complexity'},
+    {name:'Channel Performance Audit',cat:'Discovery & Audit',partner:'Bluegyfu',desc:'Full performance review of active marketing channels — paid, organic, email, social.',low:8,mid:14,high:22,kv:'# channels; Data period (3m/6m/12m); Data volume; Depth'},
+    {name:'Content Audit & Gap Analysis',cat:'Discovery & Audit',partner:'GritFuel',desc:'Audit of existing content library; gap mapping against buyer journey and SEO priorities.',low:6,mid:12,high:20,kv:'# content pieces; # channels; Gap analysis depth'},
+    {name:'SEO Technical Audit',cat:'Discovery & Audit',partner:'Bluegyfu',desc:'Technical SEO crawl and analysis; on-page, off-page, and Core Web Vitals review.',low:8,mid:16,high:28,kv:'Site size (# pages); Technical complexity; Backlink analysis?; Depth'},
+    {name:'CRO Audit',cat:'Discovery & Audit',partner:'Bluegyfu',desc:'Conversion rate optimisation audit — funnel mapping, heatmap review, UX friction points.',low:10,mid:18,high:28,kv:'# pages/flows; Traffic volume; Analytics access?; Depth'},
+    {name:'Paid Media Audit',cat:'Discovery & Audit',partner:'Bluegyfu',desc:'Review of paid media accounts (Meta, Google, LinkedIn) — performance, structure, creative.',low:8,mid:14,high:24,kv:'# platforms; Spend volume; Data period; Depth'},
+    {name:'Market Research (Custom Survey)',cat:'Discovery & Audit',partner:'GritFuel / .frank',desc:'Custom market research design, survey build, distribution, and analysis report.',low:14,mid:24,high:40,kv:'# respondents; # questions; Distribution method; Analysis depth'},
+    {name:'Customer Journey Mapping',cat:'Discovery & Audit',partner:'GritFuel / .frank',desc:'End-to-end journey mapping across personas and touchpoints with friction and opportunity analysis.',low:10,mid:18,high:28,kv:'# personas; # touchpoints; Research basis (existing data vs. new); Depth'},
+    {name:'Persona Development',cat:'Discovery & Audit',partner:'GritFuel / .frank',desc:'Research-backed persona development with behavioural, psychographic, and demographic profiles.',low:8,mid:14,high:20,kv:'# personas; Research basis; Industry complexity; Depth'},
+    {name:'Logo Design (Full)',cat:'Brand & Identity',partner:'.frank',desc:'Full logo design process: discovery, concept exploration, refinement, and final delivery.',low:8,mid:16,high:24,kv:'# initial concepts; Usage contexts; Revision rounds'},
+    {name:'Full Brand Identity System',cat:'Brand & Identity',partner:'.frank',desc:'Complete visual identity: logo, colour, typography, iconography, motion, brand guidelines.',low:24,mid:42,high:68,kv:'# identity elements; Usage contexts; Applications; Revision rounds'},
+    {name:'Brand Naming',cat:'Brand & Identity',partner:'.frank',desc:'Strategic brand or product naming: brief, exploration, shortlisting, trademark check, rationale.',low:12,mid:20,high:32,kv:'# name options delivered; Trademark check included?; Industry complexity'},
+    {name:'Website Build (5+ pages)',cat:'Website & Digital',partner:'Bluegyfu',desc:'Multi-page website design and build — beyond the standard 5-page fixed scope.',low:16,mid:32,high:64,kv:'# pages; CMS platform; # integrations; E-commerce?; Custom animations?'},
+    {name:'Landing Page System (Multi)',cat:'Website & Digital',partner:'Bluegyfu',desc:'Multiple landing pages for different campaigns, segments, or geographies.',low:10,mid:18,high:28,kv:'# landing pages; # A/B variants; # integrations; Design complexity'},
+    {name:'App / Product UX Design',cat:'Website & Digital',partner:'Bluegyfu',desc:'Full UX/UI design for digital product or app — flows, wireframes, high-fidelity screens.',low:16,mid:32,high:56,kv:'# screens/flows; Prototype required?; Complexity; Revision rounds'},
+    {name:'GTM Strategy',cat:'Strategy',partner:'.frank',desc:'Go-to-market strategy for new product, market, or segment — channels, messaging, rollout plan.',low:14,mid:24,high:40,kv:'# target markets; # channels; Research required?; Depth'},
+    {name:'Pricing Strategy',cat:'Strategy',partner:'.frank',desc:'Pricing model design and competitive benchmarking across customer segments.',low:12,mid:20,high:32,kv:'# pricing segments; Competitive research required?; Industry complexity; Depth'},
+    {name:'CRM Setup',cat:'Tech & Operations',partner:'Bluegyfu',desc:'CRM configuration, pipeline design, and workflow automation setup.',low:10,mid:18,high:28,kv:'CRM platform; # users; # custom objects; # integrations'},
+    {name:'CRM Migration',cat:'Tech & Operations',partner:'Bluegyfu',desc:'Data migration from existing CRM — cleaning, mapping, transfer, and validation.',low:12,mid:20,high:36,kv:'# contacts/records; # objects; Data quality (clean/messy); Source platform'},
+    {name:'Chatbot Setup',cat:'Tech & Operations',partner:'Bluegyfu',desc:'Conversational chatbot design, flow build, and platform integration.',low:8,mid:14,high:24,kv:'# conversation flows; # integrations; AI vs. rule-based; Complexity'},
+    {name:'Predictive Analytics Setup',cat:'Tech & Operations',partner:'Bluegyfu',desc:'Predictive model build — churn, LTV, propensity, or demand forecasting.',low:16,mid:28,high:48,kv:'# data sources; Model type; Data quality; Integration complexity'},
+    {name:'Loyalty Programme Setup',cat:'Tech & Operations',partner:'Bluegyfu',desc:'Loyalty and rewards programme design, tech setup, and integration.',low:12,mid:20,high:32,kv:'# tier levels; Tech platform; Integrations; Programme complexity'},
+    {name:'Data Infrastructure Setup',cat:'Tech & Operations',partner:'Bluegyfu',desc:'Data pipeline, warehouse, or analytics stack setup.',low:16,mid:28,high:48,kv:'# data sources; Stack complexity; # integrations; Data volume'},
+    {name:'Brand Video (60s)',cat:'Content & Creative',partner:'.frank',desc:'60-second brand or hero video — script, production, edit, and delivery.',low:16,mid:28,high:44,kv:'Animation vs. live shoot; # revision rounds; VO required?; Music licensing'},
+    {name:'Campaign Video (30s)',cat:'Content & Creative',partner:'.frank',desc:'30-second campaign video for paid or organic channels.',low:10,mid:18,high:28,kv:'Animation vs. live shoot; # variants; Revision rounds'},
+    {name:'Explainer Video',cat:'Content & Creative',partner:'.frank',desc:'Animated or live explainer video — product, service, or concept.',low:12,mid:20,high:32,kv:'Duration (60s/90s/2min+); Animation complexity; Script required?; Revision rounds'},
+    {name:'Whitepaper / Research Report',cat:'Content & Creative',partner:'GritFuel / .frank',desc:'Long-form research or thought leadership piece — research, writing, and designed layout.',low:10,mid:18,high:28,kv:'# pages; Research depth; Design level; Infographics included?'},
+    {name:'Brand Playbook / Guidelines Doc',cat:'Content & Creative',partner:'.frank',desc:'Comprehensive brand guidelines — voice, visual, usage rules, channel specs, and examples.',low:12,mid:20,high:32,kv:'Scope (voice / visual / full); # channels covered; Design depth'},
+    {name:'Performance Creative System',cat:'Content & Creative',partner:'.frank',desc:'Systematic creative development for paid media — multiple formats and variants.',low:10,mid:18,high:28,kv:'# formats; # variants per format; # channels; Iteration rounds'},
+    {name:'PR Campaign Strategy',cat:'PR & Influence',partner:'GritFuel',desc:'Full PR campaign strategy including media mapping, pitch angles, and messaging.',low:10,mid:18,high:28,kv:'# media targets; Duration; # markets; Outreach execution included?'},
+    {name:'Influencer Strategy',cat:'PR & Influence',partner:'GritFuel',desc:'Influencer marketing strategy — tier mapping, outreach approach, measurement framework.',low:8,mid:14,high:20,kv:'# influencer tiers; # markets; Vetting/shortlisting included?; Depth'},
+    {name:'Investor Relations Pack',cat:'Investor & Corporate',partner:'.frank',desc:'Investor-ready materials — deck, one-pager, financials narrative, and supporting docs.',low:14,mid:24,high:36,kv:'Funding stage; # materials/documents; Financial modelling required?; Depth'},
+    {name:'Multi-Market Content Localisation',cat:'Multi-Market',partner:'GritFuel',desc:'Localisation of existing content for new markets — translation, cultural adaptation, and QA.',low:8,mid:14,high:24,kv:'# markets/languages; # assets; Adaptation depth'},
+    {name:'Brand Activation Event',cat:'Events (via BFL)',partner:'BFL',desc:'Physical or hybrid brand activation — concept, production, and execution.',low:20,mid:36,high:60,kv:'# attendees; # locations; Format (physical/hybrid); Production complexity'},
+    {name:'Product Launch Event',cat:'Events (via BFL)',partner:'BFL',desc:'Full product launch event — strategy, production, and execution.',low:24,mid:40,high:72,kv:'# attendees; Format; # markets/cities; Media involvement'},
+    {name:'Conference / Exhibition',cat:'Events (via BFL)',partner:'BFL',desc:'Conference presence or exhibition stand — concept, build, and activation.',low:16,mid:28,high:48,kv:'# days; # attendees; Stand complexity; # events in series'},
+    {name:'Experiential Marketing Campaign',cat:'Events (via BFL)',partner:'BFL',desc:'Multi-touchpoint experiential campaign design and execution.',low:20,mid:36,high:60,kv:'# activations; # markets; Duration; Production complexity'},
+  ];
+
+  const MULTIPLIERS = {
+    size: [
+      {label:'Startup (<10 employees)',mx:1,hint:'Small team, faster decisions, lower stakeholder count'},
+      {label:'SMB (10–50 employees)',mx:1.25,hint:'Moderate complexity — some stakeholders, some process'},
+      {label:'Scale-up (51–200 employees)',mx:1.5,hint:'Multiple stakeholders, structured process, more assets'},
+      {label:'Enterprise (200+ employees)',mx:2,hint:'High complexity, multiple sign-offs, global scope possible'},
+    ],
+    ind: [
+      {label:'Standard',mx:1,hint:'Consumer, retail, hospitality, general B2B'},
+      {label:'Technical / Niche',mx:1.2,hint:'SaaS, deep tech, specialist B2B — requires domain knowledge'},
+      {label:'Regulated (fintech/health/legal)',mx:1.35,hint:'Strict compliance, legal review, additional care required'},
+    ],
+    depth: [
+      {label:'Lite',mx:0.75,hint:'MVP / starter output — covers core need, limited iterations'},
+      {label:'Standard',mx:1,hint:'Full scope as described — baseline for all credit estimates'},
+      {label:'Comprehensive',mx:1.5,hint:'Deep research, multiple drafts, exec summary, extended delivery'},
+    ],
+    rev: [
+      {label:'1 round',mx:0.9,hint:'Client provides consolidated feedback once — efficient projects'},
+      {label:'2 rounds',mx:1,hint:'Standard — initial draft + one revision round'},
+      {label:'3 rounds',mx:1.15,hint:'Additional review cycle required'},
+      {label:'4+ rounds',mx:1.35,hint:'Multiple stakeholders or high complexity requiring extended iteration'},
+    ],
+    time: [
+      {label:'Standard',mx:1,hint:'Normal delivery within standard SLA timeframes'},
+      {label:'Accelerated (rush)',mx:1.25,hint:'Compressed — prioritised resource allocation; confirm with client'},
+    ],
+  };
+
+  const DEFAULT_IDX = { size: 0, ind: 0, depth: 1, rev: 1, time: 0 };
+  const CREDIT_EUR = 25;
+  const fmtEUR = n => '€' + Math.round(n).toLocaleString('en-US');
+
+  function partnerChip(p) {
+    return p.split(/\s*\/\s*/).map(pp => {
+      const key = pp.toLowerCase().replace(/\W+/g,'');
+      let cls = 'p-gritfuel';
+      if (key.includes('frank')) cls = 'p-frank';
+      else if (key.includes('bluegyfu')) cls = 'p-bluegyfu';
+      else if (key === 'bfl') cls = 'p-bfl';
+      return `<span class="partner-chip ${cls}">${pp}</span>`;
+    }).join(' ');
+  }
+
+  // Populate item select
+  const itemSelect = document.getElementById('item-select');
+  // Group by category
+  const byCat = {};
+  ITEMS.forEach((it, i) => { (byCat[it.cat] ||= []).push({it, i}); });
+  Object.entries(byCat).forEach(([cat, items]) => {
+    const og = document.createElement('optgroup'); og.label = cat;
+    items.forEach(({it, i}) => {
+      const op = document.createElement('option'); op.value = i; op.textContent = it.name;
+      og.appendChild(op);
+    });
+    itemSelect.appendChild(og);
+  });
+
+  // Populate multiplier selects
+  function populateSelect(id, list, defaultIdx) {
+    const sel = document.getElementById(id);
+    list.forEach((opt, i) => {
+      const o = document.createElement('option'); o.value = i; o.textContent = opt.label + '  (×' + opt.mx + ')';
+      sel.appendChild(o);
+    });
+    sel.value = defaultIdx;
+  }
+  populateSelect('v-size', MULTIPLIERS.size, DEFAULT_IDX.size);
+  populateSelect('v-ind', MULTIPLIERS.ind, DEFAULT_IDX.ind);
+  populateSelect('v-depth', MULTIPLIERS.depth, DEFAULT_IDX.depth);
+  populateSelect('v-rev', MULTIPLIERS.rev, DEFAULT_IDX.rev);
+  populateSelect('v-time', MULTIPLIERS.time, DEFAULT_IDX.time);
+
+  function recalc() {
+    const item = ITEMS[+itemSelect.value];
+    document.getElementById('m-cat').textContent = item.cat;
+    document.getElementById('m-partner').innerHTML = partnerChip(item.partner);
+    document.getElementById('m-desc').textContent = item.desc;
+    document.getElementById('m-base').innerHTML = `<span style="font-family:'JetBrains Mono',monospace">Low ${item.low} · Mid ${item.mid} · High ${item.high}</span>`;
+    document.getElementById('m-keyvars').textContent = item.kv;
+
+    const s = MULTIPLIERS.size[+document.getElementById('v-size').value];
+    const i = MULTIPLIERS.ind[+document.getElementById('v-ind').value];
+    const d = MULTIPLIERS.depth[+document.getElementById('v-depth').value];
+    const r = MULTIPLIERS.rev[+document.getElementById('v-rev').value];
+    const t = MULTIPLIERS.time[+document.getElementById('v-time').value];
+
+    document.getElementById('mx-size').textContent = s.mx.toFixed(2) + '×';
+    document.getElementById('mx-ind').textContent = i.mx.toFixed(2) + '×';
+    document.getElementById('mx-depth').textContent = d.mx.toFixed(2) + '×';
+    document.getElementById('mx-rev').textContent = r.mx.toFixed(2) + '×';
+    document.getElementById('mx-time').textContent = t.mx.toFixed(2) + '×';
+    document.getElementById('h-size').textContent = s.hint;
+    document.getElementById('h-ind').textContent = i.hint;
+    document.getElementById('h-depth').textContent = d.hint;
+    document.getElementById('h-rev').textContent = r.hint;
+    document.getElementById('h-time').textContent = t.hint;
+
+    const compound = s.mx * i.mx * d.mx * r.mx * t.mx;
+    document.getElementById('mx-total').textContent = compound.toFixed(2) + '×';
+
+    const recCr = Math.round(item.mid * compound);
+    const lowCr = Math.round(item.low * compound);
+    const highCr = Math.round(item.high * compound);
+
+    document.getElementById('s-low-cr').textContent = lowCr;
+    document.getElementById('s-rec-cr').textContent = recCr;
+    document.getElementById('s-high-cr').textContent = highCr;
+    document.getElementById('s-low-eur').textContent = fmtEUR(lowCr * CREDIT_EUR);
+    document.getElementById('s-rec-eur').textContent = fmtEUR(recCr * CREDIT_EUR);
+    document.getElementById('s-high-eur').textContent = fmtEUR(highCr * CREDIT_EUR);
+
+    document.getElementById('calc-str').innerHTML =
+      `<strong>${item.mid}</strong> × ${s.mx} × ${i.mx} × ${d.mx} × ${r.mx} × ${t.mx} = <strong>${recCr}</strong> credits  (${fmtEUR(recCr * CREDIT_EUR)})`;
+  }
+
+  document.querySelectorAll('select').forEach(el => el.addEventListener('change', recalc));
+  itemSelect.value = 0;
+  recalc();
+</script>
+</body>
+</html>

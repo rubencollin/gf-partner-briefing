@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Client Onboarding</title>
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --charcoal: #2D2D2D;
+  --lime: #C8E000;
+  --lime-dark: #a8bc00;
+  --lime-bg: rgba(200,224,0,0.08);
+  --white: #FFFFFF;
+  --bg: #F2F3F4;
+  --card: #FFFFFF;
+  --border: #E2E4E7;
+  --mid: #6B7280;
+  --light: #F8F9FA;
+  --success: #22C55E;
+  --info: #3B82F6;
+  --radius: 10px;
+}
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--charcoal);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--charcoal);
+  border-bottom: 3px solid var(--lime);
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.wordmark { color: var(--lime); font-size: 17px; font-weight: 800; letter-spacing: 2px; }
+.header-sub { color: #999; font-size: 12px; }
+.mode-toggle {
+  display: flex;
+  gap: 0;
+  background: #3a3a3a;
+  border-radius: 6px;
+  padding: 3px;
+}
+.mode-btn {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  background: transparent;
+  color: #777;
+}
+.mode-btn.active { background: var(--lime); color: var(--charcoal); }
+.mode-btn.active-int { background: #6D28D9; color: white; }
+
+/* ── PROGRESS BAR ── */
+.progress-shell {
+  background: var(--charcoal);
+  padding: 20px 40px 0;
+}
+.steps-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  max-width: 800px;
+  margin: 0 auto 0;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  cursor: default;
+}
+.step-item::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #444;
+  z-index: 0;
+}
+.step-item:last-child::after { display: none; }
+.step-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #3a3a3a;
+  border: 2px solid #555;
+  color: #666;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s;
+}
+.step-item.done .step-dot { background: var(--lime); border-color: var(--lime); color: var(--charcoal); }
+.step-item.active .step-dot { background: var(--charcoal); border-color: var(--lime); color: var(--lime); box-shadow: 0 0 0 3px rgba(200,224,0,0.2); }
+.step-item.active::after { background: #444; }
+.step-item.done::after { background: var(--lime); }
+.step-label {
+  font-size: 10px;
+  color: #555;
+  margin-top: 6px;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.step-item.active .step-label { color: var(--lime); }
+.step-item.done .step-label { color: #888; }
+.progress-bar-track {
+  height: 3px;
+  background: #3a3a3a;
+  margin-top: 16px;
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--lime);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ── MAIN CONTAINER ── */
+.main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+
+/* ── STEP PANELS ── */
+.step-panel { display: none; }
+.step-panel.active { display: block; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── STEP HEADER ── */
+.step-header { margin-bottom: 28px; }
+.step-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--lime-dark);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.step-title { font-size: 26px; font-weight: 800; color: var(--charcoal); line-height: 1.2; margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--mid); max-width: 580px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--mid);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .req { color: var(--lime-dark); }
+
+/* ── FORM ELEMENTS ── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 6px;
+}
+.field label .opt { color: var(--mid); font-weight: 400; font-size: 12px; }
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="url"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--charcoal);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--lime-dark);
+  box-shadow: 0 0 0 3px rgba(200,224,0,0.15);
+}
+.field textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* ── RADIO / CHECKBOX CARDS ── */
+.choice-grid {
+  display: grid;
+  gap: 10px;
+}
+.choice-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.choice-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.choice-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.choice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  user-select: none;
+}
+.choice-card:hover { border-color: #bbb; background: var(--light); }
+.choice-card.selected { border-color: var(--lime-dark); background: var(--lime-bg); }
+.choice-card input { display: none; }
+.choice-marker {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.choice-card.selected .choice-marker {
+  background: var(--lime);
+  border-color: var(--lime-dark);
+}
+.choice-card.selected .choice-marker::after {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--charcoal);
+  border-radius: 50%;
+}
+.choice-card.checkbox .choice-marker { border-radius: 4px; }
+.choice-card.checkbox.selected .choice-marker { background: var(--lime); border-color: var(--lime-dark); }
+.choice-card.checkbox.selected .choice-marker::after {
+  content: '✓';
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--charcoal);
+  border-radius: 0;
+  width: auto; height: auto;
+  background: none;
+}
+.choice-label { font-size: 13.5px; font-weight: 600; color: var(--charcoal); line-height: 1.3; }
+.choice-desc { font-size: 12px; color: var(--mid); margin-top: 2px; font-weight: 400; }
+
+/* ── TAG PICKER (brand adjectives) ── */
+.tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag-item {
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  user-select: none;
+}
+.tag-item:hover { border-color: #bbb; background: var(--light); }
+.tag-item.selected { background: var(--charcoal); color: var(--lime); border-color: var(--charcoal); }
+.tag-limit-note { font-size: 11px; color: var(--mid); margin-top: 8px; }
+
+/* ── RANGE SLIDER ── */
+.slider-wrap { padding: 4px 0; }
+.slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--mid); margin-bottom: 6px; }
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--lime);
+  height: 4px;
+  cursor: pointer;
+}
+.slider-val {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-top: 6px;
+}
+
+/* ── INTERNAL NOTES FIELD (strategist mode) ── */
+.int-note {
+  display: none;
+  background: #FFF8E1;
+  border: 1px solid #F9A825;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+.int-note label { font-size: 11px; color: #B45309; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 5px; }
+.int-note textarea { border-color: #F9A825; min-height: 60px; font-size: 13px; }
+.int-note textarea:focus { border-color: #B45309; box-shadow: 0 0 0 2px rgba(249,168,37,0.2); }
+body.strategist-mode .int-note { display: block; }
+
+/* ── SCORING BADGE (strategist) ── */
+.score-row { display: none; align-items: center; gap: 10px; margin-top: 10px; }
+body.strategist-mode .score-row { display: flex; }
+.score-label { font-size: 11px; color: #B45309; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.score-options { display: flex; gap: 6px; }
+.score-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.score-btn:hover { border-color: #bbb; }
+.score-btn.s1.sel { background: #EF4444; color: white; border-color: #EF4444; }
+.score-btn.s2.sel { background: #F59E0B; color: white; border-color: #F59E0B; }
+.score-btn.s3.sel { background: #22C55E; color: white; border-color: #22C55E; }
+.score-btn.s4.sel { background: var(--lime); color: var(--charcoal); border-color: var(--lime-dark); }
+.score-btn.s5.sel { background: var(--charcoal); color: var(--lime); border-color: var(--charcoal); }
+
+/* ── NAV BUTTONS ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+}
+.btn {
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--lime); color: var(--charcoal); }
+.btn-primary:hover { background: var(--lime-dark); }
+.btn-ghost { background: transparent; color: var(--mid); border: 1.5px solid var(--border); }
+.btn-ghost:hover { border-color: #bbb; color: var(--charcoal); }
+.btn-submit { background: var(--charcoal); color: var(--lime); font-size: 15px; padding: 14px 36px; }
+.btn-submit:hover { background: #1a1a1a; }
+.nav-step-count { font-size: 12px; color: var(--mid); }
+
+/* ── SUMMARY VIEW ── */
+#summary-view { display: none; }
+#summary-view.active { display: block; }
+.summary-hero {
+  background: var(--charcoal);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
+  border: 3px solid var(--lime);
+}
+.summary-hero h2 { color: var(--lime); font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.summary-hero p { color: #aaa; font-size: 14px; }
+.summary-section { margin-bottom: 24px; }
+.summary-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--mid);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.summary-item {}
+.summary-item .s-label { font-size: 11px; color: var(--mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.summary-item .s-val { font-size: 14px; color: var(--charcoal); font-weight: 600; }
+.summary-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.summary-tag {
+  font-size: 12px;
+  background: var(--charcoal);
+  color: var(--lime);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* ── STRATEGIST SCORE SUMMARY ── */
+.score-summary { display: none; }
+body.strategist-mode .score-summary { display: block; }
+.score-card {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.score-card h3 { font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.score-row-sum {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 4px 0;
+  border-bottom: 1px solid #FDE68A;
+}
+.score-row-sum:last-child { border-bottom: none; }
+.score-row-sum .dim { color: #92400E; }
+.score-row-sum .pts { font-weight: 700; color: var(--charcoal); }
+
+/* ── CREDIT RECOMMENDATION (strategist) ── */
+.credit-rec { display: none; }
+body.strategist-mode .credit-rec { display: block; }
+.credit-rec-box {
+  background: rgba(200,224,0,0.08);
+  border: 1.5px solid rgba(200,224,0,0.35);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+.credit-rec-title { font-size: 12px; font-weight: 700; color: var(--lime-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+.credit-tier-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(200,224,0,0.15);
+}
+.credit-tier-row:last-child { border-bottom: none; }
+.credit-tier-row .tier { font-weight: 600; color: var(--charcoal); }
+.credit-tier-row .credits { font-weight: 800; color: var(--lime-dark); }
+.credit-tier-row.recommended { background: rgba(200,224,0,0.1); margin: 4px -10px; padding: 8px 10px; border-radius: 6px; border: none; }
+.credit-tier-row.recommended .tier::after { content: ' ← RECOMMENDED'; font-size: 10px; color: var(--lime-dark); font-weight: 700; margin-left: 6px; }
+
+/* ── PRINT ── */
+@media print {
+  .header, .progress-shell, .nav-row, .mode-toggle, #form-view { display: none !important; }
+  #summary-view { display: block !important; }
+  body { background: white; }
+  .summary-hero { border: 2px solid #C8E000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .summary-tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="wordmark">GRITFUEL</div>
+    <div style="width:1px; height:26px; background:#444;"></div>
+    <div class="header-sub">Client Onboarding · Intake Form</div>
+  </div>
+  <div class="mode-toggle" title="Switch view">
+    <button class="mode-btn active" id="btn-client-mode" onclick="setMode('client')">CLIENT</button>
+    <button class="mode-btn" id="btn-int-mode" onclick="setMode('strategist')">STRATEGIST</button>
+  </div>
+</header>
+
+<!-- ═══ PROGRESS ═══ -->
+<div class="progress-shell" id="progress-shell">
+  <div class="steps-row" id="steps-row">
+    <div class="step-item active" data-step="1"><div class="step-dot">1</div><div class="step-label">Business</div></div>
+    <div class="step-item" data-step="2"><div class="step-dot">2</div><div class="step-label">Goals</div></div>
+    <div class="step-item" data-step="3"><div class="step-dot">3</div><div class="step-label">Situation</div></div>
+    <div class="step-item" data-step="4"><div class="step-dot">4</div><div class="step-label">Audience</div></div>
+    <div class="step-item" data-step="5"><div class="step-dot">5</div><div class="step-label">Brand</div></div>
+    <div class="step-item" data-step="6"><div class="step-dot">6</div><div class="step-label">Channels</div></div>
+    <div class="step-item" data-step="7"><div class="step-dot">7</div><div class="step-label">Working</div></div>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="prog-bar" style="width:14%"></div></div>
+</div>
+
+<div class="main">
+
+<!-- ═══════════ FORM VIEW ═══════════ -->
+<div id="form-view">
+
+<!-- ── STEP 1: THE BUSINESS ── -->
+<div class="step-panel active" id="step-1">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 1 of 7 · The Business</div>
+    <div class="step-title">Let's start with the basics.</div>
+    <div class="step-desc">A few quick details so we know exactly who we're working with.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Company details <span class="req">— required</span></div>
+    <div class="field-row">
+      <div class="field">
+        <label>Company name</label>
+        <input type="text" id="f-company" placeholder="e.g. Momentum Sports BV">
+      </div>
+      <div class="field">
+        <label>Website <span class="opt">(if live)</span></label>
+        <input type="url" id="f-website" placeholder="https://yoursite.com">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Your name</label>
+        <input type="text" id="f-name" placeholder="First & last name">
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="f-email" placeholder="you@company.com">
+      </div>
+    </div>
+    <div class="field">
+      <label>Your role</label>
+      <input type="text" id="f-role" placeholder="e.g. CEO, Head of Marketing, Founder">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Industry & size</div>
+    <div class="field">
+      <label>Industry / sector</label>
+      <select id="f-industry">
+        <option value="">— select —</option>
+        <option>E-commerce / Retail</option>
+        <option>SaaS / Software</option>
+        <option>Professional Services</option>
+        <option>Health & Wellness</option>
+        <option>Sport & Fitness</option>
+        <option>Fashion & Lifestyle</option>
+        <option>Food & Beverage</option>
+        <option>Finance / Fintech</option>
+        <option>Real Estate</option>
+        <option>Travel & Hospitality</option>
+        <option>Media & Entertainment</option>
+        <option>Manufacturing / Industrial</option>
+        <option>Non-profit / NGO</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Company size</label>
+      <div class="choice-grid cols-4">
+        <label class="choice-card" onclick="pick(this,'size')">
+          <input type="radio" name="size" value="solo"><div class="choice-marker"></div>
+          <div><div class="choice-label">Solo</div><div class="choice-desc">Founder / 1 person</div></div>
+        </label>
+        <label class="choice-card" onclick="pick(this,'size')">
+          <input type="radio" name="size" value="small"><div class="choice-marker"></div>
+          <div><div class="choice-label">2–10</div><div class="choice-desc">Small team</div></div>
+        </label>
+        <label class="choice-card" onclick="pick(this,'size')">
+          <input type="radio" name="size" value="mid"><div class="choice-marker"></div>
+          <div><div class="choice-label">11–50</div><div class="choice-desc">Growing</div></div>
+        </label>
+        <label class="choice-card" onclick="pick(this,'size')">
+          <input type="radio" name="size" value="large"><div class="choice-marker"></div>
+          <div><div class="choice-label">50+</div><div class="choice-desc">Scale-up / Corp</div></div>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Business model</label>
+      <div class="choice-grid cols-3">
+        <label class="choice-card" onclick="pick(this,'model')">
+          <input type="radio" name="model" value="b2c"><div class="choice-marker"></div>
+          <div><div class="choice-label">B2C</div><div class="choice-desc">Selling to consumers</div></div>
+        </label>
+        <label class="choice-card" onclick="pick(this,'model')">
+          <input type="radio" name="model" value="b2b"><div class="choice-marker"></div>
+          <div><div class="choice-label">B2B</div><div class="choice-desc">Selling to businesses</div></div>
+        </label>
+        <label class="choice-card" onclick="pick(this,'model')">
+          <input type="radio" name="model" value="both"><div class="choice-marker"></div>
+          <div><div class="choice-label">Both</div><div class="choice-desc">Mixed</div></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Primary market</div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'market')">
+        <input type="radio" name="market" value="nl"><div class="choice-marker"></div>
+        <div><div class="choice-label">Netherlands</div><div class="choice-desc">Dutch market focus</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'market')">
+        <input type="radio" name="market" value="benelux"><div class="choice-marker"></div>
+        <div><div class="choice-label">Benelux</div><div class="choice-desc">NL + BE + LU</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'market')">
+        <input type="radio" name="market" value="europe"><div class="choice-marker"></div>
+        <div><div class="choice-label">Western Europe</div><div class="choice-desc">Multi-country</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'market')">
+        <input type="radio" name="market" value="global"><div class="choice-marker"></div>
+        <div><div class="choice-label">Global</div><div class="choice-desc">International reach</div></div>
+      </label>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Business context</label>
+    <textarea placeholder="Initial impression, partner routing considerations, complexity flags..."></textarea>
+    <div class="score-row">
+      <div class="score-label">Fit score:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <div></div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">1 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(2)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 2: GOALS ── -->
+<div class="step-panel" id="step-2">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 2 of 7 · Growth Goals</div>
+    <div class="step-title">What are you trying to achieve?</div>
+    <div class="step-desc">Be specific. The clearer your goals, the sharper your first playbook.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Primary objective <span class="req">— pick one</span></div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="awareness"><div class="choice-marker"></div>
+        <div><div class="choice-label">Brand awareness</div><div class="choice-desc">More people knowing & trusting us</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="leads"><div class="choice-marker"></div>
+        <div><div class="choice-label">Lead generation</div><div class="choice-desc">More qualified prospects in the pipeline</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="revenue"><div class="choice-marker"></div>
+        <div><div class="choice-label">Revenue growth</div><div class="choice-desc">Direct uplift in sales / conversions</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="retention"><div class="choice-marker"></div>
+        <div><div class="choice-label">Customer retention</div><div class="choice-desc">Keep existing customers longer</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="expansion"><div class="choice-marker"></div>
+        <div><div class="choice-label">Market expansion</div><div class="choice-desc">New geography, segment, or product</div></div>
+      </label>
+      <label class="choice-card" onclick="pick(this,'goal-primary')">
+        <input type="radio" name="goal-primary" value="authority"><div class="choice-label">Thought leadership</div><div class="choice-desc">Become the go-to voice in our space</div></label>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The 90-day priority</div>
+    <div class="field">
+      <label>If we could deliver one thing in 90 days, what would move the needle most for you?</label>
+      <textarea id="f-90day" placeholder="e.g. Get our organic traffic to 10k/month. Launch email list from scratch to 2,000 subscribers. Generate 20 qualified leads per month."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">12-month ambition</div>
+    <div class="field">
+      <label>Where do you want the business to be in a year?</label>
+      <textarea id="f-12mo" placeholder="Revenue targets, market position, audience size — whatever matters most to you."></textarea>
+    </div>
+    <div class="field">
+      <label>The single metric you care most about</label>
+      <select id="f-metric">
+        <option value="">— select —</option>
+        <option>Monthly website visitors</option>
+        <option>Qualified leads / month</option>
+        <option>Revenue / MRR</option>
+        <option>Email subscribers</option>
+        <option>Conversion rate</option>
+        <option>Social followers / reach</option>
+        <option>Cost per acquisition (CPA)</option>
+        <option>Customer lifetime value (LTV)</option>
+        <option>Search ranking positions</option>
+        <option>Other</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Goal alignment</label>
+    <textarea placeholder="Are goals realistic? Any mismatch between objective and timeline? Initial credit tier hypothesis?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Clarity score:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">2 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(3)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 3: CURRENT SITUATION ── -->
+<div class="step-panel" id="step-3">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 3 of 7 · Where You Are Now</div>
+    <div class="step-title">Tell us about your starting point.</div>
+    <div class="step-desc">No judgement — this helps us calibrate the right approach from day one.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Current monthly website traffic <span class="opt">(rough estimate)</span></div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="0-500"><div class="choice-marker"></div><div><div class="choice-label">Under 500</div><div class="choice-desc">Very early stage</div></div></label>
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="500-2k"><div class="choice-marker"></div><div><div class="choice-label">500 – 2,000</div><div class="choice-desc">Getting started</div></div></label>
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="2k-10k"><div class="choice-marker"></div><div><div class="choice-label">2k – 10k</div><div class="choice-desc">Growing</div></div></label>
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="10k-50k"><div class="choice-marker"></div><div><div class="choice-label">10k – 50k</div><div class="choice-desc">Established</div></div></label>
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="50k+"><div class="choice-marker"></div><div><div class="choice-label">50k+</div><div class="choice-desc">High volume</div></div></label>
+      <label class="choice-card" onclick="pick(this,'traffic')"><input type="radio" name="traffic" value="unknown"><div class="choice-marker"></div><div><div class="choice-label">Not sure</div><div class="choice-desc">Don't have data</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Active marketing channels <span class="opt">— select all that apply</span></div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="website"><div class="choice-marker"></div><div class="choice-label">Website / Blog</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="seo"><div class="choice-marker"></div><div class="choice-label">SEO</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="social"><div class="choice-marker"></div><div class="choice-label">Social media</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="email"><div class="choice-marker"></div><div class="choice-label">Email marketing</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="paid"><div class="choice-marker"></div><div class="choice-label">Paid advertising</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="pr"><div class="choice-marker"></div><div class="choice-label">PR / media</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="events"><div class="choice-marker"></div><div class="choice-label">Events</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="affiliate"><div class="choice-marker"></div><div class="choice-label">Affiliate / partnerships</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="channels" value="none"><div class="choice-marker"></div><div class="choice-label">None yet</div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What's working & what isn't</div>
+    <div class="field">
+      <label>What's working well right now? <span class="opt">(even if small)</span></label>
+      <textarea id="f-working" placeholder="e.g. We get decent word-of-mouth. Our Instagram engagement is strong. We rank for a few long-tail keywords."></textarea>
+    </div>
+    <div class="field">
+      <label>What's your biggest marketing frustration?</label>
+      <textarea id="f-frustration" placeholder="e.g. We create content but it doesn't convert. We run ads but CPL is too high. We have no idea if any of this is working."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Previous agency or freelancer experience <span class="opt">(optional)</span></div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card" onclick="pick(this,'agency-exp')"><input type="radio" name="agency-exp" value="none"><div class="choice-marker"></div><div><div class="choice-label">First time</div><div class="choice-desc">Never worked with an agency</div></div></label>
+      <label class="choice-card" onclick="pick(this,'agency-exp')"><input type="radio" name="agency-exp" value="freelancers"><div class="choice-marker"></div><div><div class="choice-label">Freelancers</div><div class="choice-desc">Ad-hoc specialists</div></div></label>
+      <label class="choice-card" onclick="pick(this,'agency-exp')"><input type="radio" name="agency-exp" value="agency"><div class="choice-marker"></div><div><div class="choice-label">Agency before</div><div class="choice-desc">Prior retainer experience</div></div></label>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Starting point</label>
+    <textarea placeholder="Traffic stage, channel maturity, tech stack gaps, any red flags from frustrations?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Readiness score:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">3 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(4)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 4: AUDIENCE ── -->
+<div class="step-panel" id="step-4">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 4 of 7 · Your Audience</div>
+    <div class="step-title">Who are you trying to reach?</div>
+    <div class="step-desc">The more specific you are, the more targeted your growth strategy will be.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Primary customer profile</div>
+    <div class="field">
+      <label>Describe your ideal customer in a few sentences</label>
+      <textarea id="f-customer" placeholder="e.g. Dutch sports enthusiasts aged 28–45, active lifestyle, spending €80–200/month on gear. Value quality over price. Research extensively before buying."></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Age range <span class="opt">(primary)</span></label>
+        <select id="f-age">
+          <option value="">— select —</option>
+          <option>Under 25</option>
+          <option>25–34</option>
+          <option>35–44</option>
+          <option>45–54</option>
+          <option>55+</option>
+          <option>All ages</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Gender split <span class="opt">(approximate)</span></label>
+        <select id="f-gender">
+          <option value="">— select —</option>
+          <option>Mostly male (70%+)</option>
+          <option>Mostly female (70%+)</option>
+          <option>Roughly equal split</option>
+          <option>Not relevant to us</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Buying process</div>
+    <div class="field">
+      <label>Who makes the purchase decision?</label>
+      <div class="choice-grid cols-3">
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="individual"><div class="choice-marker"></div><div><div class="choice-label">Individual</div><div class="choice-desc">Personal decision</div></div></label>
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="sme-owner"><div class="choice-marker"></div><div><div class="choice-label">SME owner</div><div class="choice-desc">Business founder/owner</div></div></label>
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="marketing"><div class="choice-marker"></div><div><div class="choice-label">Marketing team</div><div class="choice-desc">Brand/marketing decision</div></div></label>
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="c-suite"><div class="choice-marker"></div><div><div class="choice-label">C-suite</div><div class="choice-desc">Exec sign-off required</div></div></label>
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="procurement"><div class="choice-marker"></div><div><div class="choice-label">Procurement</div><div class="choice-desc">Formal process</div></div></label>
+        <label class="choice-card" onclick="pick(this,'buyer')"><input type="radio" name="buyer" value="committee"><div class="choice-marker"></div><div><div class="choice-label">Committee</div><div class="choice-desc">Multiple stakeholders</div></div></label>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Average order / deal value</label>
+        <select id="f-aov">
+          <option value="">— select —</option>
+          <option>Under €50</option>
+          <option>€50 – €200</option>
+          <option>€200 – €1,000</option>
+          <option>€1,000 – €10,000</option>
+          <option>€10,000+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Typical sales cycle</label>
+        <select id="f-cycle">
+          <option value="">— select —</option>
+          <option>Impulse (under 1 hour)</option>
+          <option>Short (days)</option>
+          <option>Medium (weeks)</option>
+          <option>Long (months)</option>
+          <option>Very long (6+ months)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Audience</label>
+    <textarea placeholder="Persona gaps? Content angle opportunities? Channel implications from audience profile?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Audience clarity:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(3)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">4 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(5)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 5: BRAND & VOICE ── -->
+<div class="step-panel" id="step-5">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 5 of 7 · Brand & Voice</div>
+    <div class="step-title">What does your brand sound and feel like?</div>
+    <div class="step-desc">Everything we create should feel unmistakably you. Help us get there fast.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Brand personality <span class="req">— pick up to 4</span></div>
+    <div class="tag-grid" id="brand-tags">
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Bold')">Bold</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Sophisticated')">Sophisticated</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Playful')">Playful</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Expert')">Expert</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Honest')">Honest</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Energetic')">Energetic</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Premium')">Premium</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Accessible')">Accessible</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Innovative')">Innovative</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Trustworthy')">Trustworthy</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Rebellious')">Rebellious</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Warm')">Warm</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Minimal')">Minimal</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Data-driven')">Data-driven</div>
+      <div class="tag-item" onclick="pickTag(this,'brand-adj','Community-led')">Community-led</div>
+    </div>
+    <div class="tag-limit-note" id="tag-count">0 / 4 selected</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tone of voice</div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'tone')"><input type="radio" name="tone" value="formal"><div class="choice-marker"></div><div><div class="choice-label">Formal & professional</div><div class="choice-desc">Authoritative, polished, measured</div></div></label>
+      <label class="choice-card" onclick="pick(this,'tone')"><input type="radio" name="tone" value="semi-formal"><div class="choice-marker"></div><div><div class="choice-label">Semi-formal</div><div class="choice-desc">Clear and credible, approachable</div></div></label>
+      <label class="choice-card" onclick="pick(this,'tone')"><input type="radio" name="tone" value="conversational"><div class="choice-marker"></div><div><div class="choice-label">Conversational</div><div class="choice-desc">Friendly, direct, human</div></div></label>
+      <label class="choice-card" onclick="pick(this,'tone')"><input type="radio" name="tone" value="bold"><div class="choice-marker"></div><div><div class="choice-label">Bold & provocative</div><div class="choice-desc">Challenging norms, opinionated</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Brand assets & guidelines</div>
+    <div class="field">
+      <label>Do you have brand guidelines?</label>
+      <div class="choice-grid cols-3">
+        <label class="choice-card" onclick="pick(this,'guidelines')"><input type="radio" name="guidelines" value="full"><div class="choice-marker"></div><div><div class="choice-label">Full guide</div><div class="choice-desc">Will share after this form</div></div></label>
+        <label class="choice-card" onclick="pick(this,'guidelines')"><input type="radio" name="guidelines" value="partial"><div class="choice-marker"></div><div><div class="choice-label">Partial</div><div class="choice-desc">Logos & colours, no more</div></div></label>
+        <label class="choice-card" onclick="pick(this,'guidelines')"><input type="radio" name="guidelines" value="none"><div class="choice-marker"></div><div><div class="choice-label">Nothing yet</div><div class="choice-desc">We'll build as we go</div></div></label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Any brands you admire — and why? <span class="opt">(optional)</span></label>
+      <textarea id="f-inspire" placeholder="e.g. We love how Patagonia leads with values. Nike's directness. Coolblue's personality without trying too hard."></textarea>
+    </div>
+    <div class="field">
+      <label>Any brands or styles to avoid — and why? <span class="opt">(optional)</span></label>
+      <textarea id="f-avoid" placeholder="e.g. Nothing too corporate. No stock photography vibes. Don't want to look like [competitor]."></textarea>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Brand & voice</label>
+    <textarea placeholder="Voice consistency concerns? Content style directions? Any .frank involvement needed for brand work?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Brand readiness:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(4)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">5 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(6)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 6: CHANNELS & RESOURCES ── -->
+<div class="step-panel" id="step-6">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 6 of 7 · Channels & Resources</div>
+    <div class="step-title">Where do you want to grow?</div>
+    <div class="step-desc">Tell us your priority channels and what resources you're bringing to the table.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Priority channels for this engagement <span class="opt">— select up to 4</span></div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="seo"><div class="choice-marker"></div><div><div class="choice-label">SEO / Organic</div><div class="choice-desc">Long-term traffic engine</div></div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="content"><div class="choice-marker"></div><div><div class="choice-label">Content</div><div class="choice-desc">Articles, video, thought leadership</div></div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="social"><div class="choice-marker"></div><div><div class="choice-label">Social media</div><div class="choice-desc">Organic growth & community</div></div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="email"><div class="choice-marker"></div><div><div class="choice-label">Email / CRM</div><div class="choice-desc">List building & nurture</div></div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="paid"><div class="choice-marker"></div><div><div class="choice-label">Paid media</div><div class="choice-desc">Meta, Google, LinkedIn ads</div></div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="pri-channels" value="pr"><div class="choice-marker"></div><div><div class="choice-label">PR / media</div><div class="choice-desc">Press, coverage, authority</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Monthly ad spend appetite <span class="opt">(excluding GritFuel credits)</span></div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'adspend')"><input type="radio" name="adspend" value="none"><div class="choice-marker"></div><div><div class="choice-label">None for now</div><div class="choice-desc">Organic only to start</div></div></label>
+      <label class="choice-card" onclick="pick(this,'adspend')"><input type="radio" name="adspend" value="low"><div class="choice-marker"></div><div><div class="choice-label">€500 – €2,000 / mo</div><div class="choice-desc">Testing & learning</div></div></label>
+      <label class="choice-card" onclick="pick(this,'adspend')"><input type="radio" name="adspend" value="mid"><div class="choice-marker"></div><div><div class="choice-label">€2,000 – €5,000 / mo</div><div class="choice-desc">Scaling what works</div></div></label>
+      <label class="choice-card" onclick="pick(this,'adspend')"><input type="radio" name="adspend" value="high"><div class="choice-marker"></div><div><div class="choice-label">€5,000+ / mo</div><div class="choice-desc">Performance at scale</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tools & platforms you use <span class="opt">(select all that apply)</span></div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="ga4"><div class="choice-marker"></div><div class="choice-label">Google Analytics 4</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="gsc"><div class="choice-marker"></div><div class="choice-label">Google Search Console</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="hubspot"><div class="choice-marker"></div><div class="choice-label">HubSpot</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="mailchimp"><div class="choice-marker"></div><div class="choice-label">Mailchimp</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="klaviyo"><div class="choice-marker"></div><div class="choice-label">Klaviyo</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="shopify"><div class="choice-marker"></div><div class="choice-label">Shopify</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="wordpress"><div class="choice-marker"></div><div class="choice-label">WordPress</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="webflow"><div class="choice-marker"></div><div class="choice-label">Webflow</div></label>
+      <label class="choice-card checkbox" onclick="toggle(this)"><input type="checkbox" name="tools" value="none"><div class="choice-marker"></div><div class="choice-label">None / not sure</div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Internal marketing resource</div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'intern-res')"><input type="radio" name="intern-res" value="none"><div class="choice-marker"></div><div><div class="choice-label">None</div><div class="choice-desc">GritFuel handles everything</div></div></label>
+      <label class="choice-card" onclick="pick(this,'intern-res')"><input type="radio" name="intern-res" value="part"><div class="choice-marker"></div><div><div class="choice-label">Part-time</div><div class="choice-desc">Occasional support available</div></div></label>
+      <label class="choice-card" onclick="pick(this,'intern-res')"><input type="radio" name="intern-res" value="fte"><div class="choice-marker"></div><div><div class="choice-label">1 FTE</div><div class="choice-desc">Marketing person in-house</div></div></label>
+      <label class="choice-card" onclick="pick(this,'intern-res')"><input type="radio" name="intern-res" value="team"><div class="choice-marker"></div><div><div class="choice-label">Marketing team</div><div class="choice-desc">Multiple people internally</div></div></label>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Channels & resources</label>
+    <textarea placeholder="Channel priority alignment with goals? Tech stack gaps? Partner routing implications (paid → Bluegyfu, brand → .frank)?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Opportunity score:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(5)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">6 of 7</div>
+      <button class="btn btn-primary" onclick="goStep(7)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 7: WORKING TOGETHER ── -->
+<div class="step-panel" id="step-7">
+  <div class="step-header">
+    <div class="step-eyebrow">Step 7 of 7 · Working Together</div>
+    <div class="step-title">How do we collaborate best?</div>
+    <div class="step-desc">Last step — help us set the right rhythm and expectations from day one.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Approval process</div>
+    <div class="choice-grid cols-3">
+      <label class="choice-card" onclick="pick(this,'approval')"><input type="radio" name="approval" value="direct"><div class="choice-marker"></div><div><div class="choice-label">Direct</div><div class="choice-desc">I'm the final decision-maker</div></div></label>
+      <label class="choice-card" onclick="pick(this,'approval')"><input type="radio" name="approval" value="manager"><div class="choice-marker"></div><div><div class="choice-label">Via manager</div><div class="choice-desc">One level up for sign-off</div></div></label>
+      <label class="choice-card" onclick="pick(this,'approval')"><input type="radio" name="approval" value="committee"><div class="choice-marker"></div><div><div class="choice-label">Committee</div><div class="choice-desc">Multiple stakeholders involved</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Preferred feedback style</div>
+    <div class="choice-grid cols-2">
+      <label class="choice-card" onclick="pick(this,'feedback')"><input type="radio" name="feedback" value="doc"><div class="choice-marker"></div><div><div class="choice-label">Comments in doc</div><div class="choice-desc">Track changes, inline notes</div></div></label>
+      <label class="choice-card" onclick="pick(this,'feedback')"><input type="radio" name="feedback" value="email"><div class="choice-marker"></div><div><div class="choice-label">Email / chat</div><div class="choice-desc">Written response, no formality</div></div></label>
+      <label class="choice-card" onclick="pick(this,'feedback')"><input type="radio" name="feedback" value="call"><div class="choice-marker"></div><div><div class="choice-label">Video call</div><div class="choice-desc">Discuss live, then confirm async</div></div></label>
+      <label class="choice-card" onclick="pick(this,'feedback')"><input type="radio" name="feedback" value="loom"><div class="choice-marker"></div><div><div class="choice-label">Async video (Loom)</div><div class="choice-desc">Record feedback, no scheduling needed</div></div></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Communication preferences</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Preferred comms channel</label>
+        <select id="f-comms">
+          <option value="">— select —</option>
+          <option>Email</option>
+          <option>WhatsApp</option>
+          <option>Slack</option>
+          <option>Microsoft Teams</option>
+          <option>No preference</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Preferred review cadence</label>
+        <select id="f-cadence">
+          <option value="">— select —</option>
+          <option>Weekly check-in</option>
+          <option>Bi-weekly</option>
+          <option>Monthly (as per playbook)</option>
+          <option>Ad-hoc only</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Anything else we should know?</div>
+    <div class="field">
+      <label>Key constraint or risk to flag <span class="opt">(optional)</span></label>
+      <textarea id="f-risk" placeholder="e.g. We have a product launch in June — content must be ready before then. Legal requires sign-off on all public copy. We're rebranding later this year."></textarea>
+    </div>
+    <div class="field">
+      <label>Anything you'd like to tell us that we haven't asked? <span class="opt">(optional)</span></label>
+      <textarea id="f-other" placeholder="We've learned that the best client relationships start with honesty. Nothing is too small or too big."></textarea>
+    </div>
+  </div>
+
+  <div class="int-note">
+    <label>🧠 Strategist note — Working model</label>
+    <textarea placeholder="Approval complexity? Comms overhead concerns? Any flags for the working relationship? Escalation likelihood?"></textarea>
+    <div class="score-row">
+      <div class="score-label">Collaboration score:</div>
+      <div class="score-options">
+        <button class="score-btn s1" onclick="scoreClick(this,1)">1</button>
+        <button class="score-btn s2" onclick="scoreClick(this,2)">2</button>
+        <button class="score-btn s3" onclick="scoreClick(this,3)">3</button>
+        <button class="score-btn s4" onclick="scoreClick(this,4)">4</button>
+        <button class="score-btn s5" onclick="scoreClick(this,5)">5</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credit Recommendation (strategist only) -->
+  <div class="credit-rec">
+    <div class="credit-rec-box">
+      <div class="credit-rec-title">💡 Credit Tier Recommendation</div>
+      <div class="credit-tier-row"><span class="tier">Starter</span><span>2–3 channels, early-stage</span><span class="credits">40 cr / mo</span></div>
+      <div class="credit-tier-row"><span class="tier">Growth</span><span>3–4 channels, scaling</span><span class="credits">60 cr / mo</span></div>
+      <div class="credit-tier-row recommended"><span class="tier">Accelerate</span><span>4–5 channels, performance</span><span class="credits">80 cr / mo</span></div>
+      <div class="credit-tier-row"><span class="tier">Full-stack</span><span>All channels, complex brief</span><span class="credits">120+ cr / mo</span></div>
+    </div>
+    <div style="font-size:12px; color:#6B7280; line-height:1.6;">Based on traffic stage, goal ambition, channel priorities, and internal resource level. Confirm on kick-off call.</div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goStep(6)">← Back</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="nav-step-count">7 of 7</div>
+      <button class="btn btn-submit" onclick="showSummary()">Review &amp; Complete →</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /form-view -->
+
+
+<!-- ═══════════ SUMMARY VIEW ═══════════ -->
+<div id="summary-view">
+
+  <div class="summary-hero">
+    <h2>Intake complete.</h2>
+    <p>Here's everything you've shared with us. We'll review this before your kick-off call and use it to build your first playbook.</p>
+    <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn" style="background:var(--lime); color:var(--charcoal); font-size:13px;" onclick="window.print()">⬇ Save as PDF</button>
+      <button class="btn" style="background:#3a3a3a; color:#ccc; font-size:13px;" onclick="backToForm()">← Edit answers</button>
+    </div>
+  </div>
+
+  <!-- Strategist score summary -->
+  <div class="score-summary">
+    <div class="score-card">
+      <h3>📊 Strategist Scores</h3>
+      <div class="score-row-sum"><span class="dim">Business fit</span><span class="pts" id="sc-1">—</span></div>
+      <div class="score-row-sum"><span class="dim">Goal clarity</span><span class="pts" id="sc-2">—</span></div>
+      <div class="score-row-sum"><span class="dim">Readiness</span><span class="pts" id="sc-3">—</span></div>
+      <div class="score-row-sum"><span class="dim">Audience clarity</span><span class="pts" id="sc-4">—</span></div>
+      <div class="score-row-sum"><span class="dim">Brand readiness</span><span class="pts" id="sc-5">—</span></div>
+      <div class="score-row-sum"><span class="dim">Opportunity</span><span class="pts" id="sc-6">—</span></div>
+      <div class="score-row-sum"><span class="dim">Collaboration</span><span class="pts" id="sc-7">—</span></div>
+      <div class="score-row-sum" style="border-top:2px solid #FDE68A; margin-top:6px; padding-top:8px;"><span class="dim"><strong>Total / 35</strong></span><span class="pts" id="sc-total">—</span></div>
+    </div>
+  </div>
+
+  <!-- Summary sections -->
+  <div class="summary-section">
+    <div class="summary-section-title">01 · The Business</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Company</div><div class="s-val" id="sum-company">—</div></div>
+      <div class="summary-item"><div class="s-label">Website</div><div class="s-val" id="sum-website">—</div></div>
+      <div class="summary-item"><div class="s-label">Contact</div><div class="s-val" id="sum-contact">—</div></div>
+      <div class="summary-item"><div class="s-label">Role</div><div class="s-val" id="sum-role">—</div></div>
+      <div class="summary-item"><div class="s-label">Industry</div><div class="s-val" id="sum-industry">—</div></div>
+      <div class="summary-item"><div class="s-label">Size · Model · Market</div><div class="s-val" id="sum-profile">—</div></div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">02 · Goals</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Primary objective</div><div class="s-val" id="sum-goal">—</div></div>
+      <div class="summary-item"><div class="s-label">Key metric</div><div class="s-val" id="sum-metric">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">90-day priority</div><div class="s-val" id="sum-90day" style="font-weight:400; margin-top:4px;">—</div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">12-month ambition</div><div class="s-val" id="sum-12mo" style="font-weight:400; margin-top:4px;">—</div></div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">03 · Current Situation</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Monthly traffic</div><div class="s-val" id="sum-traffic">—</div></div>
+      <div class="summary-item"><div class="s-label">Agency experience</div><div class="s-val" id="sum-agency">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Active channels</div><div class="summary-tags" id="sum-channels"></div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">What's working</div><div class="s-val" id="sum-working" style="font-weight:400; margin-top:4px;">—</div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Biggest frustration</div><div class="s-val" id="sum-frustration" style="font-weight:400; margin-top:4px;">—</div></div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">04 · Audience</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Decision-maker</div><div class="s-val" id="sum-buyer">—</div></div>
+      <div class="summary-item"><div class="s-label">Avg deal value</div><div class="s-val" id="sum-aov">—</div></div>
+      <div class="summary-item"><div class="s-label">Age range</div><div class="s-val" id="sum-age">—</div></div>
+      <div class="summary-item"><div class="s-label">Sales cycle</div><div class="s-val" id="sum-cycle">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Customer profile</div><div class="s-val" id="sum-customer" style="font-weight:400; margin-top:4px;">—</div></div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">05 · Brand & Voice</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Tone of voice</div><div class="s-val" id="sum-tone">—</div></div>
+      <div class="summary-item"><div class="s-label">Guidelines</div><div class="s-val" id="sum-guidelines">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Brand personality</div><div class="summary-tags" id="sum-brand-adj"></div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Inspiration</div><div class="s-val" id="sum-inspire" style="font-weight:400; margin-top:4px;">—</div></div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">06 · Channels & Resources</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Ad spend</div><div class="s-val" id="sum-adspend">—</div></div>
+      <div class="summary-item"><div class="s-label">Internal resource</div><div class="s-val" id="sum-intern-res">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Priority channels</div><div class="summary-tags" id="sum-pri-channels"></div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Tools in use</div><div class="summary-tags" id="sum-tools"></div></div>
+  </div>
+
+  <div class="summary-section">
+    <div class="summary-section-title">07 · Working Together</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="s-label">Approval process</div><div class="s-val" id="sum-approval">—</div></div>
+      <div class="summary-item"><div class="s-label">Feedback style</div><div class="s-val" id="sum-feedback">—</div></div>
+      <div class="summary-item"><div class="s-label">Comms channel</div><div class="s-val" id="sum-comms">—</div></div>
+      <div class="summary-item"><div class="s-label">Review cadence</div><div class="s-val" id="sum-cadence">—</div></div>
+    </div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Constraints / risks</div><div class="s-val" id="sum-risk" style="font-weight:400; margin-top:4px;">—</div></div>
+    <div class="summary-item" style="margin-top:10px;"><div class="s-label">Other notes</div><div class="s-val" id="sum-other" style="font-weight:400; margin-top:4px;">—</div></div>
+  </div>
+
+  <div style="margin-top:32px; text-align:center; padding:28px; background:var(--charcoal); border-radius:var(--radius); color:#aaa;">
+    <div style="font-size:18px; font-weight:800; color:var(--lime); margin-bottom:6px;">What happens next</div>
+    <div style="font-size:14px; max-width:500px; margin:0 auto; line-height:1.7;">
+      We'll review your answers before our kick-off call. Come ready to align on Month 1 initiatives — your first playbook will be in your hands within 5 working days.
+    </div>
+    <div style="margin-top:20px; font-size:13px; color:#666;">Questions? <a href="mailto:hello@gritfuel.works" style="color:var(--lime); text-decoration:none;">hello@gritfuel.works</a></div>
+  </div>
+
+</div><!-- /summary-view -->
+
+</div><!-- /main -->
+
+<script>
+let currentStep = 1;
+const totalSteps = 7;
+const scores = {};
+
+// ── MODE SWITCH ──────────────────────────────────────
+function setMode(mode) {
+  document.body.classList.toggle('strategist-mode', mode === 'strategist');
+  document.getElementById('btn-client-mode').classList.toggle('active', mode === 'client');
+  document.getElementById('btn-client-mode').classList.toggle('active-int', false);
+  document.getElementById('btn-int-mode').classList.toggle('active', false);
+  document.getElementById('btn-int-mode').classList.toggle('active-int', mode === 'strategist');
+}
+
+// ── NAVIGATION ────────────────────────────────────────
+function goStep(n) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = (currentStep / totalSteps) * 100;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.querySelectorAll('.step-item').forEach(el => {
+    const s = parseInt(el.dataset.step);
+    el.classList.remove('active','done');
+    if (s === currentStep) el.classList.add('active');
+    else if (s < currentStep) el.classList.add('done');
+  });
+}
+
+// ── CHOICE CARDS ─────────────────────────────────────
+function pick(card, group) {
+  document.querySelectorAll(`[name="${group}"]`).forEach(inp => {
+    inp.closest('.choice-card').classList.remove('selected');
+  });
+  card.classList.add('selected');
+}
+
+function toggle(card) {
+  card.classList.toggle('selected');
+  const cb = card.querySelector('input[type="checkbox"]');
+  if (cb) cb.checked = card.classList.contains('selected');
+}
+
+// ── TAG PICKER ───────────────────────────────────────
+const selectedTags = {};
+const tagMax = 4;
+function pickTag(el, group, val) {
+  if (!selectedTags[group]) selectedTags[group] = [];
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedTags[group] = selectedTags[group].filter(v => v !== val);
+  } else {
+    if (selectedTags[group].length >= tagMax) return;
+    el.classList.add('selected');
+    selectedTags[group].push(val);
+  }
+  document.getElementById('tag-count').textContent = selectedTags[group].length + ' / ' + tagMax + ' selected';
+}
+
+// ── SCORE BUTTONS ────────────────────────────────────
+function scoreClick(btn, val) {
+  const row = btn.closest('.score-options');
+  row.querySelectorAll('.score-btn').forEach(b => {
+    b.classList.remove('sel');
+  });
+  btn.classList.add('sel');
+  const stepEl = btn.closest('.step-panel') || btn.closest('#summary-view');
+  const step = stepEl ? stepEl.id.replace('step-','') : '?';
+  scores[step] = val;
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function getRadio(name) {
+  const el = document.querySelector(`[name="${name}"]:checked`);
+  return el ? el.value : null;
+}
+function getSelected(name) {
+  return [...document.querySelectorAll(`[name="${name}"]:checked`)].map(e => e.value);
+}
+function getVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+const labelMap = {
+  size: { solo:'Solo / 1 person', small:'2–10', mid:'11–50', large:'50+' },
+  model: { b2c:'B2C', b2b:'B2B', both:'B2C + B2B' },
+  market: { nl:'Netherlands', benelux:'Benelux', europe:'Western Europe', global:'Global' },
+  'goal-primary': { awareness:'Brand awareness', leads:'Lead generation', revenue:'Revenue growth', retention:'Customer retention', expansion:'Market expansion', authority:'Thought leadership' },
+  traffic: { '0-500':'Under 500/mo', '500-2k':'500–2,000/mo', '2k-10k':'2k–10k/mo', '10k-50k':'10k–50k/mo', '50k+':'50k+/mo', unknown:'Unknown' },
+  'agency-exp': { none:'First time', freelancers:'Freelancers', agency:'Agency experience' },
+  buyer: { individual:'Individual consumer', 'sme-owner':'SME owner', marketing:'Marketing team', 'c-suite':'C-suite', procurement:'Procurement', committee:'Committee' },
+  tone: { formal:'Formal & professional', 'semi-formal':'Semi-formal', conversational:'Conversational', bold:'Bold & provocative' },
+  guidelines: { full:'Full brand guide', partial:'Partial', none:'None yet' },
+  adspend: { none:'None for now', low:'€500–€2k/mo', mid:'€2k–€5k/mo', high:'€5k+/mo' },
+  'intern-res': { none:'None', part:'Part-time', fte:'1 FTE', team:'Marketing team' },
+  approval: { direct:'Direct (decision-maker)', manager:'Via manager', committee:'Committee sign-off' },
+  feedback: { doc:'Comments in doc', email:'Email / chat', call:'Video call', loom:'Async Loom' },
+};
+function L(group, val) { return (labelMap[group] && labelMap[group][val]) || val || '—'; }
+
+function tagsHtml(arr) {
+  if (!arr || !arr.length) return '<span style="color:#aaa">—</span>';
+  return arr.map(t => `<span class="summary-tag">${t}</span>`).join('');
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val || '—';
+}
+function setHTML(id, html) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html || '—';
+}
+
+// ── SHOW SUMMARY ─────────────────────────────────────
+function showSummary() {
+  document.getElementById('form-view').style.display = 'none';
+  document.getElementById('progress-shell').style.display = 'none';
+  document.getElementById('summary-view').style.display = 'block';
+  document.getElementById('summary-view').classList.add('active');
+
+  // Populate
+  setText('sum-company', getVal('f-company'));
+  setText('sum-website', getVal('f-website') || '—');
+  setText('sum-contact', `${getVal('f-name')} · ${getVal('f-email')}`);
+  setText('sum-role', getVal('f-role'));
+  setText('sum-industry', getVal('f-industry') || '—');
+  setText('sum-profile', [L('size', getRadio('size')), L('model', getRadio('model')), L('market', getRadio('market'))].filter(Boolean).join(' · '));
+  setText('sum-goal', L('goal-primary', getRadio('goal-primary')));
+  setText('sum-metric', getVal('f-metric') || '—');
+  setText('sum-90day', getVal('f-90day') || '—');
+  setText('sum-12mo', getVal('f-12mo') || '—');
+  setText('sum-traffic', L('traffic', getRadio('traffic')));
+  setText('sum-agency', L('agency-exp', getRadio('agency-exp')));
+  setHTML('sum-channels', tagsHtml(getSelected('channels')));
+  setText('sum-working', getVal('f-working') || '—');
+  setText('sum-frustration', getVal('f-frustration') || '—');
+  setText('sum-buyer', L('buyer', getRadio('buyer')));
+  setText('sum-aov', getVal('f-aov') || '—');
+  setText('sum-age', getVal('f-age') || '—');
+  setText('sum-cycle', getVal('f-cycle') || '—');
+  setText('sum-customer', getVal('f-customer') || '—');
+  setText('sum-tone', L('tone', getRadio('tone')));
+  setText('sum-guidelines', L('guidelines', getRadio('guidelines')));
+  setHTML('sum-brand-adj', tagsHtml(selectedTags['brand-adj'] || []));
+  setText('sum-inspire', getVal('f-inspire') || '—');
+  setText('sum-adspend', L('adspend', getRadio('adspend')));
+  setText('sum-intern-res', L('intern-res', getRadio('intern-res')));
+  setHTML('sum-pri-channels', tagsHtml(getSelected('pri-channels')));
+  setHTML('sum-tools', tagsHtml(getSelected('tools')));
+  setText('sum-approval', L('approval', getRadio('approval')));
+  setText('sum-feedback', L('feedback', getRadio('feedback')));
+  setText('sum-comms', getVal('f-comms') || '—');
+  setText('sum-cadence', getVal('f-cadence') || '—');
+  setText('sum-risk', getVal('f-risk') || '—');
+  setText('sum-other', getVal('f-other') || '—');
+
+  // Scores
+  let total = 0, count = 0;
+  for (let i = 1; i <= 7; i++) {
+    const v = scores[i] || null;
+    const el = document.getElementById('sc-' + i);
+    if (el) el.textContent = v ? `${v} / 5` : '—';
+    if (v) { total += parseInt(v); count++; }
+  }
+  const totEl = document.getElementById('sc-total');
+  if (totEl) totEl.textContent = count > 0 ? `${total} / ${count * 5}` : '—';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToForm() {
+  document.getElementById('form-view').style.display = 'block';
+  document.getElementById('progress-shell').style.display = 'block';
+  document.getElementById('summary-view').style.display = 'none';
+  document.getElementById('summary-view').classList.remove('active');
+  goStep(7);
+}
+</script>
+</body>
+</html>

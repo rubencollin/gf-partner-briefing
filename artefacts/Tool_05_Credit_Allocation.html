@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Dynamic Credit Allocation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1c1c1c;--surface:#242424;--card:#2d2d2d;--card2:#333;
+  --lime:#C8E000;--lime-dim:rgba(200,224,0,0.1);--lime-border:rgba(200,224,0,0.25);
+  --text:#e2e4e6;--muted:#888;--border:#363636;
+  --red:#e05c5c;--green:#27c76a;--blue:#4C8BF5;--purple:#9B59B6;--orange:#E67E22;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--text);font-size:14px;
+  display:flex;flex-direction:column;
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;
+  height:52px;flex-shrink:0;
+}
+.wordmark{font-size:19px;font-weight:800;color:var(--lime);letter-spacing:1.5px}
+.hdr-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.sep{width:1px;height:28px;background:var(--border);margin:0 16px}
+.mode-toggle{display:flex;background:var(--card);border-radius:6px;padding:3px;gap:2px}
+.mode-btn{
+  padding:5px 14px;border-radius:4px;font-size:10px;font-weight:700;
+  letter-spacing:0.6px;cursor:pointer;border:none;background:transparent;
+  color:var(--muted);transition:all .15s;text-transform:uppercase;
+}
+.mode-btn.active{background:var(--lime);color:#1c1c1c}
+.mm-toggle{
+  display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);
+  cursor:pointer;user-select:none;font-weight:600;
+}
+.mm-toggle input{accent-color:var(--lime);cursor:pointer;width:14px;height:14px}
+.mm-toggle.on{color:var(--lime)}
+
+/* ── BUDGET STRIP ── */
+.budget-strip{
+  background:var(--surface);border-bottom:2px solid var(--lime);
+  padding:10px 24px;display:flex;align-items:center;gap:0;flex-shrink:0;
+}
+.bs-cell{padding:0 24px;border-right:1px solid var(--border)}
+.bs-cell:first-child{padding-left:0}
+.bs-cell:last-child{border-right:none;flex:1;padding-right:0}
+.bs-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px}
+.bs-val{font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.bs-val.lime{color:var(--lime)}
+.bs-val.warn{color:var(--red)}
+.bs-val.ok{color:var(--green)}
+.bs-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.bs-input{
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  color:var(--text);font-size:20px;font-weight:800;width:72px;
+  padding:1px 8px;text-align:center;outline:none;line-height:1;
+  -moz-appearance:textfield;
+}
+.bs-input::-webkit-inner-spin-button,.bs-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.bs-input:focus{border-color:var(--lime)}
+.ctx-input{
+  background:transparent;border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font-size:13px;padding:1px 4px;outline:none;
+  font-family:inherit;width:130px;
+}
+.ctx-input:focus{border-bottom-color:var(--lime)}
+.alloc-bar-wrap{height:7px;background:var(--card2);border-radius:4px;overflow:hidden;margin:5px 0 3px}
+.alloc-bar-fill{height:100%;border-radius:4px;transition:width .3s,background .3s}
+
+/* ── MAIN LAYOUT ── */
+.main{display:flex;flex:1;overflow:hidden;min-height:0}
+.panel{flex:1;overflow-y:auto;padding:18px 24px}
+.sidebar{
+  width:268px;border-left:1px solid var(--border);
+  background:var(--surface);overflow-y:auto;padding:18px 16px;flex-shrink:0;
+}
+
+/* ── SECTION HEADERS ── */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase}
+
+/* ── BUTTONS ── */
+.btn{padding:5px 13px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:inherit;letter-spacing:0.3px}
+.btn-lime{background:var(--lime);color:#1c1c1c}
+.btn-lime:hover{background:#b5cc00}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:#555}
+
+/* ── NOTICE ── */
+.notice{
+  padding:9px 14px;border-radius:6px;font-size:12px;margin-bottom:14px;
+  display:none;align-items:center;justify-content:space-between;gap:12px;line-height:1.4;
+}
+.notice.over{background:rgba(224,92,92,0.1);border:1px solid rgba(224,92,92,0.25);color:#e8a0a0}
+.notice.under{background:rgba(200,224,0,0.07);border:1px solid rgba(200,224,0,0.18);color:#c8d090}
+.notice.exact{background:rgba(39,199,106,0.08);border:1px solid rgba(39,199,106,0.2);color:#90d8a8}
+
+/* ── ADD FORM ── */
+.add-form{
+  background:var(--card);border:1px solid var(--lime-border);border-radius:8px;
+  padding:14px;margin-bottom:14px;display:none;
+}
+.add-form.open{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 130px 130px 72px;gap:10px;margin-bottom:12px}
+.fgroup label{display:block;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:4px}
+.finput,.fselect{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;color:var(--text);font-size:12px;padding:5px 9px;
+  outline:none;font-family:inherit;
+}
+.finput:focus,.fselect:focus{border-color:var(--lime)}
+.fselect option{background:#2d2d2d}
+
+/* ── PRESET TAGS ── */
+.preset-section{margin-bottom:14px}
+.preset-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.7px;text-transform:uppercase;margin-bottom:7px}
+.preset-group{display:flex;flex-wrap:wrap;gap:6px}
+.preset-tag{
+  padding:3px 10px;border-radius:10px;border:1px solid var(--border);
+  font-size:11px;color:var(--muted);cursor:pointer;transition:all .12s;
+  white-space:nowrap;
+}
+.preset-tag:hover{border-color:var(--lime);color:var(--lime);background:var(--lime-dim)}
+
+/* ── INITIATIVE TABLE ── */
+.init-table{width:100%;border-collapse:collapse}
+.init-table th{
+  font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.7px;
+  text-transform:uppercase;text-align:left;padding:0 10px 9px 0;
+  border-bottom:1px solid var(--border);
+}
+.init-table th:last-child{padding-right:0}
+.irow{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .1s}
+.irow:hover{background:rgba(255,255,255,0.02)}
+.irow.paused td{opacity:0.55}
+.irow.complete td{opacity:0.38}
+.irow td{padding:9px 10px 9px 0;vertical-align:middle}
+.irow td:last-child{padding-right:0}
+
+/* Name input */
+.iname-input{
+  background:transparent;border:none;color:var(--text);font-weight:600;
+  font-size:13px;font-family:inherit;width:190px;outline:none;padding:2px 4px;
+  border-radius:3px;
+}
+.iname-input:focus{background:var(--card2)}
+.iname-input:disabled{color:var(--muted)}
+
+/* Badges */
+.p-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.p-badge.gf   {background:rgba(200,224,0,0.12);color:#C8E000}
+.p-badge.frank{background:rgba(76,139,245,0.12);color:#4C8BF5}
+.p-badge.blue {background:rgba(155,89,182,0.12);color:#9B59B6}
+.p-badge.bfl  {background:rgba(230,126,34,0.12);color:#E67E22}
+.tier-badge{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background:var(--card2);color:var(--muted)}
+
+/* Status */
+.sbadge{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 8px;
+  border-radius:10px;font-size:10px;font-weight:700;cursor:pointer;user-select:none;
+}
+.sbadge.active  {background:rgba(39,199,106,0.12);color:var(--green)}
+.sbadge.paused  {background:rgba(136,136,136,0.12);color:var(--muted)}
+.sbadge.complete{background:rgba(76,139,245,0.12);color:var(--blue)}
+.sdot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* Credit spinner */
+.cspin{display:flex;align-items:center;gap:5px}
+.spin-btn{
+  width:22px;height:22px;border-radius:4px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .1s;line-height:1;
+}
+.spin-btn:hover:not(:disabled){border-color:var(--lime);color:var(--lime)}
+.spin-btn:disabled{opacity:0.3;cursor:default}
+.credit-input{
+  width:40px;text-align:center;background:var(--card);border:1px solid var(--border);
+  border-radius:4px;color:var(--text);font-size:13px;font-weight:700;
+  padding:1px 4px;outline:none;-moz-appearance:textfield;
+}
+.credit-input::-webkit-inner-spin-button,.credit-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.credit-input:focus{border-color:var(--lime)}
+.credit-input:disabled{background:transparent;border-color:transparent;color:var(--muted)}
+.credit-euro{font-size:10px;color:var(--muted);white-space:nowrap}
+.delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px}
+.delta.up  {background:rgba(39,199,106,0.15);color:var(--green)}
+.delta.dn  {background:rgba(224,92,92,0.15);color:var(--red)}
+.delta.same{color:var(--muted)}
+
+/* Lock / remove */
+.icon-btn{
+  width:26px;height:26px;border-radius:4px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .12s;
+}
+.icon-btn.locked{border-color:var(--lime);color:var(--lime);background:var(--lime-dim)}
+.icon-btn:hover:not(:disabled){border-color:#555;color:var(--text)}
+.icon-btn.rm:hover:not(:disabled){color:var(--red);border-color:rgba(224,92,92,0.3)}
+.icon-btn:disabled{opacity:0.25;cursor:default}
+
+/* Unallocated row */
+.unalloc-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-top:1px dashed var(--border);margin-top:6px;
+}
+.unalloc-lbl{font-size:12px;color:var(--muted)}
+.unalloc-sub{font-size:10px;color:#555;margin-top:2px}
+.unalloc-val{font-size:15px;font-weight:800;text-align:right}
+.unalloc-euro{font-size:10px;color:var(--muted);text-align:right;margin-top:2px}
+
+/* ── SIDEBAR ── */
+.chart-wrap{position:relative;width:148px;height:148px;margin:12px auto 18px}
+.chart-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;
+}
+.chart-cv{font-size:22px;font-weight:800;color:var(--lime)}
+.chart-cl{font-size:9px;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase}
+.pcard{background:var(--card);border-radius:7px;padding:11px;margin-bottom:8px;border:1px solid var(--border)}
+.pcard-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.pcard-name{font-size:12px;font-weight:700}
+.pcard-cr{font-size:17px;font-weight:800}
+.pbar-wrap{height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.pbar{height:100%;border-radius:2px}
+.pcard-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+
+/* ── EXPORT PANEL ── */
+.export-panel{border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
+.export-toggle{
+  padding:9px 24px;cursor:pointer;display:flex;align-items:center;
+  justify-content:space-between;font-size:10px;font-weight:700;
+  color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;user-select:none;
+}
+.export-toggle:hover{color:var(--text)}
+.export-body{display:none;padding:0 24px 14px;gap:14px}
+.export-body.open{display:flex}
+.brief-pane{
+  flex:1;background:var(--card);border-radius:8px;padding:13px;
+  border:1px solid var(--border);
+}
+.brief-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.brief-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase}
+.brief-text{
+  font-size:11px;color:#9a9a9a;white-space:pre-wrap;line-height:1.7;
+  font-family:'SF Mono','Monaco','Consolas',monospace;max-height:200px;overflow-y:auto;
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#444;border-radius:10px}
+
+/* tooltips */
+[title]{cursor:help}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div style="display:flex;align-items:center;">
+    <div class="wordmark">GRITFUEL</div>
+    <div class="sep"></div>
+    <div class="hdr-title">Dynamic Credit Allocation</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:20px;">
+    <label class="mm-toggle" id="mmLabel">
+      <input type="checkbox" id="midMonthCb" onchange="toggleMidMonth()">
+      Mid-month reallocation mode
+    </label>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btnInt" onclick="setMode('internal')">Internal</button>
+      <button class="mode-btn" id="btnClt" onclick="setMode('client')">Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUDGET STRIP -->
+<div class="budget-strip">
+  <div class="bs-cell">
+    <div class="bs-lbl">Client</div>
+    <input class="ctx-input" id="clientName" value="Acme BV" onchange="render()">
+  </div>
+  <div class="bs-cell">
+    <div class="bs-lbl">Month</div>
+    <input class="ctx-input" id="monthLabel" value="May 2026" onchange="render()">
+  </div>
+  <div class="bs-cell">
+    <div class="bs-lbl">Monthly Budget</div>
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <input class="bs-input" id="budgetInput" type="number" min="1" max="999" value="20" oninput="budget=parseInt(this.value)||1;render()">
+      <span style="font-size:11px;color:var(--muted);font-weight:700;">credits</span>
+      <span class="bs-sub" id="budgetEuro"></span>
+    </div>
+  </div>
+  <div class="bs-cell">
+    <div class="bs-lbl">Allocated</div>
+    <div class="bs-val lime" id="allocVal">0</div>
+    <div class="bs-sub" id="allocEuro"></div>
+  </div>
+  <div class="bs-cell">
+    <div class="bs-lbl">Remaining</div>
+    <div class="bs-val" id="remainVal">20</div>
+    <div class="bs-sub" id="remainSub"></div>
+  </div>
+  <div class="bs-cell" style="padding-right:0;">
+    <div class="bs-lbl" style="margin-bottom:4px;">Allocation</div>
+    <div class="alloc-bar-wrap">
+      <div class="alloc-bar-fill" id="allocBar" style="width:0%;background:var(--lime)"></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);" id="allocPct">0% allocated</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- INITIATIVES PANEL -->
+  <div class="panel">
+    <div class="notice" id="notice"></div>
+
+    <!-- Toolbar -->
+    <div class="sec-hd">
+      <div class="sec-title">Initiatives</div>
+      <div style="display:flex;gap:7px;align-items:center;">
+        <button class="btn btn-ghost" onclick="autoBalance()" title="Distribute remaining credits equally across active, unlocked initiatives">Auto-balance</button>
+        <button class="btn btn-lime" onclick="toggleAddForm()">+ Add Initiative</button>
+      </div>
+    </div>
+
+    <!-- Add form -->
+    <div class="add-form" id="addForm">
+      <div class="form-grid">
+        <div class="fgroup">
+          <label>Initiative Name</label>
+          <input class="finput" id="newName" placeholder="e.g. SEO Content Sprint">
+        </div>
+        <div class="fgroup">
+          <label>Partner</label>
+          <select class="fselect" id="newPartner">
+            <option value="gf">GritFuel</option>
+            <option value="frank">.frank</option>
+            <option value="blue">Bluegyfu</option>
+            <option value="bfl">BFL</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Tier</label>
+          <select class="fselect" id="newTier">
+            <option value="T1">T1 — Foundation</option>
+            <option value="T2">T2 — Amplification</option>
+            <option value="T3">T3 — Acceleration</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Credits</label>
+          <input class="finput" id="newCredits" type="number" min="0" max="200" value="4" style="text-align:center;">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-lime" onclick="addInitiative()">Add</button>
+        <button class="btn btn-ghost" onclick="toggleAddForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Preset quick-add -->
+    <div class="preset-section" id="presetSection">
+      <div class="preset-lbl">Quick-add from playbook templates</div>
+      <div class="preset-group" id="presetGroup"></div>
+    </div>
+
+    <!-- Table -->
+    <table class="init-table">
+      <thead>
+        <tr>
+          <th style="width:210px;">Initiative</th>
+          <th style="width:140px;" id="thPartner">Partner</th>
+          <th style="width:78px;">Tier</th>
+          <th style="width:88px;">Status</th>
+          <th style="width:180px;">Credits</th>
+          <th style="width:34px;" title="Lock allocation">🔒</th>
+          <th style="width:30px;"></th>
+        </tr>
+      </thead>
+      <tbody id="initBody"></tbody>
+    </table>
+
+    <!-- Unallocated row -->
+    <div class="unalloc-row">
+      <div>
+        <div class="unalloc-lbl">Unallocated / buffer</div>
+        <div class="unalloc-sub">Credits not yet assigned to an initiative</div>
+      </div>
+      <div>
+        <div class="unalloc-val" id="unallocVal">—</div>
+        <div class="unalloc-euro" id="unallocEuro"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sec-title" style="margin-bottom:4px;">Partner Breakdown</div>
+
+    <div class="chart-wrap">
+      <canvas id="donut"></canvas>
+      <div class="chart-center">
+        <div class="chart-cv" id="donutCtr">0</div>
+        <div class="chart-cl">allocated</div>
+      </div>
+    </div>
+
+    <div id="partnerCards"></div>
+
+    <div id="clientNote" style="display:none;margin-top:14px;padding:11px;background:var(--card);border-radius:7px;border:1px solid var(--border);">
+      <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:7px;">Client-facing view</div>
+      <div style="font-size:11px;color:#888;line-height:1.6;">Partner names are hidden. The client sees initiative names, credit values, and team descriptions only.</div>
+    </div>
+
+    <div style="margin-top:16px;padding:11px;background:var(--card);border-radius:7px;border:1px solid var(--border);">
+      <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:9px;">Credit Guide</div>
+      <div style="font-size:11px;color:#888;line-height:2;">
+        <div style="display:flex;justify-content:space-between;"><span>1 credit</span><span style="color:var(--lime);font-weight:700;">€25 value</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>4 credits</span><span style="color:var(--text);font-weight:700;">€100</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>8 credits</span><span style="color:var(--text);font-weight:700;">€200</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>20 credits</span><span style="color:var(--text);font-weight:700;">€500</span></div>
+        <div style="border-top:1px solid var(--border);margin:6px 0;"></div>
+        <div style="color:#666;font-size:10px;">Paid media billed separately. Retainer credits cover strategy, content, and execution only.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT PANEL -->
+<div class="export-panel">
+  <div class="export-toggle" onclick="toggleExport()">
+    <span>↑ &nbsp;Allocation Brief — Internal &amp; Client-Facing</span>
+    <span id="exportChev">▲</span>
+  </div>
+  <div class="export-body" id="exportBody">
+    <div class="brief-pane">
+      <div class="brief-hd">
+        <div class="brief-title">Internal Brief</div>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;" onclick="copyBrief('internal')">Copy</button>
+      </div>
+      <pre class="brief-text" id="intBrief"></pre>
+    </div>
+    <div class="brief-pane">
+      <div class="brief-hd">
+        <div class="brief-title">Client-Facing Brief</div>
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;" onclick="copyBrief('client')">Copy</button>
+      </div>
+      <pre class="brief-text" id="cltBrief"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
+const P = {
+  gf:    { label:'.GritFuel',  disp:'GritFuel',  client:'GritFuel content & growth team',  color:'#C8E000', cls:'gf'    },
+  frank: { label:'.frank',     disp:'.frank',     client:'Our senior brand specialists',     color:'#4C8BF5', cls:'frank' },
+  blue:  { label:'Bluegyfu',   disp:'Bluegyfu',   client:'Our performance marketing team',   color:'#9B59B6', cls:'blue'  },
+  bfl:   { label:'BFL',        disp:'BFL',        client:'Our events & activations team',    color:'#E67E22', cls:'bfl'   },
+};
+// Fix display names
+P.gf.disp = 'GritFuel';
+
+const PRESETS = [
+  {name:'Content Foundations',       partner:'gf',    tier:'T1', credits:3},
+  {name:'SEO Audit & Setup',          partner:'gf',    tier:'T1', credits:3},
+  {name:'Social Profile Optimisation',partner:'gf',    tier:'T1', credits:2},
+  {name:'Email List Setup',           partner:'gf',    tier:'T1', credits:2},
+  {name:'Brand Narrative',            partner:'frank', tier:'T2', credits:5},
+  {name:'Visual Identity Refresh',    partner:'frank', tier:'T2', credits:4},
+  {name:'Paid Social Activation',     partner:'blue',  tier:'T2', credits:5},
+  {name:'Lead Magnet',                partner:'gf',    tier:'T2', credits:4},
+  {name:'SEO Content Sprint',         partner:'gf',    tier:'T2', credits:4},
+  {name:'Performance Max Campaign',   partner:'blue',  tier:'T3', credits:8},
+  {name:'Brand Campaign',             partner:'frank', tier:'T3', credits:8},
+  {name:'PR & Media Push',            partner:'gf',    tier:'T3', credits:6},
+  {name:'Event Activation',           partner:'bfl',   tier:'T3', credits:6},
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let budget = 20;
+let mode = 'internal';
+let midMonth = false;
+let exportOpen = false;
+let addFormOpen = false;
+let idCtr = 100;
+let donutChart = null;
+
+let initiatives = [
+  {id:1, name:'Content Foundations',       partner:'gf',    tier:'T1', credits:4, orig:4, status:'active',   locked:false},
+  {id:2, name:'SEO Audit & Setup',          partner:'gf',    tier:'T1', credits:3, orig:3, status:'active',   locked:false},
+  {id:3, name:'Brand Narrative',            partner:'frank', tier:'T2', credits:5, orig:5, status:'active',   locked:true },
+  {id:4, name:'Paid Social Activation',     partner:'blue',  tier:'T2', credits:5, orig:5, status:'active',   locked:false},
+  {id:5, name:'Lead Magnet',                partner:'gf',    tier:'T2', credits:3, orig:3, status:'paused',   locked:false},
+];
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const e   = id => document.getElementById(id);
+const eu  = c  => `€${(c*25).toLocaleString()}`;
+const alloc  = () => initiatives.filter(i=>i.status!=='complete').reduce((s,i)=>s+i.credits,0);
+const remain = () => budget - alloc();
+const pCredit = p => initiatives.filter(i=>i.partner===p&&i.status!=='complete').reduce((s,i)=>s+i.credits,0);
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  budget = Math.max(1, parseInt(e('budgetInput').value)||1);
+  const a = alloc(), r = remain();
+  const pct = Math.min(100, Math.round((a/budget)*100));
+
+  // Budget strip
+  e('budgetEuro').textContent = eu(budget)+' value';
+  e('allocVal').textContent   = a;
+  e('allocEuro').textContent  = eu(a);
+  e('remainVal').textContent  = r;
+  e('remainVal').className    = 'bs-val '+(r<0?'warn':r===0?'ok':'lime');
+  e('remainSub').textContent  = r<0 ? eu(Math.abs(r))+' over' : eu(r)+' free';
+  e('allocBar').style.width   = pct+'%';
+  e('allocBar').style.background = r<0?'var(--red)':r===0?'var(--green)':'var(--lime)';
+  e('allocPct').textContent   = pct+'% allocated';
+
+  // Notice
+  const n = e('notice');
+  if(r<0){
+    n.style.display='flex'; n.className='notice over';
+    n.innerHTML=`<span>⚠ Over-allocated by <strong>${Math.abs(r)} credit${Math.abs(r)!==1?'s':''}</strong> (${eu(Math.abs(r))}). Reduce credits or remove an initiative.</span>`;
+  } else if(r>0){
+    n.style.display='flex'; n.className='notice under';
+    n.innerHTML=`<span>💡 ${r} credit${r!==1?'s':''} (${eu(r)}) unallocated — add an initiative or click Auto-balance.</span>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;white-space:nowrap;" onclick="autoBalance()">Auto-balance</button>`;
+  } else {
+    n.style.display='flex'; n.className='notice exact';
+    n.innerHTML=`<span>✓ Budget fully allocated — every credit has been assigned.</span>`;
+  }
+
+  // Unallocated
+  const uv = e('unallocVal'), ue = e('unallocEuro');
+  if(r>=0){
+    uv.textContent = r===0 ? '0 credits' : r+' credit'+(r!==1?'s':'');
+    uv.style.color = r===0?'var(--green)':'var(--lime)';
+    ue.textContent = r>0 ? eu(r) : '';
+  } else {
+    uv.textContent = 'OVER by '+Math.abs(r); uv.style.color='var(--red)'; ue.textContent='';
+  }
+
+  // Partner header label
+  e('thPartner').textContent = mode==='internal' ? 'Partner' : 'Team';
+
+  renderTable();
+  renderSidebar();
+  renderPresets();
+  if(exportOpen) renderBriefs();
+}
+
+function renderTable(){
+  const tb = e('initBody');
+  tb.innerHTML = '';
+  initiatives.forEach(ini=>{
+    const p = P[ini.partner];
+    const pName = mode==='internal' ? p.disp : p.client;
+    const isEditable = !ini.locked && ini.status!=='complete';
+
+    const tr = document.createElement('tr');
+    tr.className = 'irow '+ini.status;
+
+    // Name
+    const t1=document.createElement('td');
+    t1.innerHTML=`<input class="iname-input" value="${esc(ini.name)}" onchange="setName(${ini.id},this.value)" ${ini.locked?'disabled':''}>`;
+
+    // Partner
+    const t2=document.createElement('td');
+    t2.innerHTML=`<span class="p-badge ${p.cls}">${pName}</span>`;
+
+    // Tier
+    const t3=document.createElement('td');
+    t3.innerHTML=`<span class="tier-badge">${ini.tier}</span>`;
+
+    // Status
+    const t4=document.createElement('td');
+    t4.innerHTML=`<span class="sbadge ${ini.status}" onclick="cycleStatus(${ini.id})" title="Click to change status">
+      <span class="sdot"></span>${ini.status}</span>`;
+
+    // Credits
+    const t5=document.createElement('td');
+    let dHtml='';
+    if(midMonth && ini.orig!==undefined){
+      const d=ini.credits-ini.orig;
+      if(d>0) dHtml=`<span class="delta up">+${d}</span>`;
+      else if(d<0) dHtml=`<span class="delta dn">${d}</span>`;
+      else dHtml=`<span class="delta same">—</span>`;
+    }
+    t5.innerHTML=`<div class="cspin">
+      <button class="spin-btn" onclick="adj(${ini.id},-1)" ${!isEditable?'disabled':''}>−</button>
+      <input class="credit-input" type="number" min="0" max="999" value="${ini.credits}"
+        onchange="setC(${ini.id},parseInt(this.value)||0)" ${!isEditable?'disabled':''}>
+      <button class="spin-btn" onclick="adj(${ini.id},1)" ${!isEditable?'disabled':''}>+</button>
+      <span class="credit-euro">${eu(ini.credits)}</span>${dHtml}
+    </div>`;
+
+    // Lock
+    const t6=document.createElement('td');
+    t6.innerHTML=`<button class="icon-btn ${ini.locked?'locked':''}" onclick="toggleLock(${ini.id})"
+      title="${ini.locked?'Unlock':'Lock'} this allocation">${ini.locked?'🔒':'🔓'}</button>`;
+
+    // Remove
+    const t7=document.createElement('td');
+    t7.innerHTML=`<button class="icon-btn rm" onclick="remove(${ini.id})" ${ini.locked?'disabled':''} title="Remove">✕</button>`;
+
+    tr.append(t1,t2,t3,t4,t5,t6,t7);
+    tb.appendChild(tr);
+  });
+}
+
+function renderSidebar(){
+  const a = alloc();
+  e('donutCtr').textContent = a;
+  e('clientNote').style.display = mode==='client'?'block':'none';
+
+  // Partner cards
+  const cards = e('partnerCards');
+  cards.innerHTML='';
+  ['gf','frank','blue','bfl'].forEach(k=>{
+    const c=pCredit(k), p=P[k];
+    if(!c) return;
+    const pct=a>0?Math.round((c/a)*100):0;
+    const nm=mode==='internal'?p.disp:p.client;
+    cards.innerHTML+=`<div class="pcard">
+      <div class="pcard-hd">
+        <div class="pcard-name" style="color:${p.color}">${nm}</div>
+        <div class="pcard-cr" style="color:${p.color}">${c}</div>
+      </div>
+      <div class="pbar-wrap"><div class="pbar" style="width:${pct}%;background:${p.color}"></div></div>
+      <div class="pcard-meta"><span>${pct}% of allocated</span><span>${eu(c)}</span></div>
+    </div>`;
+  });
+  if(!cards.innerHTML) cards.innerHTML='<div style="font-size:11px;color:var(--muted);text-align:center;padding:20px 0;">No credits allocated yet</div>';
+
+  // Donut
+  const data=['gf','frank','blue','bfl'].map(k=>({k,c:pCredit(k),color:P[k].color})).filter(x=>x.c>0);
+  const labels=data.map(d=>mode==='internal'?P[d.k].disp:P[d.k].client);
+  const values=data.map(d=>d.c);
+  const colors=data.map(d=>d.color);
+
+  if(!donutChart){
+    const ctx=e('donut').getContext('2d');
+    donutChart=new Chart(ctx,{
+      type:'doughnut',
+      data:{labels,datasets:[{data:values.length?values:[1],backgroundColor:values.length?colors:['#333'],borderWidth:0,hoverOffset:4}]},
+      options:{
+        cutout:'72%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed} cr (${eu(c.parsed)})`}}
+        },
+        animation:{duration:250},
+      }
+    });
+  } else {
+    donutChart.data.labels=labels;
+    donutChart.data.datasets[0].data=values.length?values:[1];
+    donutChart.data.datasets[0].backgroundColor=values.length?colors:['#333'];
+    donutChart.update();
+  }
+}
+
+function renderPresets(){
+  const used=new Set(initiatives.map(i=>i.name));
+  const avail=PRESETS.filter(p=>!used.has(p.name));
+  const pg=e('presetGroup');
+  pg.innerHTML='';
+  avail.slice(0,10).forEach(p=>{
+    const s=document.createElement('span');
+    s.className='preset-tag';
+    s.textContent='+ '+p.name;
+    s.onclick=()=>quickAdd(p);
+    pg.appendChild(s);
+  });
+  e('presetSection').style.display=avail.length?'block':'none';
+}
+
+function renderBriefs(){
+  const cl=e('clientName').value, mo=e('monthLabel').value;
+  const a=alloc(), r=remain();
+  const line=(n)=>'─'.repeat(n);
+
+  // Internal brief
+  let ib=`CREDIT ALLOCATION BRIEF — INTERNAL\n${line(50)}\n`;
+  ib+=`Client    : ${cl}\nMonth     : ${mo}\n`;
+  ib+=`Budget    : ${budget} credits (${eu(budget)})\n`;
+  ib+=`Allocated : ${a} credits (${eu(a)})\n`;
+  if(r!==0) ib+=`${r>0?'Remaining ':'Over      '}: ${Math.abs(r)} credits (${eu(Math.abs(r))})\n`;
+  ib+=`\nINITIATIVES\n${line(50)}\n`;
+  const byStatus = (s)=>initiatives.filter(i=>i.status===s);
+  ['active','paused','complete'].forEach(s=>{
+    const grp=byStatus(s); if(!grp.length) return;
+    ib+=`\n${s.toUpperCase()}\n`;
+    grp.forEach(i=>{
+      const lock=i.locked?' [locked]':'';
+      const delta=midMonth&&i.orig!==undefined&&i.credits!==i.orig?` (was ${i.orig})` :'';
+      ib+=`  ${i.name.padEnd(34)} ${String(i.credits).padStart(2)} cr ${eu(i.credits).padStart(6)}  ${P[i.partner].disp}  ${i.tier}${lock}${delta}\n`;
+    });
+  });
+  ib+=`\nPARTNER TOTALS\n${line(50)}\n`;
+  ['gf','frank','blue','bfl'].forEach(k=>{
+    const c=pCredit(k); if(!c) return;
+    ib+=`  ${P[k].disp.padEnd(12)} ${c} credits (${eu(c)})\n`;
+  });
+  e('intBrief').textContent=ib;
+
+  // Client brief
+  let cb=`CREDIT ALLOCATION — ${mo.toUpperCase()}\n${line(50)}\n`;
+  cb+=`Total monthly value: ${eu(budget)}\n\n`;
+  const act=byStatus('active');
+  if(act.length){
+    cb+=`ACTIVE INITIATIVES\n${line(50)}\n`;
+    act.forEach(i=>{
+      cb+=`• ${i.name}\n  Team: ${P[i.partner].client}  |  ${i.credits} credit${i.credits!==1?'s':''} (${eu(i.credits)})\n\n`;
+    });
+  }
+  const pau=byStatus('paused');
+  if(pau.length){
+    cb+=`ON HOLD THIS MONTH\n${line(50)}\n`;
+    pau.forEach(i=>{ cb+=`• ${i.name}\n`; });
+    cb+='\n';
+  }
+  const com=byStatus('complete');
+  if(com.length){
+    cb+=`COMPLETED\n${line(50)}\n`;
+    com.forEach(i=>{ cb+=`• ${i.name} ✓\n`; });
+    cb+='\n';
+  }
+  cb+=`Total committed: ${eu(a)}\n`;
+  if(r>0) cb+=`Available to allocate: ${eu(r)}\n`;
+  e('cltBrief').textContent=cb;
+}
+
+// ── ACTIONS ──────────────────────────────────────────────────────────────────
+function setMode(m){
+  mode=m;
+  e('btnInt').classList.toggle('active',m==='internal');
+  e('btnClt').classList.toggle('active',m==='client');
+  render();
+}
+
+function toggleMidMonth(){
+  midMonth=e('midMonthCb').checked;
+  e('mmLabel').classList.toggle('on',midMonth);
+  if(midMonth) initiatives.forEach(i=>{ if(i.orig===undefined) i.orig=i.credits; });
+  render();
+}
+
+function adj(id,d){
+  const i=initiatives.find(x=>x.id===id);
+  if(!i||i.locked||i.status==='complete') return;
+  i.credits=Math.max(0,i.credits+d);
+  render();
+}
+
+function setC(id,v){
+  const i=initiatives.find(x=>x.id===id);
+  if(!i||i.locked||i.status==='complete') return;
+  i.credits=Math.max(0,v);
+  render();
+}
+
+function setName(id,v){
+  const i=initiatives.find(x=>x.id===id);
+  if(i) i.name=v;
+}
+
+function cycleStatus(id){
+  const i=initiatives.find(x=>x.id===id);
+  if(!i) return;
+  const c=['active','paused','complete'];
+  i.status=c[(c.indexOf(i.status)+1)%c.length];
+  render();
+}
+
+function toggleLock(id){
+  const i=initiatives.find(x=>x.id===id);
+  if(i){ i.locked=!i.locked; render(); }
+}
+
+function remove(id){
+  const i=initiatives.find(x=>x.id===id);
+  if(i&&i.locked) return;
+  initiatives=initiatives.filter(x=>x.id!==id);
+  render();
+}
+
+function autoBalance(){
+  const unlocked=initiatives.filter(i=>i.status==='active'&&!i.locked);
+  if(!unlocked.length) return;
+  const fixed=initiatives.filter(i=>i.locked||i.status!=='active').reduce((s,i)=>s+i.credits,0);
+  const pool=budget-fixed;
+  if(pool<0) return;
+  const base=Math.floor(pool/unlocked.length);
+  const rem=pool-(base*unlocked.length);
+  unlocked.forEach((i,idx)=>{ i.credits=base+(idx<rem?1:0); });
+  render();
+}
+
+function toggleAddForm(){
+  addFormOpen=!addFormOpen;
+  e('addForm').classList.toggle('open',addFormOpen);
+}
+
+function addInitiative(){
+  const name=e('newName').value.trim();
+  if(!name) return;
+  const credits=Math.max(0,parseInt(e('newCredits').value)||0);
+  initiatives.push({id:++idCtr, name, partner:e('newPartner').value,
+    tier:e('newTier').value, credits, orig:credits, status:'active', locked:false});
+  e('newName').value='';
+  e('newCredits').value='4';
+  addFormOpen=false; e('addForm').classList.remove('open');
+  render();
+}
+
+function quickAdd(preset){
+  initiatives.push({id:++idCtr, ...preset, orig:preset.credits, status:'active', locked:false});
+  render();
+}
+
+function toggleExport(){
+  exportOpen=!exportOpen;
+  e('exportBody').classList.toggle('open',exportOpen);
+  e('exportChev').textContent=exportOpen?'▼':'▲';
+  if(exportOpen) renderBriefs();
+}
+
+function copyBrief(type){
+  const el=e(type==='internal'?'intBrief':'cltBrief');
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const btn=el.previousElementSibling.querySelector('button');
+    const orig=btn.textContent; btn.textContent='Copied ✓';
+    setTimeout(()=>btn.textContent=orig,1500);
+  });
+}
+
+function esc(s){ return s.replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

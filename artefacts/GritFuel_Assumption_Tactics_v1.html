@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Weakest Assumptions & Tactics v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #3C3C3C;
+    --lime: #DEE450;
+    --orange: #FC4E2B;
+    --gray: #929292;
+    --light: #F4F4F2;
+    --white: #FFFFFF;
+    --ink: #1E1E1E;
+    --hairline: #E5E5E3;
+    --amber: #F5C518;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--light); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* HEADER */
+  header { margin-bottom: 40px; position: relative; }
+  .eyebrow { font-weight: 600; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 54px; line-height: 1.0; letter-spacing: -1.5px; color: var(--charcoal); margin-bottom: 18px; }
+  h1 .accent { background: var(--lime); padding: 0 8px; }
+  .sub { font-size: 17px; color: var(--gray); max-width: 820px; line-height: 1.55; }
+  .companion { display: inline-block; background: var(--charcoal); color: var(--lime); padding: 4px 10px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 18px; border-radius: 2px; }
+  .meta-strip { display: flex; gap: 28px; margin-top: 28px; padding: 14px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); flex-wrap: wrap; }
+  .meta-strip > div { font-size: 12px; }
+  .meta-strip .label { color: var(--gray); font-weight: 500; text-transform: uppercase; letter-spacing: 1.2px; margin-right: 8px; }
+  .meta-strip .value { color: var(--charcoal); font-weight: 600; }
+  .arrow-bg { position: absolute; right: 0; top: 30px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 180px; color: var(--lime); opacity: 0.25; line-height: 1; pointer-events: none; user-select: none; }
+
+  /* PRINCIPLE */
+  .principle { background: var(--charcoal); color: var(--white); padding: 28px 32px; margin-top: 32px; border-left: 6px solid var(--lime); display: grid; grid-template-columns: 180px 1fr; gap: 32px; align-items: center; }
+  .principle .kicker { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); }
+  .principle p { font-size: 15px; line-height: 1.6; color: #f0f0f0; }
+  .principle p strong { color: var(--lime); font-weight: 700; }
+
+  /* ASSUMPTION CARDS */
+  .section { margin-top: 56px; }
+  .assumption-card { background: var(--white); border: 1px solid var(--hairline); overflow: hidden; }
+  .ass-head { padding: 24px 32px; background: var(--charcoal); color: var(--white); display: grid; grid-template-columns: 60px 1fr auto; gap: 24px; align-items: center; }
+  .ass-head .ass-num { font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 900; color: var(--orange); line-height: 1; }
+  .ass-head .ass-title { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.25; }
+  .ass-head .ass-tag { font-size: 11px; color: var(--lime); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+  .ass-head .risk-badge { text-align: right; }
+  .ass-head .risk-label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+  .ass-head .risk-value { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 20px; color: var(--orange); margin-top: 2px; }
+
+  .ass-body { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hairline); padding: 1px; }
+  .ass-pane { background: var(--white); padding: 24px 28px; }
+  .ass-pane h5 { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+  .ass-pane p { font-size: 13.5px; color: #3a3a3a; line-height: 1.6; margin-bottom: 14px; }
+  .ass-pane p:last-child { margin-bottom: 0; }
+  .ass-pane p strong { color: var(--charcoal); font-weight: 600; }
+
+  /* TACTICS */
+  .tactics { background: var(--light); padding: 28px 32px; border-top: 4px solid var(--lime); }
+  .tactics h5 { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--charcoal); margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .tactics h5::before { content: ""; display: inline-block; width: 28px; height: 3px; background: var(--lime); }
+  .tactic-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .tactic { background: var(--white); border: 1px solid var(--hairline); padding: 16px 18px; position: relative; transition: border-color .15s; }
+  .tactic:hover { border-color: var(--charcoal); }
+  .tactic .t-num { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; color: var(--orange); letter-spacing: 1.5px; margin-bottom: 6px; }
+  .tactic .t-title { font-size: 13.5px; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; line-height: 1.4; }
+  .tactic .t-body { font-size: 12.5px; color: #4a4a4a; line-height: 1.55; }
+  .tactic .t-meta { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hairline); display: flex; gap: 10px; font-size: 10px; }
+  .tactic .t-meta span { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 2px 7px; border-radius: 2px; }
+  .eff-low { background: #e8f5d0; color: #4a5b0c; }
+  .eff-med { background: #fff2cc; color: #7a5b00; }
+  .eff-high { background: #ffe4dc; color: #a02e10; }
+  .imp-low { background: var(--hairline); color: var(--gray); }
+  .imp-med { background: var(--charcoal); color: var(--lime); }
+  .imp-high { background: var(--orange); color: var(--white); }
+
+  /* SIGNALS */
+  .signals { background: var(--white); padding: 24px 32px; border-top: 1px solid var(--hairline); }
+  .signals h5 { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+  .signals h5::before { content: "!"; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: var(--orange); color: var(--white); border-radius: 50%; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; }
+  .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .signal-grid > div { display: flex; gap: 10px; font-size: 12.5px; color: #3a3a3a; line-height: 1.5; }
+  .signal-grid > div::before { content: "→"; color: var(--charcoal); font-weight: 700; flex-shrink: 0; }
+
+  /* MATRIX */
+  .matrix-intro { font-size: 14px; color: var(--gray); max-width: 820px; line-height: 1.55; margin-bottom: 28px; }
+  .matrix-box { background: var(--white); border: 1px solid var(--hairline); padding: 28px 32px; position: relative; }
+  .matrix-grid { display: grid; grid-template-columns: 60px 1fr 1fr; grid-template-rows: 40px 1fr 1fr 40px; gap: 0; min-height: 600px; position: relative; }
+  .y-label { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); display: flex; align-items: center; justify-content: center; grid-row: 2 / 4; }
+  .x-label { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); text-align: center; padding: 12px 0; grid-column: 2 / 4; }
+  .q-header { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); padding: 10px 14px; background: var(--light); }
+  .quadrant { border: 1px dashed var(--hairline); padding: 20px 16px; position: relative; }
+  .quadrant-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray); margin-bottom: 14px; }
+  .q1 { background: rgba(222, 228, 80, 0.22); }
+  .q1 .quadrant-title { color: var(--charcoal); }
+  .q1 .q-kicker { color: var(--charcoal); font-weight: 900; }
+  .q2 { background: rgba(222, 228, 80, 0.08); }
+  .q3 { background: var(--white); }
+  .q4 { background: rgba(252, 78, 43, 0.08); }
+  .q-kicker { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray); margin-bottom: 12px; display: block; }
+  .m-tactic { background: var(--white); border: 1px solid var(--hairline); padding: 8px 10px; margin-bottom: 6px; font-size: 11.5px; line-height: 1.35; }
+  .m-tactic .m-ref { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--orange); font-size: 10px; margin-right: 6px; letter-spacing: 0.5px; }
+  .q1 .m-tactic { border-color: var(--charcoal); }
+
+  /* PRIORITY LIST */
+  .priority { background: var(--charcoal); color: var(--white); padding: 36px 40px; margin-top: 40px; position: relative; overflow: hidden; }
+  .priority .kicker { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); margin-bottom: 12px; }
+  .priority h3 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.3px; }
+  .priority-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid #555; }
+  .priority-list > div { border-right: 1px solid #555; padding: 20px 22px; }
+  .priority-list > div:last-child { border-right: none; }
+  .priority-list h4 { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+  .priority-list ol { list-style: none; counter-reset: p; }
+  .priority-list li { counter-increment: p; position: relative; padding: 8px 0 8px 28px; font-size: 13px; line-height: 1.5; color: #f0f0f0; border-bottom: 1px dashed #555; }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before { content: counter(p); position: absolute; left: 0; top: 8px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 13px; color: var(--lime); }
+
+  /* FOOTER */
+  footer { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--hairline); color: var(--gray); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; color: var(--charcoal); font-size: 14px; letter-spacing: -0.3px; }
+  footer .logo .dot { color: var(--lime); }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    h1 { font-size: 38px; }
+    .ass-body, .signal-grid, .matrix-grid, .priority-list { grid-template-columns: 1fr !important; }
+    .ass-head { grid-template-columns: 1fr; text-align: left; }
+    .principle { grid-template-columns: 1fr; }
+    .y-label { display: none; }
+  }
+
+  @media print {
+    body { background: white; }
+    .wrap { padding: 20px; }
+    .section { page-break-inside: avoid; margin-top: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="arrow-bg">→</div>
+  <div class="companion">Companion to Founder/CEO Deep Dive v2</div>
+  <div class="eyebrow">Assumption Tactics · v1 · Internal</div>
+  <h1>Weakest<br>Assumptions <span class="accent">—</span><br>How We Tackle Them</h1>
+  <p class="sub">Four live structural assumptions. For each: the root cause, a way to know it's breaking, tactics we execute regardless, and signals to watch. Every tactic is plotted on an impact × effort matrix at the end so we can see what to start this week vs. this quarter.</p>
+  <div class="meta-strip">
+    <div><span class="label">Assumptions</span><span class="value">4 live (partner-risk retired)</span></div>
+    <div><span class="label">Tactics</span><span class="value">21 total across 4 assumptions</span></div>
+    <div><span class="label">Framework</span><span class="value">Validation · Mitigation · Signals</span></div>
+    <div><span class="label">Date</span><span class="value">April 2026</span></div>
+  </div>
+</header>
+
+<div class="principle">
+  <div>
+    <div class="kicker">Operating<br>Principle</div>
+  </div>
+  <p>A risky assumption without a <strong>validation path</strong>, <strong>mitigation tactics</strong>, and <strong>tripwire signals</strong> is just a worry on a slide. Every tactic below is one of three types: something we do <em>regardless</em> (mitigation), something we run to find out if the assumption is true (validation), or something we watch for to know if it's breaking (signal). The goal isn't to eliminate risk — it's to make each assumption observable and reversible.</p>
+</div>
+
+<!-- ASSUMPTION 1 -->
+<section class="section">
+  <div class="assumption-card">
+    <div class="ass-head">
+      <div class="ass-num">01</div>
+      <div>
+        <div class="ass-title">Founders will pay for a system they can't see.</div>
+        <div class="ass-tag">Risk type · Emotional buy-in · Highest leverage</div>
+      </div>
+      <div class="risk-badge">
+        <div class="risk-label">If this breaks</div>
+        <div class="risk-value">No deals close</div>
+      </div>
+    </div>
+
+    <div class="ass-body">
+      <div class="ass-pane">
+        <h5>Root cause</h5>
+        <p>The OS is 5 tools in a backend loop. Tools are rational; growth is emotional. A founder signing €3.5–8k/mo needs something <strong>visceral</strong> to buy, not a process diagram. Today the Compound Score and Dashboard are described as outputs — they need to <em>be</em> the product in the buyer's mind.</p>
+      </div>
+      <div class="ass-pane">
+        <h5>Validation approach</h5>
+        <p>Show 10 prospects two pitch variants: (a) "here's our OS and how it works" (b) "here's your Compound Score and what it's telling you this month." Track: time-to-first-question, emotional language in response, close rate. If (b) wins 3:1 or better on engagement, the hypothesis is confirmed — the Score <em>is</em> the product, everything else is infrastructure.</p>
+      </div>
+    </div>
+
+    <div class="tactics">
+      <h5>Tactics</h5>
+      <div class="tactic-list">
+        <div class="tactic">
+          <div class="t-num">T1.1</div>
+          <div class="t-title">Make the Compound Score the product's face</div>
+          <div class="t-body">Dashboard hero, monthly email subject line, first line of every Playbook, first artifact a prospect sees in sales. "Your Compound Score is 73 — up from 68 last month" becomes the conversational unit.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T1.2</div>
+          <div class="t-title">Pre-sales Dashboard demo (10 min)</div>
+          <div class="t-body">First 10 minutes of every sales call: walk a real (or anonymised beta) client's Dashboard. Lets prospect experience the product before hearing any pitch. Cuts abstract-system perception instantly.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T1.3</div>
+          <div class="t-title">"Month 0" diagnostic deliverable</div>
+          <div class="t-body">Before full onboarding, offer a standalone €500–€1k diagnostic: we ingest their existing data and produce a baseline Compound Score + one Playbook page. Tangible artifact, low commitment, converts at 60%+.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T1.4</div>
+          <div class="t-title">Visible monthly Growth State email</div>
+          <div class="t-body">Client-facing email on the 1st of every month: Score, trend, top 3 initiatives, Playbook summary. Shareable format — founders forward it to board members, which becomes earned distribution.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T1.5</div>
+          <div class="t-title">Score-driven case studies</div>
+          <div class="t-body">Every case study leads with the Score trajectory: "Client X went from 41 (Pivot) to 78 (Accelerate) in six months." Anchors the Score as the metric customers are buying.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <h5>Signals the assumption is breaking</h5>
+      <div class="signal-grid">
+        <div>Prospects don't mention the Score unprompted after call 2</div>
+        <div>Sales calls keep circling back to "what do you actually do?"</div>
+        <div>Existing clients don't reference the Score in renewal conversations</div>
+        <div>Dashboard engagement (MAU) &lt; 2 sessions/month per client</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSUMPTION 2 -->
+<section class="section">
+  <div class="assumption-card">
+    <div class="ass-head">
+      <div class="ass-num">02</div>
+      <div>
+        <div class="ass-title">SMEs with €50–500k budgets want a system, not a relationship.</div>
+        <div class="ass-tag">Risk type · GTM motion · Channel design</div>
+      </div>
+      <div class="risk-badge">
+        <div class="risk-label">If this breaks</div>
+        <div class="risk-value">Wrong channel</div>
+      </div>
+    </div>
+
+    <div class="ass-body">
+      <div class="ass-pane">
+        <h5>Root cause</h5>
+        <p>EU mid-market buying behaviour is overwhelmingly relationship-driven: intros, repeat vendors, "my friend recommended." The OS is the rational justification — the trust layer is what closes. If GritFuel leads with product and omits the human, the pitch reads as SaaS and loses to the fractional CMO who had drinks with them last Thursday.</p>
+      </div>
+      <div class="ass-pane">
+        <h5>Validation approach</h5>
+        <p>Run two parallel sales funnels for 90 days. Funnel A: inbound/product-led — website + demo video + booking calendar. Funnel B: founder-led — Ruben + co-founders doing intros and first meetings personally. Track conversion, sales-cycle length, and 6-month retention. The ratio tells us the real balance of system-vs-relationship in our ICP.</p>
+      </div>
+    </div>
+
+    <div class="tactics">
+      <h5>Tactics</h5>
+      <div class="tactic-list">
+        <div class="tactic">
+          <div class="t-num">T2.1</div>
+          <div class="t-title">Founder-led sales for first 20 clients</div>
+          <div class="t-body">Ruben + co-founders in every discovery call until client 20. Relationship is the product during beta. Data from these calls feeds every other tactic in this doc.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T2.2</div>
+          <div class="t-title">Named strategist model, publicly visible</div>
+          <div class="t-body">Every client is introduced to their strategist by name + photo + bio at onboarding. The OS scales; the strategist relationship is what clients refer to when they refer us on.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T2.3</div>
+          <div class="t-title">Beta cohort community</div>
+          <div class="t-body">Private Slack/WhatsApp for beta clients. Monthly founder office hours. Peer intros across the cohort. Converts clients into relationship-rich advocates who sell for us in their own networks.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T2.4</div>
+          <div class="t-title">Public founder POV content</div>
+          <div class="t-body">Weekly LinkedIn posts, monthly long-form essay, one podcast appearance per month — all authored by named founders, not the GritFuel brand account. Prospects feel they already know us before first call.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T2.5</div>
+          <div class="t-title">Two-funnel test (see validation)</div>
+          <div class="t-body">Run inbound-product vs. founder-led sales funnels in parallel for a quarter. Let the data decide where to invest. If founder-led wins by 2x, GTM reshapes around relationship; if inbound wins, we scale the system layer.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <h5>Signals the assumption is breaking</h5>
+      <div class="signal-grid">
+        <div>Inbound funnel converts &lt; 2%; founder-led converts &gt; 25%</div>
+        <div>"Who will I work with?" is the #1 question in sales</div>
+        <div>Clients reference their strategist's name when renewing, not the OS</div>
+        <div>Referrals come through people, never through the website</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSUMPTION 3 -->
+<section class="section">
+  <div class="assumption-card">
+    <div class="ass-head">
+      <div class="ass-num">03</div>
+      <div>
+        <div class="ass-title">The credit model reduces friction.</div>
+        <div class="ass-tag">Risk type · Pricing legibility · Operational</div>
+      </div>
+      <div class="risk-badge">
+        <div class="risk-label">If this breaks</div>
+        <div class="risk-value">Churn + confusion</div>
+      </div>
+    </div>
+
+    <div class="ass-body">
+      <div class="ass-pane">
+        <h5>Root cause</h5>
+        <p>Credits are a clean unit internally (1 credit = €25 output) but an abstraction externally. Every budget-minded client will ask "what is a credit worth, really?" and answer it themselves — sometimes wrongly. If clients feel they're being billed in a currency they can't audit, trust breaks even if value is being delivered.</p>
+      </div>
+      <div class="ass-pane">
+        <h5>Validation approach</h5>
+        <p>In the first 10 prospect calls, explicitly ask: "The credit model — does this make it easier or harder for you to understand what you're getting?" Listen for the word "complicated." Then, post-onboarding for first 5 clients, measure time-to-first-confusion: how many days before a credit-related question is asked? &lt; 14 days = real problem.</p>
+      </div>
+    </div>
+
+    <div class="tactics">
+      <h5>Tactics</h5>
+      <div class="tactic-list">
+        <div class="tactic">
+          <div class="t-num">T3.1</div>
+          <div class="t-title">Always show credits AND euros</div>
+          <div class="t-body">Every Playbook line, every invoice, every Dashboard allocation shows both: "Landing page rebuild — 12 credits (€300)". Dual-unit pricing removes the translation burden entirely.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T3.2</div>
+          <div class="t-title">Outcome-named credit bundles</div>
+          <div class="t-body">Instead of "5 credits," name packaged deliverables: "Launch Pack" (10 credits), "SEO Sprint" (15 credits), "Brand Refresh" (25 credits). Clients buy outcomes, credits become invisible plumbing.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T3.3</div>
+          <div class="t-title">Real-time credit tracker in Dashboard</div>
+          <div class="t-body">Live balance, forecast use, rollover countdown, utilization by channel. Makes the model inspectable at any moment — trust through transparency.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T3.4</div>
+          <div class="t-title">First Playbook pre-allocates 100%</div>
+          <div class="t-body">Month 1 Playbook arrives with all credits already allocated. Client only has to approve, not decide. Removes cognitive load during the fragile onboarding window.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-low">Effort: Low</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T3.5</div>
+          <div class="t-title">Flat-fee bailout tier</div>
+          <div class="t-body">For clients who structurally resist abstraction, offer "Core Flat" at €3,500/mo with a fixed pre-defined scope (no credits). Loses some flexibility upside, but recovers a segment otherwise lost to confusion. Experiment, not default.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-high">Effort: High</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <h5>Signals the assumption is breaking</h5>
+      <div class="signal-grid">
+        <div>Credit questions dominate the first 30 days with new clients</div>
+        <div>Clients don't use their full monthly credit allocation by month 3</div>
+        <div>Support tickets tagged "pricing" or "billing" &gt; 10% of total</div>
+        <div>NPS dips within 3 days of monthly invoice</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSUMPTION 4 -->
+<section class="section">
+  <div class="assumption-card">
+    <div class="ass-head">
+      <div class="ass-num">04</div>
+      <div>
+        <div class="ass-title">No agency can copy this in the 18-month head-start window.</div>
+        <div class="ass-tag">Risk type · Defensibility · Competitive</div>
+      </div>
+      <div class="risk-badge">
+        <div class="risk-label">If this breaks</div>
+        <div class="risk-value">Margin compression</div>
+      </div>
+    </div>
+
+    <div class="ass-body">
+      <div class="ass-pane">
+        <h5>Root cause</h5>
+        <p>The OS is copyable. S4 Capital, WPP's SME arms, Dept, Accenture Song all have the capital and talent to build a GritFuel clone in 12–18 months once the model is validated. The data-accumulation moat is real but slow — it takes 6–12 months per client for switching cost to become meaningful. Defensibility is mostly head-start, not inherent.</p>
+      </div>
+      <div class="ass-pane">
+        <h5>Validation approach</h5>
+        <p>Quarterly competitive sweep: (a) track "growth operating system" and adjacent search volume, (b) scan S4/WPP/Dept/Accenture job posts for tell-tale roles (e.g. "subscription growth lead"), (c) monitor domain registrations in the category, (d) sample-buy competitor outputs where possible. Rate of convergence &gt; expected = accelerate data-moat and category-branding tactics.</p>
+      </div>
+    </div>
+
+    <div class="tactics">
+      <h5>Tactics</h5>
+      <div class="tactic-list">
+        <div class="tactic">
+          <div class="t-num">T4.1</div>
+          <div class="t-title">Own the category name</div>
+          <div class="t-body">Make "Growth Operating System" and GritFuel conceptually inseparable. Whitepapers, conference talks, podcast appearances that define the category on our terms. Copycats arrive to a landscape we've already shaped.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T4.2</div>
+          <div class="t-title">Aggressive public thinking — not product</div>
+          <div class="t-body">Publish Compounding Engine logic, OS architecture, pricing philosophy openly. Counter-intuitive: transparency about method creates trust, not imitation risk. Imitators still need talent, data, and relationships — none of which are in the whitepaper.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T4.3</div>
+          <div class="t-title">Accelerate client count, not ARPU</div>
+          <div class="t-body">Optimize for client logo count in Y1–Y2 over revenue-per-client. Each client contributes data to the moat. 25 clients at Core tier is a stronger defensive position than 10 at Performance tier. Re-read the SOM plan with this lens.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T4.4</div>
+          <div class="t-title">Senior strategist talent lock-up</div>
+          <div class="t-body">Identify the 10 senior strategists in EU most aligned with the OS model. Contract them, advise them, hire them, or build MOUs before competitors realize the category exists. Talent is the real binding constraint — not the tooling.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-high">Effort: High</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T4.5</div>
+          <div class="t-title">Exclusive accelerator / VC partnerships</div>
+          <div class="t-body">Lock 3–5 exclusive partnerships with accelerators or seed funds who refer their entire portfolio. Creates a structural inbound channel competitors can't easily replicate. See VC partner deck for existing framework.</div>
+          <div class="t-meta"><span class="imp-high">Impact: High</span><span class="eff-high">Effort: High</span></div>
+        </div>
+        <div class="tactic">
+          <div class="t-num">T4.6</div>
+          <div class="t-title">Trade-secret &amp; IP discipline</div>
+          <div class="t-body">Formally document Compounding Engine scoring methodology, Router logic, and Playbook templates as trade secrets. Consider modest patent filings where defensible. Won't stop a clone but raises the cost of blatant copying.</div>
+          <div class="t-meta"><span class="imp-med">Impact: Medium</span><span class="eff-med">Effort: Medium</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signals">
+      <h5>Signals the assumption is breaking</h5>
+      <div class="signal-grid">
+        <div>A large agency launches a monthly subscription tier for SMEs</div>
+        <div>"Growth operating system" search volume triples YoY from non-GritFuel sources</div>
+        <div>Agency job posts mention "compound" / "credits" / "subscription" growth models</div>
+        <div>Prospects mention a competitor offering a similar structure in discovery calls</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATRIX -->
+<section class="section">
+  <div class="section-head" style="display:flex;align-items:baseline;gap:18px;margin-bottom:18px">
+    <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:38px;color:var(--lime);line-height:1">★</div>
+    <div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;color:var(--charcoal)">Impact × Effort Matrix</div>
+      <div style="color:var(--gray);font-size:14px;margin-top:6px">All 21 tactics plotted. Start top-left, end bottom-right.</div>
+    </div>
+  </div>
+
+  <p class="matrix-intro">The top-left quadrant is where tactics earn their place in the next 2 weeks. The top-right is the quarter's roadmap. The bottom-left is "do eventually, it won't hurt." The bottom-right is where you say no unless something changes.</p>
+
+  <div class="matrix-box">
+    <div class="matrix-grid">
+      <div class="y-label">Impact →</div>
+      <div class="q-header" style="grid-column:2">Low effort</div>
+      <div class="q-header" style="grid-column:3">High effort</div>
+
+      <div class="quadrant q1">
+        <div class="q-kicker">★ Do this week — quick wins</div>
+        <div class="m-tactic"><span class="m-ref">T1.1</span>Compound Score becomes product's face</div>
+        <div class="m-tactic"><span class="m-ref">T1.2</span>Pre-sales Dashboard demo in first 10 min</div>
+        <div class="m-tactic"><span class="m-ref">T2.1</span>Founder-led sales for first 20 clients</div>
+        <div class="m-tactic"><span class="m-ref">T2.2</span>Named strategist model, publicly visible</div>
+        <div class="m-tactic"><span class="m-ref">T3.1</span>Always show credits AND euros</div>
+        <div class="m-tactic"><span class="m-ref">T3.4</span>First Playbook pre-allocates 100%</div>
+      </div>
+
+      <div class="quadrant q2">
+        <div class="q-kicker">Strategic investments — this quarter</div>
+        <div class="m-tactic"><span class="m-ref">T1.3</span>Month 0 diagnostic deliverable (€500–1k)</div>
+        <div class="m-tactic"><span class="m-ref">T2.4</span>Public founder POV content cadence</div>
+        <div class="m-tactic"><span class="m-ref">T2.5</span>Two-funnel GTM test (90 days)</div>
+        <div class="m-tactic"><span class="m-ref">T3.2</span>Outcome-named credit bundles</div>
+        <div class="m-tactic"><span class="m-ref">T4.1</span>Own the category name</div>
+        <div class="m-tactic"><span class="m-ref">T4.2</span>Aggressive public thinking — not product</div>
+        <div class="m-tactic"><span class="m-ref">T4.3</span>Accelerate client count, not ARPU</div>
+        <div class="m-tactic"><span class="m-ref">T4.4</span>Senior strategist talent lock-up</div>
+        <div class="m-tactic"><span class="m-ref">T4.5</span>Exclusive accelerator / VC partnerships</div>
+      </div>
+
+      <div class="quadrant q3">
+        <div class="q-kicker">Nice-to-have — fill-in work</div>
+        <div class="m-tactic"><span class="m-ref">T1.4</span>Monthly Growth State email</div>
+        <div class="m-tactic"><span class="m-ref">T1.5</span>Score-driven case studies</div>
+        <div class="m-tactic"><span class="m-ref">T2.3</span>Beta cohort community (Slack / office hours)</div>
+        <div class="m-tactic"><span class="m-ref">T3.3</span>Real-time credit tracker in Dashboard</div>
+        <div class="m-tactic"><span class="m-ref">T4.6</span>Trade-secret &amp; IP discipline</div>
+      </div>
+
+      <div class="quadrant q4">
+        <div class="q-kicker">Hold — reconsider only if signals fire</div>
+        <div class="m-tactic"><span class="m-ref">T3.5</span>Flat-fee bailout tier (only if credit-confusion signals fire)</div>
+      </div>
+
+      <div class="x-label">← Effort →</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIORITY NEXT STEPS -->
+<section class="section">
+  <div class="priority">
+    <div class="kicker">Priority roadmap</div>
+    <h3>What to commit to by time horizon</h3>
+    <div class="priority-list">
+      <div>
+        <h4>Next 2 weeks</h4>
+        <ol>
+          <li>Rebuild Dashboard hero around the Compound Score (T1.1)</li>
+          <li>Adopt "first 10 minutes = live demo" in every sales call (T1.2)</li>
+          <li>Add euro equivalent next to every credit reference everywhere (T3.1)</li>
+          <li>Pre-allocate 100% of Month 1 credits for all new clients (T3.4)</li>
+          <li>Founder-led sales commitment for clients 1–20 (T2.1)</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Next quarter</h4>
+        <ol>
+          <li>Launch "Month 0" diagnostic as a paid on-ramp (T1.3)</li>
+          <li>Stand up the two-funnel GTM test (T2.5) with tracking in place</li>
+          <li>Ship outcome-named credit bundles (T3.2)</li>
+          <li>Start weekly founder POV publishing rhythm (T2.4)</li>
+          <li>Publish first "Growth OS" thought-leadership whitepaper (T4.1, T4.2)</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Next 6–12 months</h4>
+        <ol>
+          <li>Lock up senior strategist talent pool in EU (T4.4)</li>
+          <li>Sign 3–5 exclusive accelerator / VC partnerships (T4.5)</li>
+          <li>Reshape SOM targets around client-count velocity (T4.3)</li>
+          <li>Formalise trade-secret &amp; IP documentation (T4.6)</li>
+          <li>Quarterly competitive sweep in place (validation for A4)</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">GritFuel<span class="dot">.</span>works — Assumption Tactics v1</div>
+  <div>Companion to Founder/CEO Deep Dive v2 · Internal · April 2026</div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GritFuel — Headcount & Capacity Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1A1A; --charcoal: #3C3C3C; --gray: #929292;
+    --gray-300: #D9D9D4; --gray-200: #E8E8E3; --gray-100: #F1F1ED;
+    --paper: #FAFAF7; --white: #FFFFFF;
+    --lime: #DEE450; --lime-dark: #B8BE3A; --lime-50: #F4F6D3;
+    --orange: #FC4E2B; --orange-50: #FFE4DC;
+    --green: #4E9B3E; --red: #C8382B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; color: var(--ink); background: var(--gray-100); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .shell { max-width: 1260px; margin: 0 auto; padding: 28px 24px 80px; }
+  .home-link { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .home-link:hover { color: var(--ink); }
+
+  h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 6px; }
+  h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 14px; margin-top: 36px; }
+  h3 { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--charcoal); margin-bottom: 12px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .intro { color: var(--charcoal); max-width: 800px; margin-bottom: 30px; }
+
+  /* KPI ROW */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .kpi { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 16px 18px; }
+  .kpi .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); margin-bottom: 6px; }
+  .kpi .val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--ink); }
+  .kpi .sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .kpi.accent { background: var(--lime-50); border-color: var(--lime); }
+
+  /* ASSUMPTIONS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px; }
+  .card { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 20px 22px; }
+  .assumption-row { display: grid; grid-template-columns: 1fr 90px; align-items: center; gap: 14px; padding: 6px 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+  .assumption-row:last-child { border: 0; }
+  .assumption-row label { color: var(--charcoal); }
+  .assumption-row small { display: block; font-size: 11px; color: var(--gray); }
+  .assumption-row input { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 8px; border: 1.5px solid var(--gray-300); border-radius: 6px; text-align: right; width: 100%; }
+  .assumption-row input:focus { outline: none; border-color: var(--lime-dark); background: var(--lime-50); }
+
+  /* BINDING CONSTRAINT CALLOUT */
+  .constraint { background: var(--ink); color: var(--paper); padding: 18px 22px; border-radius: 12px; margin-bottom: 28px; display: flex; align-items: center; gap: 14px; }
+  .constraint .pill { background: var(--lime); color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; font-weight: 700; flex-shrink: 0; }
+  .constraint .text { font-size: 13px; }
+  .constraint strong { color: var(--lime); }
+
+  /* QUARTERLY TABLE */
+  .table-wrap { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; overflow-x: auto; margin-bottom: 28px; }
+  table.qt { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.qt th, table.qt td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--gray-100); white-space: nowrap; }
+  table.qt th { background: var(--gray-100); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--charcoal); position: sticky; top: 0; }
+  table.qt th:first-child, table.qt td:first-child { text-align: left; white-space: nowrap; min-width: 200px; }
+  table.qt tbody tr.section td { background: var(--gray-100); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); padding: 10px; font-weight: 700; }
+  table.qt td.num { font-family: 'JetBrains Mono', monospace; }
+  table.qt tr.total td { background: var(--lime-50); font-weight: 700; color: var(--ink); }
+  table.qt tr.margin-row td { font-weight: 700; }
+  table.qt tr.margin-row td.num { font-family: 'JetBrains Mono', monospace; }
+  .cell-good { color: var(--green); }
+  .cell-warn { color: var(--orange); }
+  .cell-bad { color: var(--red); }
+  .year-sep { border-right: 2px solid var(--gray-300) !important; }
+
+  /* HIRE TRIGGER TIMELINE */
+  .triggers { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 22px 24px; margin-bottom: 28px; }
+  .trigger { display: grid; grid-template-columns: 90px 1fr; gap: 18px; padding: 12px 0; border-bottom: 1px solid var(--gray-100); align-items: start; }
+  .trigger:last-child { border: 0; padding-bottom: 0; }
+  .trigger:first-child { padding-top: 0; }
+  .trigger .q { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; background: var(--lime); color: var(--ink); padding: 4px 8px; border-radius: 4px; text-align: center; letter-spacing: 0.05em; }
+  .trigger .role { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+  .trigger .reason { font-size: 12px; color: var(--charcoal); }
+
+  /* MARGIN INFLECTION CHART */
+  .chart-wrap { background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 24px 28px; margin-bottom: 28px; }
+  .chart-legend { display: flex; gap: 22px; margin-bottom: 14px; font-size: 11px; color: var(--charcoal); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
+  .chart-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .chart-legend .mrr .dot { background: var(--lime); }
+  .chart-legend .cost .dot { background: var(--orange); }
+  svg.chart { width: 100%; height: auto; display: block; }
+
+  /* NOTE */
+  .note { background: var(--white); border-left: 3px solid var(--lime); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 32px; font-size: 13px; color: var(--charcoal); }
+  .note strong { color: var(--ink); }
+
+  .reset { margin-top: 6px; background: none; border: 1px solid var(--gray-300); padding: 8px 14px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--charcoal); cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; }
+  .reset:hover { background: var(--gray-100); }
+
+  @media (max-width: 960px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <a class="home-link" href="../04-finance.html">← Back to Finance</a>
+
+  <div class="eyebrow">Artefact · interactive</div>
+  <h1>Headcount &amp; Capacity Plan</h1>
+  <p class="intro">Bottom-up, capacity-driven model across Y1–Y3 on a quarterly basis. Strategist hours are the binding constraint — every hire downstream follows the client ramp, not the other way around. Edit the assumptions to stress-test the model.</p>
+
+  <!-- KPI SUMMARY -->
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Clients — End Y3</div><div class="val" id="kpi-clients">48</div><div class="sub">from 2 at Q1 Y1</div></div>
+    <div class="kpi accent"><div class="lbl">ARR — End Y3</div><div class="val" id="kpi-arr">€2.76M</div><div class="sub">MRR × 12</div></div>
+    <div class="kpi"><div class="lbl">Blended ACV / mo</div><div class="val" id="kpi-acv">€4,788</div><div class="sub">tier-weighted</div></div>
+    <div class="kpi"><div class="lbl">Total FTE — End Y3</div><div class="val" id="kpi-fte">19</div><div class="sub">7 founders/core + 12 hires</div></div>
+  </div>
+
+  <!-- CONSTRAINT CALLOUT -->
+  <div class="constraint">
+    <div class="pill">Binding constraint</div>
+    <div class="text">
+      <strong>Strategist capacity</strong> is the bottleneck. At 104 productive hrs/FTE/month and a weighted 13.35 hrs per client per month, one strategist supports ~6 clients at a realistic planning load. PM Strategist capacity is roughly <strong>2–3× higher</strong> — PM headcount tracks strategist growth, not the inverse.
+    </div>
+  </div>
+
+  <!-- ASSUMPTIONS -->
+  <div class="two-col">
+    <div class="card">
+      <h3>Pricing &amp; tier mix</h3>
+      <div class="assumption-row"><label>Core tier ACV / month<small>monthly subscription EUR</small></label><input type="number" id="a-core-acv" value="3500"></div>
+      <div class="assumption-row"><label>Growth tier ACV / month</label><input type="number" id="a-growth-acv" value="5250"></div>
+      <div class="assumption-row"><label>Performance tier ACV / month</label><input type="number" id="a-perf-acv" value="8000"></div>
+      <div class="assumption-row"><label>Tier mix — Core (%)<small>must sum to 100%</small></label><input type="number" id="a-mix-core" value="50"></div>
+      <div class="assumption-row"><label>Tier mix — Growth (%)</label><input type="number" id="a-mix-growth" value="35"></div>
+      <div class="assumption-row"><label>Tier mix — Performance (%)</label><input type="number" id="a-mix-perf" value="15"></div>
+    </div>
+
+    <div class="card">
+      <h3>Capacity &amp; hours</h3>
+      <div class="assumption-row"><label>Productive hrs / FTE / month<small>160 gross − 35% overhead = 104</small></label><input type="number" id="a-productive" value="104"></div>
+      <div class="assumption-row"><label>Strategist hrs / Core client</label><input type="number" id="a-bs-core" value="9"></div>
+      <div class="assumption-row"><label>Strategist hrs / Growth client</label><input type="number" id="a-bs-growth" value="15"></div>
+      <div class="assumption-row"><label>Strategist hrs / Performance client</label><input type="number" id="a-bs-perf" value="24"></div>
+      <div class="assumption-row"><label>PM Strat hrs / Core client</label><input type="number" id="a-pm-core" value="2"></div>
+      <div class="assumption-row"><label>PM Strat hrs / Growth client</label><input type="number" id="a-pm-growth" value="5"></div>
+      <div class="assumption-row"><label>PM Strat hrs / Perf client</label><input type="number" id="a-pm-perf" value="9"></div>
+    </div>
+  </div>
+
+  <!-- QUARTERLY TABLE -->
+  <h2>Quarterly projection — Y1 · Y2 · Y3</h2>
+  <div class="table-wrap">
+    <table class="qt" id="qt">
+      <thead>
+        <tr>
+          <th>Metric (EUR unless noted)</th>
+          <th>Q1 Y1</th><th>Q2 Y1</th><th>Q3 Y1</th><th class="year-sep">Q4 Y1</th>
+          <th>Q1 Y2</th><th>Q2 Y2</th><th>Q3 Y2</th><th class="year-sep">Q4 Y2</th>
+          <th>Q1 Y3</th><th>Q2 Y3</th><th>Q3 Y3</th><th>Q4 Y3</th>
+        </tr>
+      </thead>
+      <tbody id="qt-body"></tbody>
+    </table>
+  </div>
+
+  <!-- MARGIN CHART -->
+  <h2>MRR vs. monthly cost — the inflection</h2>
+  <div class="chart-wrap">
+    <div class="chart-legend">
+      <span class="mrr"><span class="dot"></span>MRR (revenue)</span>
+      <span class="cost"><span class="dot"></span>Monthly headcount cost</span>
+    </div>
+    <svg class="chart" id="chart" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <!-- HIRE TRIGGERS -->
+  <h2>Key hire triggers</h2>
+  <div class="triggers">
+    <div class="trigger">
+      <div class="q">Q4 Y1</div>
+      <div><div class="role">Tech Lead + Client Success Manager</div><div class="reason">Platform build starts; 9 clients — admin overhead becomes a constraint.</div></div>
+    </div>
+    <div class="trigger">
+      <div class="q">Q1 Y2</div>
+      <div><div class="role">SA Strategist (1st)</div><div class="reason">Approaching 12 clients; 3 strategists at capacity limit — SA pool begins with favourable FX.</div></div>
+    </div>
+    <div class="trigger">
+      <div class="q">Q3 Y2</div>
+      <div><div class="role">SA Strategist (2nd) + SSA Market Lead</div><div class="reason">18 clients; SSA presence now justified — Lagos or Nairobi base.</div></div>
+    </div>
+    <div class="trigger">
+      <div class="q">Q4 Y2</div>
+      <div><div class="role">PM Strategist (additional) + Business Development</div><div class="reason">21 clients; paid media volume and inbound now require dedicated sales.</div></div>
+    </div>
+    <div class="trigger">
+      <div class="q">Q1 Y3</div>
+      <div><div class="role">SA Strategist (3rd) + CTO / Head of Product</div><div class="reason">26 clients; GritFuel OS automation phase requires senior tech leadership.</div></div>
+    </div>
+    <div class="trigger">
+      <div class="q">Q2 Y3</div>
+      <div><div class="role">SA Strategist (4th) + Head of Operations</div><div class="reason">32 clients; operational complexity requires a dedicated Ops lead.</div></div>
+    </div>
+  </div>
+
+  <button class="reset" onclick="resetAll()">↺ Reset to defaults</button>
+
+  <div class="note">
+    <strong>Note.</strong> Costs shown are headcount only. Add ~15–20% for tools, software, office, and travel. Credit-funded partner execution (via ·frank / Bluegyfu / BFL) is client-funded — offset by credit revenue and not reflected in this view. Partner draws begin in Y2 (€4k/mo × 3) and step up in Y3 (€6k/mo × 3).
+  </div>
+</div>
+
+<script>
+  // ---- CONFIG ----
+  const QUARTERS = ['Q1 Y1','Q2 Y1','Q3 Y1','Q4 Y1','Q1 Y2','Q2 Y2','Q3 Y2','Q4 Y2','Q1 Y3','Q2 Y3','Q3 Y3','Q4 Y3'];
+  const YEAR_SEP_IDX = [3, 7]; // after Q4 Y1 and Q4 Y2
+  // Client ramp (end-of-quarter)
+  const CLIENTS = [2,4,6,9,12,15,18,21,26,32,40,48];
+  // Headcount cost rows (monthly EUR) — from source model
+  const COSTS = [
+    { label: 'Partner draws (3)',             vals: [0,0,0,0, 12000,12000,12000,12000, 18000,18000,18000,18000] },
+    { label: 'Strategists — total',           vals: [5500,5500,5500,5500, 8500,8500,11500,11500, 14500,17500,20500,20500] },
+    { label: 'PM Strategists — total',        vals: [8000,8000,8000,8000, 8000,8000,8000,14000, 14000,14000,20000,20000] },
+    { label: 'Client Success Manager',        vals: [0,0,0,5500, 5500,5500,5500,5500, 5500,5500,5500,5500] },
+    { label: 'Tech Lead',                     vals: [0,0,0,6000, 6000,6000,6000,6000, 6000,6000,6000,6000] },
+    { label: 'SSA Market Lead',               vals: [0,0,0,0, 0,0,3500,3500, 3500,3500,3500,3500] },
+    { label: 'Business Dev / Sales',          vals: [0,0,0,0, 0,0,0,5500, 5500,5500,5500,5500] },
+    { label: 'CTO / Head of Product',         vals: [0,0,0,0, 0,0,0,0, 12000,12000,12000,12000] },
+    { label: 'Head of Operations',            vals: [0,0,0,0, 0,0,0,0, 0,7000,7000,7000] },
+    { label: 'AI Experts (2 × part-time)',    vals: [3000,3000,3000,3000, 3000,3000,3000,3000, 3000,3000,3000,3000] },
+  ];
+  // FTE totals per quarter
+  const FTE_TOTAL = [7,7,8,9,10,10,12,14,16,18,19,19];
+
+  const fmtEUR = n => '€' + Math.round(n).toLocaleString('en-US');
+  const fmtEURk = n => n >= 1000000 ? '€'+(n/1000000).toFixed(2)+'M' : '€'+Math.round(n/1000)+'k';
+  const fmtPct = n => (n*100).toFixed(1) + '%';
+
+  function readInputs() {
+    const n = id => parseFloat(document.getElementById(id).value) || 0;
+    return {
+      coreAcv: n('a-core-acv'), growthAcv: n('a-growth-acv'), perfAcv: n('a-perf-acv'),
+      mixCore: n('a-mix-core')/100, mixGrowth: n('a-mix-growth')/100, mixPerf: n('a-mix-perf')/100,
+      productive: n('a-productive'),
+      bsCore: n('a-bs-core'), bsGrowth: n('a-bs-growth'), bsPerf: n('a-bs-perf'),
+      pmCore: n('a-pm-core'), pmGrowth: n('a-pm-growth'), pmPerf: n('a-pm-perf'),
+    };
+  }
+
+  function td(content, cls='') { return `<td class="${cls}">${content}</td>`; }
+  function ytd(i, extra='') { return ((YEAR_SEP_IDX.includes(i)) ? 'year-sep ' : '') + extra; }
+
+  function recalc() {
+    const a = readInputs();
+    const blendedAcv = a.coreAcv*a.mixCore + a.growthAcv*a.mixGrowth + a.perfAcv*a.mixPerf;
+    const bsWeighted = a.bsCore*a.mixCore + a.bsGrowth*a.mixGrowth + a.bsPerf*a.mixPerf;
+    const pmWeighted = a.pmCore*a.mixCore + a.pmGrowth*a.mixGrowth + a.pmPerf*a.mixPerf;
+    const mrrArr = CLIENTS.map(c => c * blendedAcv);
+    const totalCostArr = QUARTERS.map((_, i) => COSTS.reduce((s, r) => s + r.vals[i], 0));
+    const marginArr = mrrArr.map((m, i) => m - totalCostArr[i]);
+    const marginPctArr = mrrArr.map((m, i) => m === 0 ? 0 : marginArr[i]/m);
+
+    // Render table
+    let html = '';
+    html += `<tr class="section"><td colspan="13">Clients &amp; capacity</td></tr>`;
+    html += `<tr><td>Active clients (EoQ)</td>` + CLIENTS.map((v,i)=>td(v,'num '+ytd(i))).join('') + `</tr>`;
+    html += `<tr><td>Total FTE (all roles)</td>` + FTE_TOTAL.map((v,i)=>td(v,'num '+ytd(i))).join('') + `</tr>`;
+    html += `<tr><td>Brand Strat capacity (clients)<small style="display:block;font-size:10px;color:var(--gray)">${Math.round(a.productive/bsWeighted*10)/10} clients / strat · theoretical</small></td>` + QUARTERS.map((_,i)=>td('—','num '+ytd(i))).join('') + `</tr>`;
+
+    html += `<tr class="section"><td colspan="13">Revenue</td></tr>`;
+    html += `<tr><td>Blended ACV / month</td>` + QUARTERS.map((_,i)=>td(fmtEUR(blendedAcv),'num '+ytd(i))).join('') + `</tr>`;
+    html += `<tr><td>MRR (EoQ)</td>` + mrrArr.map((v,i)=>td(fmtEUR(v),'num '+ytd(i))).join('') + `</tr>`;
+    html += `<tr><td>Quarterly revenue (MRR × 3)</td>` + mrrArr.map((v,i)=>td(fmtEUR(v*3),'num '+ytd(i))).join('') + `</tr>`;
+    html += `<tr><td>Implied ARR</td>` + mrrArr.map((v,i)=>td(fmtEUR(v*12),'num '+ytd(i))).join('') + `</tr>`;
+
+    html += `<tr class="section"><td colspan="13">Monthly headcount costs</td></tr>`;
+    for (const row of COSTS) {
+      html += `<tr><td>${row.label}</td>` + row.vals.map((v,i)=>td(v===0?'—':fmtEUR(v),'num '+ytd(i))).join('') + `</tr>`;
+    }
+    html += `<tr class="total"><td>Total monthly cost</td>` + totalCostArr.map((v,i)=>td(fmtEUR(v),'num '+ytd(i))).join('') + `</tr>`;
+
+    html += `<tr class="section"><td colspan="13">Margin</td></tr>`;
+    html += `<tr class="margin-row"><td>Monthly gross margin (MRR − cost)</td>` + marginArr.map((v,i) => {
+      const cls = v < 0 ? 'cell-bad' : v < 10000 ? 'cell-warn' : 'cell-good';
+      return td((v<0?'−':'')+fmtEUR(Math.abs(v)), 'num '+cls+' '+ytd(i));
+    }).join('') + `</tr>`;
+    html += `<tr class="margin-row"><td>Gross margin %</td>` + marginPctArr.map((v,i) => {
+      const cls = v < 0 ? 'cell-bad' : v < 0.25 ? 'cell-warn' : 'cell-good';
+      return td((v<0?'−':'')+Math.abs(v*100).toFixed(1)+'%', 'num '+cls+' '+ytd(i));
+    }).join('') + `</tr>`;
+
+    document.getElementById('qt-body').innerHTML = html;
+
+    // KPIs
+    document.getElementById('kpi-clients').textContent = CLIENTS[11];
+    document.getElementById('kpi-arr').textContent = fmtEURk(mrrArr[11]*12);
+    document.getElementById('kpi-acv').textContent = fmtEUR(blendedAcv);
+    document.getElementById('kpi-fte').textContent = FTE_TOTAL[11];
+
+    // Chart
+    drawChart(mrrArr, totalCostArr);
+  }
+
+  function drawChart(mrr, cost) {
+    const svg = document.getElementById('chart');
+    const W = 1200, H = 360, pad = { t: 20, r: 20, b: 50, l: 70 };
+    const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+    const maxY = Math.max(...mrr, ...cost) * 1.08;
+    const n = mrr.length;
+    const xStep = cw / (n - 1);
+    const x = i => pad.l + i * xStep;
+    const y = v => pad.t + ch - (v / maxY) * ch;
+
+    const ticks = 5;
+    let gridY = '';
+    for (let t = 0; t <= ticks; t++) {
+      const v = maxY * t / ticks;
+      const yy = y(v);
+      gridY += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yy}" y2="${yy}" stroke="#F1F1ED" stroke-width="1"/>`;
+      gridY += `<text x="${pad.l - 8}" y="${yy + 3}" font-family="'JetBrains Mono', monospace" font-size="10" fill="#929292" text-anchor="end">${v===0?'0':'€'+Math.round(v/1000)+'k'}</text>`;
+    }
+
+    let xLabels = '';
+    QUARTERS.forEach((q,i) => {
+      xLabels += `<text x="${x(i)}" y="${H - pad.b + 18}" font-family="'JetBrains Mono', monospace" font-size="9" fill="#929292" text-anchor="middle">${q}</text>`;
+    });
+    // Year separators
+    YEAR_SEP_IDX.forEach(i => {
+      const xs = x(i) + xStep/2;
+      xLabels += `<line x1="${xs}" x2="${xs}" y1="${pad.t}" y2="${H - pad.b}" stroke="#D9D9D4" stroke-width="1" stroke-dasharray="3 3"/>`;
+    });
+
+    const mrrPath = mrr.map((v,i) => `${i===0?'M':'L'} ${x(i)} ${y(v)}`).join(' ');
+    const costPath = cost.map((v,i) => `${i===0?'M':'L'} ${x(i)} ${y(v)}`).join(' ');
+    const mrrArea = mrrPath + ` L ${x(n-1)} ${y(0)} L ${x(0)} ${y(0)} Z`;
+
+    // Find crossover (first quarter where MRR > cost, previous where MRR < cost)
+    let crossIdx = -1;
+    for (let i = 1; i < n; i++) {
+      if (mrr[i-1] < cost[i-1] && mrr[i] >= cost[i]) { crossIdx = i; break; }
+    }
+    let crossMark = '';
+    if (crossIdx >= 0) {
+      crossMark = `<line x1="${x(crossIdx)}" x2="${x(crossIdx)}" y1="${pad.t}" y2="${H-pad.b}" stroke="#FC4E2B" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+        <circle cx="${x(crossIdx)}" cy="${y(mrr[crossIdx])}" r="5" fill="#DEE450" stroke="#1A1A1A" stroke-width="1.5"/>
+        <text x="${x(crossIdx)}" y="${pad.t + 14}" font-family="'JetBrains Mono', monospace" font-size="10" fill="#FC4E2B" text-anchor="middle" font-weight="700">Break-even ↓</text>`;
+    }
+
+    const dots = (arr, color) => arr.map((v,i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${color}" stroke="white" stroke-width="1.5"/>`).join('');
+
+    svg.innerHTML = `
+      ${gridY}
+      ${xLabels}
+      <path d="${mrrArea}" fill="#DEE450" opacity="0.18"/>
+      <path d="${mrrPath}" fill="none" stroke="#B8BE3A" stroke-width="2.5"/>
+      <path d="${costPath}" fill="none" stroke="#FC4E2B" stroke-width="2.5" stroke-dasharray="5 4"/>
+      ${dots(mrr, '#B8BE3A')}
+      ${dots(cost, '#FC4E2B')}
+      ${crossMark}
+    `;
+  }
+
+  function resetAll() {
+    const d = { 'a-core-acv':3500,'a-growth-acv':5250,'a-perf-acv':8000,
+      'a-mix-core':50,'a-mix-growth':35,'a-mix-perf':15,'a-productive':104,
+      'a-bs-core':9,'a-bs-growth':15,'a-bs-perf':24,'a-pm-core':2,'a-pm-growth':5,'a-pm-perf':9 };
+    Object.entries(d).forEach(([id,v]) => document.getElementById(id).value = v);
+    recalc();
+  }
+
+  document.querySelectorAll('input[type=number]').forEach(el => el.addEventListener('input', recalc));
+  recalc();
+</script>
+</body>
+</html>

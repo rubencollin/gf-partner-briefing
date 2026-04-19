@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel — Escalation & Handoff Router</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --charcoal:#2D2D2D;--lime:#C8E000;--lime-d:#a8bc00;--lime-bg:rgba(200,224,0,0.08);
+  --white:#FFF;--bg:#F2F3F4;--int:#181A1B;--int-card:#1f2123;--int-b:#2e3133;
+  --mid:#6B7280;--success:#22C55E;--warn:#F59E0B;--danger:#EF4444;--info:#3B82F6;
+  --frank:#60A5FA;--frank-bg:rgba(96,165,250,0.08);--frank-b:rgba(96,165,250,0.25);
+  --blue:#A78BFA;--blue-bg:rgba(167,139,250,0.08);--blue-b:rgba(167,139,250,0.25);
+  --bfl:#FB923C;--bfl-bg:rgba(251,146,60,0.08);--bfl-b:rgba(251,146,60,0.25);
+  --gf:#C8E000;--gf-bg:rgba(200,224,0,0.08);--gf-b:rgba(200,224,0,0.25);
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--int);color:#E5E7EB;font-size:14px;line-height:1.5;min-height:100vh}
+/* HEADER */
+.hdr{background:var(--charcoal);border-bottom:3px solid var(--lime);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.wm{color:var(--lime);font-size:17px;font-weight:800;letter-spacing:2px}
+.hdr-sub{color:#888;font-size:12px;margin-left:14px}
+.int-badge{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.25);padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px}
+/* LAYOUT */
+.main{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 60px)}
+.left-panel{padding:28px 24px 60px 32px;border-right:1px solid var(--int-b);overflow-y:auto}
+.right-panel{padding:28px 32px 60px 24px;background:#1a1c1d}
+/* SECTION */
+.sec{margin-bottom:28px}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6B7280;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-title .badge{background:var(--int-b);color:#9CA3AF;padding:2px 8px;border-radius:10px;font-size:10px;text-transform:none;letter-spacing:0;font-weight:600}
+/* CARD */
+.card{background:var(--int-card);border:1px solid var(--int-b);border-radius:10px;padding:18px}
+/* FORM ELEMENTS */
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:600;color:#D1D5DB;margin-bottom:6px;letter-spacing:.2px}
+.field input[type=text],.field select,.field textarea{width:100%;background:#2a2c2e;border:1.5px solid var(--int-b);color:#F3F4F6;padding:9px 12px;border-radius:7px;font-size:13px;font-family:inherit;outline:none;transition:.2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lime-d)}
+.field textarea{min-height:80px;resize:vertical}
+/* CHECKBOX CARDS */
+.chk-grid{display:grid;gap:8px}
+.chk-grid.cols-2{grid-template-columns:1fr 1fr}
+.chk-item{display:flex;align-items:flex-start;gap:10px;background:#2a2c2e;border:1.5px solid var(--int-b);border-radius:8px;padding:10px 12px;cursor:pointer;transition:.15s;user-select:none}
+.chk-item:hover{border-color:#3a3c3e}
+.chk-item.checked{border-color:var(--lime-d);background:var(--lime-bg)}
+.chk-box{width:18px;height:18px;border-radius:4px;border:2px solid #374151;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:var(--charcoal);transition:.15s}
+.chk-item.checked .chk-box{background:var(--lime);border-color:var(--lime-d)}
+.chk-text strong{display:block;font-size:12.5px;font-weight:700;color:#D1D5DB;line-height:1.3}
+.chk-item.checked .chk-text strong{color:#F3F4F6}
+.chk-text small{font-size:11px;color:#6B7280}
+/* SERVICE TAGS */
+.svc-grid{display:flex;flex-wrap:wrap;gap:7px}
+.svc-tag{padding:6px 13px;border:1.5px solid var(--int-b);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;background:#2a2c2e;color:#9CA3AF;user-select:none}
+.svc-tag:hover{border-color:#3a3c3e;color:#D1D5DB}
+.svc-tag.sel-gf{background:var(--gf-bg);border-color:var(--gf-b);color:var(--lime)}
+.svc-tag.sel-frank{background:var(--frank-bg);border-color:var(--frank-b);color:var(--frank)}
+.svc-tag.sel-blue{background:var(--blue-bg);border-color:var(--blue-b);color:var(--blue)}
+.svc-tag.sel-bfl{background:var(--bfl-bg);border-color:var(--bfl-b);color:var(--bfl)}
+/* ROUTING RESULT */
+.route-hero{border-radius:10px;padding:22px;margin-bottom:16px;border:1.5px solid var(--int-b);transition:.4s}
+.route-hero.gf{border-color:var(--gf-b);background:var(--gf-bg)}
+.route-hero.frank{border-color:var(--frank-b);background:var(--frank-bg)}
+.route-hero.blue{border-color:var(--blue-b);background:var(--blue-bg)}
+.route-hero.bfl{border-color:var(--bfl-b);background:var(--bfl-bg)}
+.route-hero.multi{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.06)}
+.route-eyebrow{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6B7280;margin-bottom:6px}
+.route-partner{font-size:24px;font-weight:900;margin-bottom:4px}
+.route-gf{color:var(--lime)}
+.route-frank{color:var(--frank)}
+.route-blue{color:var(--blue)}
+.route-bfl{color:var(--bfl)}
+.route-multi{color:var(--bfl)}
+.route-sub{font-size:13px;color:#9CA3AF;margin-bottom:14px;line-height:1.5}
+.escalation-level{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.3px;text-transform:uppercase}
+.el-none{background:rgba(34,197,94,.12);color:#22C55E}
+.el-soft{background:rgba(200,224,0,.12);color:var(--lime-d)}
+.el-escalate{background:rgba(59,130,246,.12);color:#60A5FA}
+.el-urgent{background:rgba(239,68,68,.12);color:#EF4444}
+/* PARTNER SCORE BARS */
+.score-row{margin-bottom:10px}
+.score-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.score-name{font-size:12px;font-weight:700}
+.score-val{font-size:12px;font-weight:700;color:#9CA3AF}
+.score-track{height:6px;background:#2a2c2e;border-radius:3px;overflow:hidden}
+.score-fill{height:100%;border-radius:3px;transition:width .5s ease}
+/* ROLE TAGS */
+.role-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.role-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px}
+.rt-lead{background:rgba(200,224,0,.15);color:var(--lime-d)}
+.rt-support{background:rgba(107,114,128,.15);color:#9CA3AF}
+.rt-owner{background:rgba(59,130,246,.12);color:#60A5FA}
+/* BRIEF TABS */
+.brief-tabs{display:flex;gap:0;background:#2a2c2e;border-radius:7px;padding:3px;margin-bottom:14px}
+.brief-tab{flex:1;padding:6px;border:none;border-radius:5px;cursor:pointer;font-size:12px;font-weight:700;transition:.15s;background:transparent;color:#6B7280;letter-spacing:.3px}
+.brief-tab.active{background:var(--charcoal);color:#F3F4F6}
+.brief-content{display:none}
+.brief-content.active{display:block}
+.brief-box{background:#2a2c2e;border:1px solid var(--int-b);border-radius:8px;padding:16px;font-size:13px;color:#D1D5DB;line-height:1.7;min-height:160px;white-space:pre-wrap;font-family:inherit}
+/* QUESTION LIST */
+.q-list{list-style:none}
+.q-list li{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:#9CA3AF;padding:6px 0;border-bottom:1px solid var(--int-b)}
+.q-list li:last-child{border-bottom:none}
+.q-list li::before{content:'?';font-weight:800;color:var(--lime-d);flex-shrink:0;margin-top:1px}
+/* IMPACT ROW */
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.impact-cell{background:#2a2c2e;border-radius:8px;padding:12px 14px}
+.impact-label{font-size:10px;color:#6B7280;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.impact-val{font-size:15px;font-weight:800;color:#F3F4F6}
+.impact-sub{font-size:11px;color:#6B7280;margin-top:2px}
+/* COPY BTN */
+.copy-btn{background:#2a2c2e;color:#9CA3AF;border:1px solid var(--int-b);padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;margin-top:10px}
+.copy-btn:hover{border-color:#555;color:#D1D5DB}
+/* RESET */
+.reset-btn{background:transparent;color:#EF4444;border:1px solid rgba(239,68,68,.25);padding:7px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;letter-spacing:.3px}
+.reset-btn:hover{background:rgba(239,68,68,.08)}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;color:#4B5563}
+.empty-state .es-icon{font-size:36px;margin-bottom:12px}
+.empty-state p{font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div style="display:flex;align-items:center">
+    <div class="wm">GRITFUEL</div>
+    <div class="hdr-sub">Escalation & Handoff Router</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="int-badge">🔒 INTERNAL ONLY</div>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+</header>
+
+<div class="main">
+
+<!-- ══════════════════════════════
+     LEFT — BRIEF INTAKE
+══════════════════════════════ -->
+<div class="left-panel">
+
+  <div class="sec">
+    <div class="sec-title">Brief Details</div>
+    <div class="card">
+      <div class="field">
+        <label>Brief title / what the client is asking for</label>
+        <input type="text" id="brief-title" placeholder="e.g. Full rebrand for Q3 launch, or Event for 200 guests in Amsterdam" oninput="route()">
+      </div>
+      <div class="field">
+        <label>Brief description <span style="color:#6B7280;font-weight:400">(optional — adds context to the generated brief)</span></label>
+        <textarea id="brief-desc" placeholder="What did the client say? Any context, urgency, or budget mentioned?" oninput="route()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Service Category <span class="badge">select all that apply</span></div>
+    <div class="card">
+      <div style="margin-bottom:10px;font-size:11px;color:#6B7280">Colour = default routing signal</div>
+      <div class="svc-grid" id="svc-grid">
+        <div class="svc-tag" data-partner="gf"   onclick="toggleSvc(this)">Content & Copywriting</div>
+        <div class="svc-tag" data-partner="gf"   onclick="toggleSvc(this)">SEO & Organic Growth</div>
+        <div class="svc-tag" data-partner="gf"   onclick="toggleSvc(this)">Social Media (organic)</div>
+        <div class="svc-tag" data-partner="gf"   onclick="toggleSvc(this)">Email Marketing</div>
+        <div class="svc-tag" data-partner="gf"   onclick="toggleSvc(this)">PR & Media Outreach</div>
+        <div class="svc-tag" data-partner="frank" onclick="toggleSvc(this)">Brand Strategy</div>
+        <div class="svc-tag" data-partner="frank" onclick="toggleSvc(this)">Creative Direction</div>
+        <div class="svc-tag" data-partner="frank" onclick="toggleSvc(this)">Visual Identity / Rebrand</div>
+        <div class="svc-tag" data-partner="frank" onclick="toggleSvc(this)">Naming & Architecture</div>
+        <div class="svc-tag" data-partner="frank" onclick="toggleSvc(this)">Campaign Concept</div>
+        <div class="svc-tag" data-partner="blue"  onclick="toggleSvc(this)">Paid Media</div>
+        <div class="svc-tag" data-partner="blue"  onclick="toggleSvc(this)">Performance Marketing</div>
+        <div class="svc-tag" data-partner="blue"  onclick="toggleSvc(this)">Marketing Automation</div>
+        <div class="svc-tag" data-partner="blue"  onclick="toggleSvc(this)">Analytics & Attribution</div>
+        <div class="svc-tag" data-partner="blue"  onclick="toggleSvc(this)">CRM & Data</div>
+        <div class="svc-tag" data-partner="bfl"   onclick="toggleSvc(this)">Event / Activation</div>
+        <div class="svc-tag" data-partner="bfl"   onclick="toggleSvc(this)">Experiential Marketing</div>
+        <div class="svc-tag" data-partner="bfl"   onclick="toggleSvc(this)">Sponsorship</div>
+        <div class="svc-tag" data-partner="bfl"   onclick="toggleSvc(this)">Live Production</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Complexity & Scope Flags <span class="badge">check all that apply</span></div>
+    <div class="card">
+      <div class="chk-grid cols-2" id="complexity-grid">
+        <div class="chk-item" onclick="toggleChk(this)" data-val="brand-creative" data-partner="frank" data-score="25">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Original brand creative</strong><small>Not content — new identity or campaign concept</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="creative-director" data-partner="frank" data-score="30">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Creative director needed</strong><small>Brief requires senior creative leadership</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="multi-market" data-partner="frank,blue" data-score="15">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Multi-market / international</strong><small>More than one country or language</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="large-budget" data-partner="frank" data-score="15">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Budget &gt;€50k</strong><small>Requires senior partner involvement</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="martech" data-partner="blue" data-score="35">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Advanced marketing tech</strong><small>Integrations, automation, custom tooling</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="physical" data-partner="bfl" data-score="45">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Physical production / venue</strong><small>Space, logistics, on-site coordination</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="strategic-workshop" data-partner="frank" data-score="20">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Strategic workshop / session</strong><small>Facilitated alignment with leadership</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="out-of-playbook" data-partner="frank" data-score="10">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Outside current playbook</strong><small>Not covered by existing monthly initiatives</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Client Signals <span class="badge">what the client is showing or saying</span></div>
+    <div class="card">
+      <div class="chk-grid" id="signal-grid">
+        <div class="chk-item" onclick="toggleChk(this)" data-val="brand-ask" data-partner="frank" data-score="20">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client asked about brand or positioning</strong><small>"We want to look more premium" / "our brand isn't working"</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="event-mention" data-partner="bfl" data-score="25">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client mentioned an event or launch</strong><small>Product launch, anniversary, trade show, client dinner</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="data-crm" data-partner="blue" data-score="20">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client mentioned CRM, data, or attribution</strong><small>"We don't know what's converting" / "we need a better CRM"</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="strategy-session" data-partner="frank" data-score="18">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client requested a strategic session or workshop</strong><small>Wants to align internally or set a new direction</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="dissatisfied" data-partner="frank" data-score="15">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client is dissatisfied with current output</strong><small>Feedback suggests a mismatch in direction or quality</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="scale-ask" data-partner="blue" data-score="18">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client asking to scale paid or performance</strong><small>"We want to spend more on ads" / "can we do Google too?"</small></div>
+        </div>
+        <div class="chk-item" onclick="toggleChk(this)" data-val="expansion" data-partner="frank,blue" data-score="15">
+          <div class="chk-box"></div>
+          <div class="chk-text"><strong>Client expanding into new market or product</strong><small>Requires repositioning or new channel infrastructure</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">Compounding Trigger <span class="badge">from the engine</span></div>
+    <div class="card">
+      <div class="field">
+        <label>Which initiative is driving this escalation?</label>
+        <select id="compound-trigger" onchange="route()">
+          <option value="none">None — not driven by compounding engine</option>
+          <option value="pr-authority" data-partner="frank" data-score="15">PR Authority (Tier 3) → thought leadership positioning</option>
+          <option value="paid-scale" data-partner="blue" data-score="30">Paid Scale (Tier 3) → performance campaigns at scale</option>
+          <option value="lead-scoring" data-partner="blue" data-score="25">Lead Scoring / CRM (Tier 3) → automation + sales handoff</option>
+          <option value="brand-foundation" data-partner="frank" data-score="30">Brand Foundation needed → blocks paid and authority work</option>
+          <option value="social-growth" data-partner="frank" data-score="12">Social Growth Engine → creative direction layer needed</option>
+          <option value="event-launch" data-partner="bfl" data-score="35">Event / Launch Campaign → physical + experiential layer</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /left-panel -->
+
+
+<!-- ══════════════════════════════
+     RIGHT — ROUTING OUTPUT
+══════════════════════════════ -->
+<div class="right-panel">
+
+  <!-- EMPTY STATE -->
+  <div id="empty-state" class="empty-state">
+    <div class="es-icon">⚡</div>
+    <p>Fill in the brief on the left.<br>The routing decision will appear here in real time.</p>
+  </div>
+
+  <!-- ROUTING RESULT (hidden until triggered) -->
+  <div id="routing-result" style="display:none">
+
+    <div class="sec-title" style="margin-bottom:12px">Routing Decision <span class="badge" id="result-timestamp"></span></div>
+
+    <!-- Hero card -->
+    <div class="route-hero gf" id="route-hero">
+      <div class="route-eyebrow" id="route-eyebrow">PRIMARY DELIVERY</div>
+      <div class="route-partner" id="route-partner">GritFuel</div>
+      <div class="route-sub" id="route-sub">—</div>
+      <div id="escalation-badge"><span class="escalation-level el-none">● No escalation</span></div>
+      <div class="role-tags" id="role-tags"></div>
+    </div>
+
+    <!-- Partner scores -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="sec-title" style="font-size:10px;margin-bottom:12px">Partner signal scores</div>
+      <div class="score-row">
+        <div class="score-header"><div class="score-name" style="color:var(--lime)">GritFuel</div><div class="score-val" id="sc-gf">0</div></div>
+        <div class="score-track"><div class="score-fill" id="sf-gf" style="background:var(--lime);width:0%"></div></div>
+      </div>
+      <div class="score-row">
+        <div class="score-header"><div class="score-name" style="color:var(--frank)">.frank</div><div class="score-val" id="sc-frank">0</div></div>
+        <div class="score-track"><div class="score-fill" id="sf-frank" style="background:var(--frank);width:0%"></div></div>
+      </div>
+      <div class="score-row">
+        <div class="score-header"><div class="score-name" style="color:var(--blue)">Bluegyfu</div><div class="score-val" id="sc-blue">0</div></div>
+        <div class="score-track"><div class="score-fill" id="sf-blue" style="background:var(--blue);width:0%"></div></div>
+      </div>
+      <div class="score-row" style="margin-bottom:0">
+        <div class="score-header"><div class="score-name" style="color:var(--bfl)">BFL</div><div class="score-val" id="sc-bfl">0</div></div>
+        <div class="score-track"><div class="score-fill" id="sf-bfl" style="background:var(--bfl);width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Impact -->
+    <div class="impact-grid">
+      <div class="impact-cell">
+        <div class="impact-label">Escalation level</div>
+        <div class="impact-val" id="imp-level">—</div>
+        <div class="impact-sub" id="imp-level-sub">—</div>
+      </div>
+      <div class="impact-cell">
+        <div class="impact-label">Credit impact</div>
+        <div class="impact-val" id="imp-credits">—</div>
+        <div class="impact-sub" id="imp-credits-sub">—</div>
+      </div>
+    </div>
+
+    <!-- Key questions -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="sec-title" style="font-size:10px;margin-bottom:10px">Resolve before starting</div>
+      <ul class="q-list" id="question-list"></ul>
+    </div>
+
+    <!-- Handoff briefs -->
+    <div class="sec-title" style="font-size:10px;margin-bottom:10px">Handoff Brief</div>
+    <div class="brief-tabs">
+      <button class="brief-tab active" onclick="switchTab(this,'internal')">Internal (with partner names)</button>
+      <button class="brief-tab" onclick="switchTab(this,'client')">Client-facing (sanitised)</button>
+    </div>
+    <div class="brief-content active" id="tab-internal">
+      <div class="brief-box" id="brief-internal">—</div>
+      <button class="copy-btn" onclick="copyBrief('internal')">Copy internal brief</button>
+    </div>
+    <div class="brief-content" id="tab-client">
+      <div class="brief-box" id="brief-client">—</div>
+      <button class="copy-btn" onclick="copyBrief('client')">Copy client-facing brief</button>
+    </div>
+
+  </div><!-- /routing-result -->
+</div><!-- /right-panel -->
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+const PARTNER_LABELS = {
+  gf:    'GritFuel',
+  frank: '.frank',
+  blue:  'Bluegyfu',
+  bfl:   'BFL'
+};
+const PARTNER_CLIENT = {
+  gf:    'GritFuel',
+  frank: 'our senior brand specialists',
+  blue:  'our performance marketing team',
+  bfl:   'our events & activations team'
+};
+const PARTNER_COLOR_CLASS = {
+  gf:'gf', frank:'frank', blue:'blue', bfl:'bfl'
+};
+
+let hasInput = false;
+
+// ═══════════════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════════════
+function toggleSvc(el) {
+  const partner = el.dataset.partner;
+  const isOn = el.classList.contains('sel-' + partner);
+  el.classList.toggle('sel-' + partner, !isOn);
+  route();
+}
+
+function toggleChk(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.chk-box');
+  box.textContent = el.classList.contains('checked') ? '✓' : '';
+  route();
+}
+
+function switchTab(btn, id) {
+  document.querySelectorAll('.brief-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.brief-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function resetAll() {
+  document.getElementById('brief-title').value = '';
+  document.getElementById('brief-desc').value = '';
+  document.getElementById('compound-trigger').value = 'none';
+  document.querySelectorAll('.svc-tag').forEach(t => t.className = 'svc-tag');
+  document.querySelectorAll('.chk-item').forEach(c => {
+    c.classList.remove('checked');
+    c.querySelector('.chk-box').textContent = '';
+  });
+  hasInput = false;
+  document.getElementById('empty-state').style.display = 'block';
+  document.getElementById('routing-result').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════
+// ROUTING ALGORITHM
+// ═══════════════════════════════════════════════
+function route() {
+  const title = document.getElementById('brief-title').value.trim();
+  const desc  = document.getElementById('brief-desc').value.trim();
+
+  // Collect scores
+  const scores = { gf: 50, frank: 0, blue: 0, bfl: 0 };
+
+  // Service categories
+  document.querySelectorAll('.svc-tag').forEach(t => {
+    const p = t.dataset.partner;
+    if (t.classList.contains('sel-' + p)) {
+      if (p === 'gf')    scores.gf    += 30;
+      if (p === 'frank') scores.frank += 40;
+      if (p === 'blue')  scores.blue  += 35;
+      if (p === 'bfl')   scores.bfl   += 50;
+    }
+  });
+
+  // Complexity flags
+  document.querySelectorAll('#complexity-grid .chk-item.checked').forEach(c => {
+    const partners = c.dataset.partner.split(',');
+    const score = parseInt(c.dataset.score) || 15;
+    partners.forEach(p => { if (scores[p] !== undefined) scores[p] += score; });
+  });
+
+  // Client signals
+  document.querySelectorAll('#signal-grid .chk-item.checked').forEach(c => {
+    const partners = c.dataset.partner.split(',');
+    const score = parseInt(c.dataset.score) || 15;
+    partners.forEach(p => { if (scores[p] !== undefined) scores[p] += score; });
+  });
+
+  // Compounding trigger
+  const triggerEl = document.getElementById('compound-trigger');
+  const triggerOpt = triggerEl.options[triggerEl.selectedIndex];
+  if (triggerEl.value !== 'none' && triggerOpt.dataset.partner) {
+    const p = triggerOpt.dataset.partner;
+    const s = parseInt(triggerOpt.dataset.score) || 20;
+    if (scores[p] !== undefined) scores[p] += s;
+  }
+
+  // Determine if any input has been provided
+  const anyInput = title || desc ||
+    document.querySelectorAll('.svc-tag[class*="sel-"]').length > 0 ||
+    document.querySelectorAll('.chk-item.checked').length > 0 ||
+    triggerEl.value !== 'none';
+
+  if (!anyInput) {
+    document.getElementById('empty-state').style.display = 'block';
+    document.getElementById('routing-result').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('routing-result').style.display = 'block';
+
+  // Find primary
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const primary = sorted[0][0];
+  const secondary = sorted[1][1] > 30 && sorted[1][0] !== 'gf' ? sorted[1][0] : null;
+  const isMulti = secondary && sorted[1][1] > sorted[0][1] * 0.65;
+
+  // Escalation level
+  let escLevel, escClass, escLevelLabel, escLevelSub;
+  if (primary === 'gf' && !secondary) {
+    escLevel = 'none'; escClass = 'el-none';
+    escLevelLabel = 'No escalation'; escLevelSub = 'GritFuel delivers in full';
+  } else if (primary === 'gf' && secondary) {
+    escLevel = 'soft'; escClass = 'el-soft';
+    escLevelLabel = 'Soft handoff'; escLevelSub = 'GritFuel leads, partner supports';
+  } else if (!isMulti) {
+    escLevel = 'escalate'; escClass = 'el-escalate';
+    escLevelLabel = 'Escalation'; escLevelSub = `Route to ${PARTNER_LABELS[primary]}`;
+  } else {
+    escLevel = 'urgent'; escClass = 'el-urgent';
+    escLevelLabel = 'Multi-partner'; escLevelSub = 'GritFuel orchestrates';
+  }
+
+  // Update hero card
+  const hero = document.getElementById('route-hero');
+  hero.className = 'route-hero ' + (isMulti ? 'multi' : PARTNER_COLOR_CLASS[primary]);
+
+  document.getElementById('route-eyebrow').textContent = isMulti ? 'MULTI-PARTNER BRIEF' : 'PRIMARY DELIVERY';
+  const partnerEl = document.getElementById('route-partner');
+  partnerEl.textContent = isMulti ? `${PARTNER_LABELS[primary]} + ${PARTNER_LABELS[secondary]}` : PARTNER_LABELS[primary];
+  partnerEl.className = 'route-partner route-' + (isMulti ? 'multi' : primary);
+
+  // Sub-text
+  const subTexts = {
+    gf:    'GritFuel leads and delivers. No partner involvement required.',
+    frank: 'Brief requires strategic or creative brand expertise. .frank leads delivery; GritFuel retains account ownership.',
+    blue:  'Brief requires performance marketing or martech capability. Bluegyfu leads delivery; GritFuel retains account ownership.',
+    bfl:   'Brief requires event or experiential production. BFL leads delivery; GritFuel retains account ownership.',
+    multi: `Complex brief spans multiple capability areas. GritFuel orchestrates ${PARTNER_LABELS[primary]} and ${PARTNER_LABELS[secondary]}.`
+  };
+  document.getElementById('route-sub').textContent = isMulti ? subTexts.multi : subTexts[primary];
+
+  // Escalation badge
+  document.getElementById('escalation-badge').innerHTML =
+    `<span class="escalation-level ${escClass}">● ${escLevelLabel}</span>`;
+
+  // Role tags
+  const roles = [];
+  if (primary !== 'gf') {
+    roles.push(`<span class="role-tag rt-lead">${PARTNER_LABELS[primary]}: Lead delivery</span>`);
+    roles.push(`<span class="role-tag rt-owner">GritFuel: Account owner · Client face</span>`);
+    if (secondary) roles.push(`<span class="role-tag rt-support">${PARTNER_LABELS[secondary]}: Support</span>`);
+  } else {
+    roles.push(`<span class="role-tag rt-lead">GritFuel: Lead delivery</span>`);
+    if (secondary) roles.push(`<span class="role-tag rt-support">${PARTNER_LABELS[secondary]}: Support</span>`);
+  }
+  document.getElementById('role-tags').innerHTML = roles.join('');
+
+  // Score bars
+  const maxScore = Math.max(...Object.values(scores));
+  ['gf','frank','blue','bfl'].forEach(p => {
+    const pct = maxScore > 0 ? Math.round((scores[p] / maxScore) * 100) : 0;
+    document.getElementById('sc-' + p).textContent = scores[p];
+    document.getElementById('sf-' + p).style.width = pct + '%';
+  });
+
+  // Impact
+  document.getElementById('imp-level').textContent = escLevelLabel;
+  document.getElementById('imp-level-sub').textContent = escLevelSub;
+  const creditImpact = primary === 'gf' ? 'Standard credit billing' :
+    isMulti ? 'Scope-based quote — credits + separate partner fee' :
+    'Scope-based quote — may exceed credit budget';
+  const creditSub = primary === 'gf' ? 'Existing monthly credits apply' :
+    'Provide estimate before committing';
+  document.getElementById('imp-credits').textContent = creditImpact;
+  document.getElementById('imp-credits-sub').textContent = creditSub;
+
+  // Questions
+  const questions = buildQuestions(primary, secondary, isMulti, escLevel, title);
+  document.getElementById('question-list').innerHTML =
+    questions.map(q => `<li>${q}</li>`).join('');
+
+  // Timestamps
+  document.getElementById('result-timestamp').textContent = 'Updated now';
+
+  // Briefs
+  buildBriefs(title, desc, primary, secondary, isMulti, escLevel, scores, questions);
+}
+
+function buildQuestions(primary, secondary, isMulti, escLevel, title) {
+  const qs = [];
+  if (primary === 'frank' || secondary === 'frank') {
+    qs.push('Does the client have existing brand guidelines or are we starting from scratch?');
+    qs.push('Who is the internal stakeholder with final approval on brand decisions?');
+    qs.push('What is the desired timeline for brand deliverables?');
+  }
+  if (primary === 'blue' || secondary === 'blue') {
+    qs.push('Is tracking (pixel, GA4, UTMs) in place and verified?');
+    qs.push('What is the monthly ad spend budget, separate from GritFuel credits?');
+    qs.push('Which platforms are in scope — Meta, Google, LinkedIn, other?');
+  }
+  if (primary === 'bfl' || secondary === 'bfl') {
+    qs.push('What is the event date, location, and expected attendance?');
+    qs.push('Is there a venue or does BFL need to source one?');
+    qs.push('What is the total event budget (production, venue, catering separate from credits)?');
+  }
+  if (isMulti) {
+    qs.push('Have all partner leads been briefed and confirmed availability?');
+    qs.push('Who is the single point of contact for the client — GritFuel strategist?');
+  }
+  if (escLevel !== 'none') {
+    qs.push('Has the client been informed of timelines for this type of work?');
+    qs.push('Is this brief in addition to the current monthly playbook or replacing an initiative?');
+  }
+  if (!qs.length) {
+    qs.push('Is this brief fully covered by the current monthly credit allocation?');
+    qs.push('Does this affect the delivery timeline of any current initiative?');
+  }
+  return qs;
+}
+
+function buildBriefs(title, desc, primary, secondary, isMulti, escLevel, scores, questions) {
+  const now = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  const displayTitle = title || '[Brief title not set]';
+  const displayDesc = desc ? `\n\nClient context: ${desc}` : '';
+
+  // INTERNAL
+  const lead = isMulti
+    ? `${PARTNER_LABELS[primary]} (lead) + ${PARTNER_LABELS[secondary]} (support), orchestrated by GritFuel`
+    : primary === 'gf' ? 'GritFuel (full delivery)'
+    : `${PARTNER_LABELS[primary]} (lead delivery) — GritFuel retains account ownership`;
+
+  const intBrief =
+`GRITFUEL INTERNAL HANDOFF BRIEF
+Date: ${now}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BRIEF: ${displayTitle}${displayDesc}
+
+ROUTING DECISION
+Primary:  ${PARTNER_LABELS[primary]}
+${secondary ? `Support:  ${PARTNER_LABELS[secondary]}\n` : ''}Escalation: ${escLevel === 'none' ? 'None — GritFuel delivers' : escLevel === 'soft' ? 'Soft handoff' : isMulti ? 'Multi-partner' : 'Full escalation'}
+Client face: GritFuel (always)
+
+DELIVERY MODEL
+${lead}
+
+PARTNER SCORES
+GritFuel: ${scores.gf}  |  .frank: ${scores.frank}  |  Bluegyfu: ${scores.blue}  |  BFL: ${scores.bfl}
+
+OPEN QUESTIONS (resolve before starting)
+${questions.map((q,i) => `${i+1}. ${q}`).join('\n')}
+
+NOTES
+- Do not reference ${PARTNER_LABELS[primary] !== 'GritFuel' ? PARTNER_LABELS[primary] : 'partner names'} in client communications
+- All client updates go via GritFuel account owner
+- Brief this document to ${PARTNER_LABELS[primary]} before client confirmation`;
+
+  // CLIENT-FACING
+  const clientLead = PARTNER_CLIENT[primary];
+  const clientFacing =
+`${displayTitle}
+
+Thank you for bringing this to us. Here's how we'll handle it.
+
+APPROACH
+${primary === 'gf'
+  ? `This falls within our core delivery. We'll include it in the next playbook cycle and confirm the credit allocation with you shortly.`
+  : isMulti
+  ? `This brief requires input from across our team. GritFuel will coordinate ${clientLead} and ${PARTNER_CLIENT[secondary]} to deliver a cohesive result.`
+  : `For this type of work we bring in ${clientLead}. GritFuel will manage the brief end to end — you'll have one point of contact throughout.`
+}
+
+WHAT HAPPENS NEXT
+1. We'll review the brief internally and come back within 2 business days.
+2. We'll share a scoped estimate — timeline, deliverables, and any budget implications.
+3. Once aligned, we'll brief the team and confirm the kick-off date.
+
+A couple of things we'll want to confirm with you:
+${questions.slice(0,3).map((q,i) => `${i+1}. ${q}`).join('\n')}
+
+We'll be in touch shortly.
+— GritFuel`;
+
+  document.getElementById('brief-internal').textContent = intBrief;
+  document.getElementById('brief-client').textContent = clientFacing;
+}
+
+function copyBrief(type) {
+  const text = document.getElementById('brief-' + type).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns.forEach(b => { if (b.textContent.includes(type === 'internal' ? 'internal' : 'client')) {
+      b.textContent = '✓ Copied';
+      setTimeout(() => b.textContent = `Copy ${type === 'internal' ? 'internal' : 'client-facing'} brief`, 2000);
+    }});
+  });
+}
+</script>
+</body>
+</html>

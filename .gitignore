@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# LibreOffice lock files
+.~lock*
+
+# Dependencies (if you ever add a build step)
+node_modules/
+
+# Logs
+*.log

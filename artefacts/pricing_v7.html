@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GritFuel Pricing — v7</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Inter', sans-serif; background: #f2f2ee; color: #1a1a1a; }
+
+  .page { max-width: 1160px; margin: 0 auto; padding: 48px 24px; }
+
+  .page-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: #aaa; text-transform: uppercase; margin-bottom: 6px; }
+  h1 { font-size: 26px; font-weight: 800; color: #1a1a1a; margin-bottom: 6px; }
+  .intro { font-size: 13px; color: #666; max-width: 680px; line-height: 1.7; margin-bottom: 36px; }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 20px; align-items: center; margin-bottom: 28px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #666; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* TIER GRID */
+  .tiers { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: stretch; }
+  .tier { background: #fff; border-radius: 14px; overflow: hidden; border: 1.5px solid #e4e4e0; display: flex; flex-direction: column; }
+
+  /* TIER TOP */
+  .tier-top { padding: 24px 22px 16px; }
+  .tier-name { font-size: 9px; font-weight: 800; letter-spacing: 0.14em; color: #aaa; text-transform: uppercase; margin-bottom: 5px; }
+  .tier-headline { font-size: 18px; font-weight: 800; color: #1a1a1a; line-height: 1.15; margin-bottom: 10px; }
+  .tier-sub { font-size: 11px; color: #888; font-style: italic; line-height: 1.5; margin-top: 8px; }
+
+  /* CREDIT BAND */
+  .credit-band {
+    margin: 14px 22px 0;
+    background: #f7f9e8; border-radius: 8px; padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    border: 1px solid #e6ed9a;
+  }
+  .credit-band-label { font-size: 10px; font-weight: 600; color: #6a7a00; }
+  .credit-band-value { font-size: 14px; font-weight: 800; color: #1a1a1a; }
+
+  /* TIME BLOCK */
+  .time-block {
+    margin: 14px 22px 0;
+    background: #f8f8f6; border-radius: 8px;
+    padding: 12px 14px; border: 1px solid #ebebeb;
+  }
+  .time-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 4px 0; }
+  .time-row + .time-row { border-top: 1px solid #f0f0ee; margin-top: 4px; padding-top: 8px; }
+  .time-session-name { font-size: 10px; font-weight: 700; color: #1a1a1a; }
+  .time-session-cadence { font-size: 9px; color: #aaa; margin-top: 1px; }
+  .time-value { font-size: 14px; font-weight: 800; color: #1a1a1a; text-align: right; white-space: nowrap; }
+  .time-unit { font-size: 9px; color: #aaa; text-align: right; margin-top: 1px; }
+
+  /* FEATURE SECTIONS */
+  .feature-section { padding: 14px 22px; border-top: 1px solid #f0f0ec; }
+  .section-header {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #bbb; margin-bottom: 9px; display: flex; align-items: center; gap: 6px;
+  }
+  .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .dot-fixed { background: #1a1a1a; }
+  .dot-credits { background: #89a000; }
+  .dot-specialist { background: #FF6B00; }
+
+  .feature-list { list-style: none; }
+  .feature-list li {
+    font-size: 11px; color: #333; padding: 3px 0;
+    display: flex; align-items: flex-start; gap: 7px; line-height: 1.5;
+  }
+  .check { font-size: 13px; flex-shrink: 0; margin-top: -1px; }
+  .check-dark  { color: #1a1a1a; }
+  .check-lime  { color: #89a000; }
+  .check-orange{ color: #FF6B00; }
+  .check-grey  { color: #ddd; }
+
+  .feature-note { font-size: 9px; color: #aaa; font-style: italic; display: block; margin-top: 1px; }
+
+  .credits-more {
+    margin-top: 8px; padding: 7px 10px;
+    background: #f4f4f0; border-radius: 6px; border: 1px dashed #d8d8d0;
+    font-size: 10px; color: #888; line-height: 1.5;
+  }
+  .credits-more a { color: #6a8000; font-weight: 700; text-decoration: none; }
+
+  /* BOTTOM */
+  .tier-bottom { padding: 14px 22px 20px; border-top: 1px solid #f0f0ec; margin-top: auto; }
+  .tier-tagline { font-size: 11px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; line-height: 1.4; }
+  .cta-btn {
+    display: block; width: 100%; text-align: center;
+    padding: 11px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+  }
+  .cta-dark { background: #1a1a1a; color: #fff; }
+  .cta-lime { background: #C8E000; color: #1a1a1a; }
+
+  /* ANNOTATIONS */
+  .divider { border: none; border-top: 1.5px solid #e0e0d8; margin: 48px 0; }
+  .annotation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .annotation { background: #fff; border-radius: 10px; padding: 16px 18px; border-left: 3px solid #e0e0e0; }
+  .annotation.resolved { border-left-color: #C8E000; }
+  .annotation.note     { border-left-color: #1a1a1a; }
+  .ann-label { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .ann-label.lime { color: #6a8000; }
+  .ann-label.dark { color: #1a1a1a; }
+  .ann-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; }
+  .ann-body { font-size: 11px; color: #555; line-height: 1.6; }
+  .ann-body strong { color: #1a1a1a; }
+
+  .footer { font-size: 10px; color: #bbb; text-align: center; padding-top: 24px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-label">Pricing Tiers — v7 · Hybrid scenario applied</div>
+  <h1>Tier Feature Lists</h1>
+  <p class="intro">
+    Changes from v6: hybrid scenario applied — selected deliverables reclassified from fixed to credit-funded
+    in Growth and Performance; credit volumes unchanged (70 / 110 / 180).
+  </p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1a1a1a;"></div> Always included — no credits deducted</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#89a000;"></div> Credit-powered — funded from your monthly budget</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FF6B00;"></div> Direct specialist involvement</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="tiers">
+
+    <!-- ─────────── CORE ─────────── -->
+    <div class="tier">
+      <div class="tier-top">
+        <div class="tier-name">Core</div>
+        <div class="tier-headline">Clarity.<br>Traction.<br>Control.</div>
+        <div class="tier-sub">For organisations that need disciplined focus.</div>
+      </div>
+
+      <div class="credit-band">
+        <div><div class="credit-band-label">Monthly credit capacity</div></div>
+        <div class="credit-band-value">70 credits</div>
+      </div>
+
+      <div class="time-block" style="margin-top:14px;">
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">Monthly strategy session</div>
+            <div class="time-session-cadence">1× per month</div>
+          </div>
+          <div><div class="time-value">60 min</div></div>
+        </div>
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">On-demand support</div>
+            <div class="time-session-cadence">Use anytime — book via your strategist</div>
+          </div>
+          <div>
+            <div class="time-value">1.5 hrs</div>
+            <div class="time-unit">per month</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-fixed"></span>Always included</div>
+        <ul class="feature-list">
+          <li><span class="check check-dark">✓</span> Monthly Growth Playbook</li>
+          <li><span class="check check-dark">✓</span> Live growth dashboard</li>
+          <li><span class="check check-dark">✓</span> Dedicated lead strategist</li>
+          <li><span class="check check-dark">✓</span> Compounding growth engine</li>
+          <li><span class="check check-dark">✓</span> Ongoing brand &amp; messaging guidance</li>
+          <li><span class="check check-dark">✓</span> Specialist input via your lead strategist</li>
+        </ul>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-credits"></span>Your credits fund</div>
+        <ul class="feature-list">
+          <li><span class="check check-lime">✓</span>
+            Priority channel execution
+            <span class="feature-note">1–2 channels — agreed in your monthly playbook</span>
+          </li>
+          <li><span class="check check-lime">✓</span> Discovery &amp; audit work</li>
+          <li><span class="check check-lime">✓</span> Brand &amp; content deliverables</li>
+        </ul>
+        <div class="credits-more">
+          Credits unlock any service from our full 153-item menu —
+          including brand identity, SEO, paid campaigns, web builds, and more.
+          <br><a href="#">Explore the full services menu →</a>
+        </div>
+      </div>
+
+      <div class="tier-bottom">
+        <div class="tier-tagline">Establish commercial momentum with precision.</div>
+        <a class="cta-btn cta-dark" href="#">Let's Talk Core</a>
+      </div>
+    </div>
+
+    <!-- ─────────── GROWTH ─────────── -->
+    <div class="tier">
+      <div class="tier-top">
+        <div class="tier-name">Growth</div>
+        <div class="tier-headline">Repeatability.<br>Optimisation.<br>Expansion.</div>
+        <div class="tier-sub">For teams building a scalable engine.</div>
+      </div>
+
+      <div class="credit-band">
+        <div><div class="credit-band-label">Monthly credit capacity</div></div>
+        <div class="credit-band-value">110 credits</div>
+      </div>
+
+      <div class="time-block" style="margin-top:14px;">
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">Bi-weekly alignment</div>
+            <div class="time-session-cadence">2× per month</div>
+          </div>
+          <div>
+            <div class="time-value">60 min</div>
+            <div class="time-unit">each</div>
+          </div>
+        </div>
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">On-demand support</div>
+            <div class="time-session-cadence">Use anytime — book via your strategist</div>
+          </div>
+          <div>
+            <div class="time-value">3 hrs</div>
+            <div class="time-unit">per month</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-fixed"></span>Everything in Core, plus</div>
+        <ul class="feature-list">
+          <li><span class="check check-dark">✓</span> Fractional CMO oversight</li>
+        </ul>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-credits"></span>Your credits fund</div>
+        <ul class="feature-list">
+          <li><span class="check check-lime">✓</span> Structured growth experiments</li>
+          <li><span class="check check-lime">✓</span>
+            Multi-channel orchestration
+            <span class="feature-note">3+ channels — directed by your monthly playbook</span>
+          </li>
+          <li><span class="check check-lime">✓</span> Creative production &amp; conversion optimisation</li>
+        </ul>
+        <div class="credits-more">
+          Credits unlock any service from our full 153-item menu —
+          including paid media, brand identity, SEO, web builds, and more.
+          <br><a href="#">Explore the full services menu →</a>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-specialist"></span>Direct specialist involvement</div>
+        <ul class="feature-list">
+          <li><span class="check check-orange">✓</span> Senior brand &amp; strategy specialists</li>
+          <li><span class="check check-orange">✓</span> Performance marketing specialists</li>
+        </ul>
+      </div>
+
+      <div class="tier-bottom">
+        <div class="tier-tagline">Turn traction into predictable performance.</div>
+        <a class="cta-btn cta-lime" href="#">Let's Talk Growth</a>
+      </div>
+    </div>
+
+    <!-- ─────────── PERFORMANCE ─────────── -->
+    <div class="tier">
+      <div class="tier-top">
+        <div class="tier-name">Performance</div>
+        <div class="tier-headline">Acceleration.<br>Market Expansion.<br>Efficiency at Scale.</div>
+        <div class="tier-sub">For organisations scaling aggressively.</div>
+      </div>
+
+      <div class="credit-band">
+        <div><div class="credit-band-label">Monthly credit capacity</div></div>
+        <div class="credit-band-value">180 credits</div>
+      </div>
+
+      <div class="time-block" style="margin-top:14px;">
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">Weekly growth review</div>
+            <div class="time-session-cadence">4× per month</div>
+          </div>
+          <div>
+            <div class="time-value">60 min</div>
+            <div class="time-unit">each</div>
+          </div>
+        </div>
+        <div class="time-row">
+          <div class="time-left">
+            <div class="time-session-name">On-demand support</div>
+            <div class="time-session-cadence">Use anytime — book via your strategist</div>
+          </div>
+          <div>
+            <div class="time-value">6 hrs</div>
+            <div class="time-unit">per month</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-fixed"></span>Everything in Growth, plus</div>
+        <ul class="feature-list">
+          <li><span class="check check-dark">✓</span> Priority account access &amp; senior escalation</li>
+        </ul>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-credits"></span>Your credits fund</div>
+        <ul class="feature-list">
+          <li><span class="check check-lime">✓</span> Advanced testing architecture</li>
+          <li><span class="check check-lime">✓</span> Forecasting &amp; growth modelling</li>
+          <li><span class="check check-lime">✓</span> Full-funnel campaigns &amp; multi-market rollout</li>
+        </ul>
+        <div class="credits-more">
+          Credits unlock any service from our full 153-item menu —
+          including advanced analytics, market research, event strategy, and more.
+          <br><a href="#">Explore the full services menu →</a>
+        </div>
+      </div>
+
+      <div class="feature-section">
+        <div class="section-header"><span class="dot dot-specialist"></span>Direct specialist involvement</div>
+        <ul class="feature-list">
+          <li><span class="check check-orange">✓</span> Senior brand &amp; strategy specialists</li>
+          <li><span class="check check-orange">✓</span> Performance marketing specialists</li>
+          <li><span class="check check-orange">✓</span> Events &amp; activation specialists</li>
+        </ul>
+      </div>
+
+      <div class="tier-bottom">
+        <div class="tier-tagline">Scale revenue with control and confidence.</div>
+        <a class="cta-btn cta-dark" href="#">Let's Talk Performance</a>
+      </div>
+    </div>
+
+  </div><!-- /tiers -->
+
+  <hr class="divider">
+
+  <div style="margin-bottom:16px;">
+    <div class="page-label">Design decisions &amp; rationale</div>
+  </div>
+  <div class="annotation-grid">
+
+    <div class="annotation resolved">
+      <div class="ann-label lime">Resolved — Hybrid</div>
+      <div class="ann-title">Price increases: Growth +€250 → €5,250 · Performance +€500 → €8,000</div>
+      <div class="ann-body">
+        Modest increases to bring fixed-item margin above 30% across all tiers.
+        Core stays at €3,500. Increases are below 10% and justified by the model depth (CMO oversight, weekly cadence, specialist involvement).
+        <br><br>
+        Resulting margins: <strong>Core 53% · Growth 42% · Performance 30%</strong> — all above the 30% threshold.
+      </div>
+    </div>
+
+    <div class="annotation resolved">
+      <div class="ann-label lime">Resolved — Hybrid</div>
+      <div class="ann-title">Reclassified items: deliverables moved from fixed to credit-funded</div>
+      <div class="ann-body">
+        <strong>Growth:</strong> Structured growth experiments + Multi-channel orchestration moved to credit-funded. Rationale: these are deliverable outputs, not relationship overhead — clients should direct credit spend here via the monthly playbook, not receive them as undifferentiated fixed inclusions.
+        <br><br>
+        <strong>Performance:</strong> Advanced testing architecture + Forecasting &amp; growth modelling moved to credit-funded. This makes Performance's credit pool feel more powerful — clients get 180 credits to direct at high-value analytical work, not just production volume.
+      </div>
+    </div>
+
+    <div class="annotation note">
+      <div class="ann-label dark">Rationale</div>
+      <div class="ann-title">Growth "Everything in Core, plus": Fractional CMO oversight only</div>
+      <div class="ann-body">
+        With structured growth experiments and multi-channel orchestration moved to credit-funded, Fractional CMO oversight is the sole additional fixed inclusion in Growth. This is intentional: the CMO function is pure relationship and strategic oversight — it has no deliverable output by itself, which makes it genuinely "fixed." It's also the clearest signal of the tier upgrade: a senior lens applied to everything the client does.
+      </div>
+    </div>
+
+    <div class="annotation note">
+      <div class="ann-label dark">Rationale</div>
+      <div class="ann-title">Performance "Everything in Growth, plus": Priority account access</div>
+      <div class="ann-body">
+        After reclassification, Performance's structural differentiators are the cadence (4× weekly reviews, 6 hrs on-demand), the larger credit pool (180 credits), and the additional specialist (events &amp; activation). "Priority account access &amp; senior escalation" captures the one meaningful fixed addition: Performance clients get top-of-queue access to senior leadership when issues escalate. This is a commitment, not a deliverable — correctly classified as fixed.
+      </div>
+    </div>
+
+    <div class="annotation note">
+      <div class="ann-label dark">Rationale</div>
+      <div class="ann-title">Session naming: strategy → alignment → growth review</div>
+      <div class="ann-body">
+        <strong>Monthly strategy session</strong> (Core) — setting direction once a month.
+        <strong>Bi-weekly alignment</strong> (Growth) — checking course mid-month, adjusting priorities. "Alignment" is more accurate than "strategy" at this cadence.
+        <strong>Weekly growth review</strong> (Performance) — operational pulse checks at weekly frequency. "Review" is honest; "strategy" at 4× a month would set the wrong expectation.
+      </div>
+    </div>
+
+    <div class="annotation note">
+      <div class="ann-label dark">Rationale</div>
+      <div class="ann-title">"Your credits fund" — illustrative examples per tier, 153-item menu linked</div>
+      <div class="ann-body">
+        Each tier's three bullet examples are anchored to that tier's typical credit use. They are not an exhaustive list — the 153-item menu callout makes this explicit. Examples intentionally escalate across tiers: Core (audits, brand basics) → Growth (experiments, multi-channel) → Performance (testing architecture, forecasting) to reinforce tier positioning without restricting what clients can actually buy.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer" style="margin-top:40px;">GritFuel · Pricing tiers v7 · Hybrid scenario · Internal review · April 2026</div>
+</div>
+</body>
+</html>
